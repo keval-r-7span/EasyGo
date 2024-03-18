@@ -12,13 +12,13 @@ const {
   paymentStatus,
 } = require("../controllers/bookingController");
 
-router.get("/booking", viewBooking);
-router.get("/bookingstatus", BookingStatus);
-router.get("/booking/:id", viewBookingById);
-router.post("/booking/create",validateRequest, createBooking);
-router.post("/booking/:id/completed", changeRideStatus);
-router.put("/booking/update/:id", updateBooking);
-router.post("/booking/payment/status/:id",paymentStatus)
-router.delete("/booking/cancel/:id", cancelBooking);
+router.get("/all", viewBooking);
+router.get("/status", BookingStatus);
+router.get("/:id", viewBookingById);
+router.post("/create",validateRequest, createBooking);
+router.post("/:id/completed", changeRideStatus);
+router.put("/update/:id", updateBooking);
+router.post("/payment/status/:id",paymentStatus)
+router.delete("/cancel/:id", cancelBooking);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
     },
-    driverId: {
+    driver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Driver",
     },

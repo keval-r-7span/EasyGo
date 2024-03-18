@@ -5,6 +5,7 @@ exports.viewBookingAll = async () => {
     return await BookingSchema.find()
       .sort({ createdAt: -1 })
       .populate("customer")
+      .populate("driver")
       .exec();
   } catch (error) {
     throw error;
@@ -16,6 +17,7 @@ exports.viewBooking = async (query) => {
     return await BookingSchema.findById(query)
       .sort({ createdAt: -1 })
       .populate("customer")
+      .populate("driver")
       .exec();
   } catch (error) {
     throw error;
@@ -23,7 +25,11 @@ exports.viewBooking = async (query) => {
 };
 exports.viewBookingFilter = async (query) => {
   try {
-    return await BookingSchema.find(query).sort({ createdAt: -1 });
+    return await BookingSchema.find(query)
+      .sort({ createdAt: -1 })
+      .populate("customer")
+      .populate("driver")
+      .exec();
   } catch (error) {
     throw error;
   }

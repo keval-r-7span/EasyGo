@@ -2,6 +2,7 @@ const Joi = require("joi");
 
 const bookingJoiSchema = Joi.object({
   customer:Joi.string(),
+  driver:Joi.string(),
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
   pickupTime: Joi.string().required().default(Date.now()),
@@ -15,7 +16,7 @@ const bookingJoiSchema = Joi.object({
 const validateRequest = (req, res, next) => {
   const { error } = bookingJoiSchema.validate(req.body);
   if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res.status(400).json({error: error.details[0].message});
   }
   next();
 };

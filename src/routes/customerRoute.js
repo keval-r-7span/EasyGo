@@ -14,13 +14,13 @@ const {sendOTP,
 const validateRequest = require('../validation/userValidation')
 
 // mapping with controllers
-router.post('/user/register',validateRequest, signUp);
-router.post('/user/login', login)
-router.get('/user/view', getCustomer);
-router.get('/user/view/:id', getCustomerByID);
-router.put('/user/update/:id', updateCustomer);
-router.delete('/user/delete/:id', deleteCustomer);
-router.post('/user/send-otp', sendOTP)
-router.post('/user/verify-otp', verifyOtp)
+router.post('/register',validateRequest, signUp);
+router.post('/login', login)
+router.get('/view', getCustomer);
+router.get('/view/:id', getCustomerByID);
+router.put('/update/:id', updateCustomer);
+router.delete('/delete/:id', deleteCustomer);
+router.post('/send-otp', sendOTP)
+router.post('/verify-otp', verifyOtp)
 
 module.exports = router;

@@ -1,8 +1,6 @@
 const customerService = require("../services/userService");
-const booking = require("../services/bookingService")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const userJoiSchema = require("../validation/userValidation");
 const { JWT } = require("../helper/constants");
 
 const signUp = async (req, res) => {
