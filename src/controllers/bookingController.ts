@@ -30,6 +30,9 @@ const bookingStatus = async (req:Request, res:Response) => {
   try {
     const status = req.body.status || req.query.status;
     const response = await bookingService.viewBookingFilter({ status });
+    if(!response){
+      return res.status(200).json({sucess:true,message:"No Data Found."})
+    }
     return res.status(200).json({sucess:true,data:response})
   } catch (error) {
     return res.status(200).json({sucess:true,message:error})
