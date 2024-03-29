@@ -18,6 +18,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: echo -e "DB_URL = '${{ secrets.DB_URL }}'\nPORT = ${{ secrets.PORT }}" >> .env
+    - run: echo -e "DB_URL = "${{ secrets.DB_URL }}"\nPORT = ${{ secrets.PORT }}" >> .env
     - run: npm ci
     - run: pm2 restart ride
