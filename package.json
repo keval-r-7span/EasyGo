@@ -1,7 +1,7 @@
 {
-  "name": "rideme",
+  "name": "ridewithme",
   "version": "1.0.0",
-  "description": "bike taxi booking web applications",
+  "description": "bike taxi booking API",
   "type": "module",
   "main": "app.js",
   "scripts": {

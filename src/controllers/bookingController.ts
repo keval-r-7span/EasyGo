@@ -9,8 +9,7 @@ const viewBooking = async (req:Request, res:Response)=> {
     }
     return res.status(200).json({sucess:true,data:response})
   } catch (error) {
-    console.log(error);
-    return res.json({sucess:false,data:"Error in viewBooking"})
+    return res.json({sucess:false,data:error})
   }
 };
 
