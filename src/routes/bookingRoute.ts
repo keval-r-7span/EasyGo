@@ -6,7 +6,7 @@ import {
 } from '../controllers/bookingController';
 import validateRequest from '../validation/bookingValidation';
 
-router.get("/all", viewBooking);
+router.get("/list", viewBooking);
 router.get("/status", bookingStatus);
 router.get("/:id", viewBookingById);
 router.get("/revenue/total", getRevenue);

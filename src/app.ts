@@ -12,7 +12,7 @@ app.use(express.json());
 app.use("/api/v1", indexRoute);
 
 app.get("/",(req:Request,res:Response)=>{
-  res.status(200).send("Welcome to RideWithMe API")
+  res.status(200).send("Welcome to RideWithMe-API 🚕")
 })
 // Connect to MongoDB Atlas .
 connectDB();
