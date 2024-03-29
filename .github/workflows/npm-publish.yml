@@ -20,4 +20,5 @@ jobs:
         cache: 'npm'
     - run: echo -e "DB_URL = ${{ secrets.DB_URL }}\nPORT = ${{ secrets.PORT }}" >> .env
     - run: npm ci
-    - run: pm2 restart ride
+    - run: pm2 delete all
+    - run: npm deploy
