@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface driver {
+export interface driver {
   name: string;
   email: string; 
   phoneNumber: string; 
@@ -41,4 +41,4 @@ const driverSchema = new mongoose.Schema<driver>({
   
 });
 
-export default mongoose.model<driver>('Driver', driverSchema);
+export default mongoose.model<driver>("driver", driverSchema);
