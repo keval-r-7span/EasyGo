@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { JWT } from "../helper/constants";
 
-const generateAccessToken = (user: { _id: any; phoneNumber: any; email: any; role: any; }) => {
+const generateAccessToken = (user: { _id: any; phoneNumber: string; email: string; role: string; }) => {
   const payload = {
     _id:  user._id,
     phoneNumber: user.phoneNumber,

@@ -5,14 +5,11 @@ const CustomerSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        // unique: true,
+        unique: true,
     },
     phoneNumber: {
         type: String,
         unique: true,
-    },
-    password: {
-        type: String,
     },
     role: {
         type: String,
@@ -25,7 +22,5 @@ const CustomerSchema = new mongoose.Schema({
     resetPasswordExpires: {
         type: Date,
     },
-    //penalty
-    // profile-->gender,
 }, { timestamps: true });
 export default mongoose.model("Customer", CustomerSchema);

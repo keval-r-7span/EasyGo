@@ -9,14 +9,3 @@ const logger = createLogger({
     transports: [new transports.Console()],
 });
 export default logger;
-// const logger:Logger = 
-//    createLogger({
-//     level: "info",
-//     format: combine(
-//       format.colorize(),
-//       timestamp({ format: "HH:mm:ss" }),
-//       myFormat
-//     ),
-//     transports: [new transports.Console()],
-//   });
-// export default logger;

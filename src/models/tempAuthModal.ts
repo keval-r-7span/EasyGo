@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
 
-export interface Customer{
+export interface tempAuth{
     name: string;
     email: string;
     phoneNumber: string;
-    password: string;
     role: string;
-    token: string;
-    resetPasswordExpires: Date
+    createdAt: Date
 }
 
-const CustomerSchema = new mongoose.Schema<Customer>(
+const tempAuthSchema = new mongoose.Schema<tempAuth>(
     {
       name: {
         type: String,
@@ -28,15 +26,14 @@ const CustomerSchema = new mongoose.Schema<Customer>(
         enum: ["admin", "driver", "user"],
         default: "user",
       },
-      token: {
-        type: String,
-      },
-      resetPasswordExpires: {
+      createdAt:{
         type: Date,
-      },
+        default: Date.now(),
+        expires: 120
+      }
     },
     { timestamps: true }
   );
   
-  export default mongoose.model<Customer>("Customer", CustomerSchema);
+  export default mongoose.model<tempAuth>("tempAuth", tempAuthSchema);
   

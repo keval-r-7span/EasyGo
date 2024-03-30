@@ -11,49 +11,76 @@ import { customerService } from "../services/userService";
 const getCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield customerService.viewCustomer();
-        return res.status(200).json({ sucess: true, data: response });
+        return res.status(200).json({
+            sucess: true,
+            data: response
+        });
     }
     catch (error) {
         console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        return res.json({
+            sucess: false,
+            message: "Error in GetCustomer",
+        });
     }
 });
 const getCustomerByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield customerService.viewCustomerById(req.params.id);
-        return res.status(200).json({ sucess: true, data: response });
+        return res.status(200).json({
+            sucess: true,
+            data: response,
+        });
     }
     catch (error) {
         console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        return res.json({
+            sucess: false,
+            message: "Error in GetCustomer ID",
+        });
     }
 });
 const updateCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const { name, email, phoneNumber, role } = req.body;
+        const { name, email, role } = req.body;
         const response = yield customerService.updateCustomer(req.params.id, {
             name,
             email,
-            phoneNumber,
             role,
         });
-        console.log(response);
-        return res.status(200).json({ sucess: true, data: response });
+        return res.status(200).json({
+            sucess: true,
+            data: response,
+        });
     }
     catch (error) {
         console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        return res.json({
+            sucess: false,
+            message: "ERROR in Update Customer",
+        });
     }
 });
 const deleteCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield customerService.deleteCustomer(req.params.id);
-        return res.status(200).json({ sucess: true, data: response });
+        if (!response) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid ID"
+            });
+        }
+        return res.status(200).json({
+            sucess: true,
+            data: response,
+        });
     }
     catch (error) {
         console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        return res.status(500).json({
+            sucess: false,
+            message: "ERROR in DeleteCustomer",
+        });
     }
 });
 export { getCustomer, getCustomerByID, updateCustomer, deleteCustomer };

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import CustomerSchema from "../models/customerModel";
+import tempAuthSchema from "../models/tempAuthModal";
 import logger from "../utils/logger";
 const viewCustomer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -57,17 +58,30 @@ const registerUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
         logger.error(error);
     }
 });
-// const updateSingle = async (
-//   get: ,
-//   set: ,
-//   option:
-// ) => {
-//   try {
-//     return await CustomerSchema.updateOne(get, set, option);
-//   } catch (error) {
-//     logger.error(error);
-//   }
-// };
+const registeruserTemp = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield tempAuthSchema.create(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+const findPhoneNumber = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield tempAuthSchema.findOne(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+const removeTempUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield tempAuthSchema.findByIdAndDelete(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
 export const customerService = {
     viewCustomer,
     viewCustomerById,
@@ -75,5 +89,7 @@ export const customerService = {
     updateCustomer,
     findCustomer,
     registerUser,
-    //   updateSingle,
+    registeruserTemp,
+    findPhoneNumber,
+    removeTempUser
 };

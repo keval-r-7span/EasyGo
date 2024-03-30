@@ -19,6 +19,6 @@ const DISTANCE = {
 const MAIL = {
     HOST: process.env.MAIL_HOST,
     USER: process.env.MAIL_USER,
-    PASS: process.env.MAIL_PASS
+    PASS: process.env.MAIL_PASS,
 };
 export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL };

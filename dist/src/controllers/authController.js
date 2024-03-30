@@ -8,111 +8,186 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { customerService } from "../services/userService";
-import bcrypt from "bcryptjs";
+import { TWILIO } from "../helper/constants";
+import twilio from "twilio";
+import logger from "../utils/logger";
 import jwtToken from "../validation/jwtToken";
+const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, phoneNumber, password, role } = req.body;
-        const userExist = yield customerService.findCustomer({ email });
+        const { name, email, phoneNumber, role } = req.body;
+        const userExist = yield customerService.findCustomer({ phoneNumber });
         if (userExist) {
-            throw new Error("User Already exist with same Email: " + { email });
+            throw new Error("User Already exist with phoneNumber");
         }
         if (role !== "admin") {
-            const hashedPassword = yield bcrypt.hash(password, 10);
-            const response = yield customerService.registerUser({
+            const response = yield customerService.registeruserTemp({
                 name,
                 email: email.toLowerCase(),
                 phoneNumber,
-                password: hashedPassword,
                 role,
             });
             if (!response) {
-                throw new Error("Failed to register");
+                return res.json({
+                    success: false,
+                    message: "Invalid Data",
+                });
+            }
+            const otpResponse = yield sendOtp(phoneNumber);
+            if (!otpResponse.success) {
+                throw new Error("Failed to send OTP");
             }
             yield response.save();
-            return res.status(200).json({ sucess: true, data: response });
+            return res.json({
+                success: true,
+                message: "OTP sent Please verify within 10 minutes",
+            });
         }
         else {
-            return res.json({ sucess: false, data: "ERROR" });
+            return res.json({
+                sucess: false,
+                message: "Role Should not be selected as Admin",
+            });
         }
     }
     catch (error) {
-        console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        return res.json({
+            sucess: false,
+            message: "Error occured at Sign-Up" + error,
+        });
+    }
+});
+const sendOtp = (phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const fourDigit = phoneNumber.substring(5, 9);
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verifications.create({
+            to: `+91${phoneNumber}`,
+            channel: "sms",
+        });
+        return {
+            success: true,
+            data: response,
+            message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+        };
+    }
+    catch (error) {
+        return {
+            success: false,
+            message: "Error occurred while sending OTP",
+        };
+    }
+});
+const verifyOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber, otp } = req.body;
+    if (!phoneNumber && !otp) {
+        return res.json({
+            success: false,
+            message: "Please Enter phone and otp",
+        });
+    }
+    try {
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verificationChecks.create({
+            to: `+91${phoneNumber}`,
+            code: otp,
+        });
+        if (response.status === "approved") {
+            const existUserTemp = yield customerService.findPhoneNumber({
+                phoneNumber,
+            });
+            if (existUserTemp) {
+                const newUser = yield customerService.registerUser({
+                    name: existUserTemp.name,
+                    email: existUserTemp.email,
+                    phoneNumber: existUserTemp.phoneNumber,
+                    role: existUserTemp.role,
+                });
+                yield (newUser === null || newUser === void 0 ? void 0 : newUser.save());
+                yield customerService.removeTempUser(existUserTemp.id);
+            }
+        }
+        return res.json({
+            success: true,
+            message: "Successfully Verified and Registered ",
+        });
+    }
+    catch (error) {
+        return res.json({
+            sucess: false,
+            message: "Error occured while verifying otp" + error,
+        });
+    }
+});
+const sendLoginOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber } = req.body;
+    const fourDigit = phoneNumber.substring(5, 10);
+    let registeredUser = yield customerService.findCustomer({ phoneNumber });
+    if (!registeredUser) {
+        return res.json({
+            sucess: false,
+            message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
+        });
+    }
+    else {
+        try {
+            const response = yield client.verify.v2
+                .services(TWILIO.SERVICE_SID)
+                .verifications.create({
+                to: `+91${phoneNumber}`,
+                channel: "sms",
+            });
+            return res.status(200).json({
+                sucess: true,
+                message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+            });
+        }
+        catch (error) {
+            logger.error(error);
+            return res.json({
+                sucess: false,
+                data: "Error occured at sending OTP",
+            });
+        }
     }
 });
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber, otp } = req.body;
     try {
-        const { phoneNumber, password } = req.body;
-        if (!phoneNumber || !password) {
-            return res.json({ sucess: false, data: "ERROR" });
-        }
-        let registeredUser = yield customerService.findCustomer({ phoneNumber });
-        if (!registeredUser) {
-            return res.json({ sucess: false, data: "ERROR" });
-        }
-        else {
-            const ismatch = yield bcrypt.compare(password, registeredUser.password);
-            if (ismatch) {
-                const token = jwtToken(registeredUser);
-                registeredUser.token = token;
-                res.cookie("token", token, { httpOnly: true }).json({
-                    success: true,
-                    registeredUser,
-                    message: "User Logged in successfully",
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verificationChecks.create({
+            to: `+91${phoneNumber}`,
+            code: otp,
+        });
+        if (response.status === "approved") {
+            const existUser = yield customerService.findCustomer({ phoneNumber });
+            if (!existUser) {
+                return res.json({
+                    success: false,
+                    message: "Oops!! Sign-Up first",
                 });
             }
             else {
-                return res.json({ sucess: false, data: "ERROR" });
+                const token = jwtToken(existUser);
+                existUser.token = token;
+                return res
+                    .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly: true })
+                    .json({
+                    success: true,
+                    message: "User Logged in successfully",
+                });
             }
         }
     }
     catch (error) {
-        console.log(error);
-        return res.json({ sucess: false, data: "ERROR" });
+        logger.error(error);
+        return res.json({
+            sucess: false,
+            message: "Error occured while verifying otp",
+        });
     }
 });
-//   const resetPasswordToken = async (req: Request, res: Response) => {
-//     try {
-//       const { email } = req.body;
-//       const user = await customerService.findCustomer({ email });
-//       if (!user) {
-//         return res.json({ sucess: false, data: "ERROR" });
-//       }
-//       const token = crypto.randomUUID();
-//       const response = await customerService.updateSingle(
-//         { email:string },
-//         { token:string, resetPasswordExpires: Date.now() + 5 * 60 * 1000 },
-//         { new: true }
-//       );
-//       const url = `http://localhost:4000/update-password/${token}`;
-//       console.log(url);
-//     //   await mailForBooking(email, "URL SENDING ", `link : ${url}`);
-//       return res.status(200).json({ sucess: true, data: response });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-//   const resetPassword = async (req: Request, res: Response) => {
-//     try {
-//       const { password, token } = req.body;
-//       const userDetails = await customerService.findCustomer({ token });
-//       if (!userDetails) {
-//         return res.json({ sucess: false, data: "ERROR" });
-//       }
-//       if (userDetails.resetPasswordExpires < Date.now) {
-//         return res.json({ sucess: false, data: "ERROR" });
-//       }
-//       const encryptPassword = await bcrypt.hash(password, 10);
-//       const response = await customerService.updateSingle(
-//         { token },
-//         { password: encryptPassword },
-//         { new: true }
-//       );
-//       return res.status(200).json({ sucess: true, data: response });
-//     } catch (error) {
-//         console.log(error);
-//         return res.json({ sucess: false, data: "ERROR" });
-//     }
-//   };
-export { signUp, login };
+export { signUp, verifyOtp, sendLoginOtp, login };
