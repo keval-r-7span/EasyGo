@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const { JWT } = require("../helper/constants");
+import jwt from 'jsonwebtoken'
+import { JWT } from "../helper/constants";
 
-exports.generateAccessToken = (user) => {
+const generateAccessToken = (user: { _id: any; phoneNumber: any; email: any; role: any; }) => {
   const payload = {
     _id:  user._id,
     phoneNumber: user.phoneNumber,
@@ -11,3 +11,5 @@ exports.generateAccessToken = (user) => {
   const options = { expiresIn: JWT.EXPIRES };
   return jwt.sign(payload, JWT.SECRET, options);
 };
+
+export default generateAccessToken;
