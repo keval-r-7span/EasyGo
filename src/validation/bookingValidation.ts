@@ -1,7 +1,11 @@
-const Joi = require("joi");
+import { NextFunction,Request,Response } from 'express';
+import Joi from 'joi';
 
-const bookingJoiSchema = Joi.object({
+const bookingJoiSchema= Joi.object({
   customer:Joi.string(),
+  driver:Joi.string(),
+  vehicle:Joi.string(),
+  vehicleClass:Joi.string(),
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
   pickupTime: Joi.string().required().default(Date.now()),
@@ -12,12 +16,12 @@ const bookingJoiSchema = Joi.object({
   comments: Joi.string(),
 });
 
-const validateRequest = (req, res, next) => {
+const validateRequest = (req:Request, res:Response, next:NextFunction) => {
   const { error } = bookingJoiSchema.validate(req.body);
   if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res.status(400).json({sucess:false,error: `JoiSchema validation error: ${error.details[0].message}`});
   }
   next();
 };
 
-module.exports = validateRequest;
+export default validateRequest;
