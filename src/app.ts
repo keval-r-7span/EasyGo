@@ -1,6 +1,6 @@
 import express from 'express';
 import connectDB from './configs/dbConnection';
-import indexRoute from './routes/indexRoute';
+import indexRoute from './routes';
 import {PORT} from './helper/constants';
 import logger from './utils/logger';
 
