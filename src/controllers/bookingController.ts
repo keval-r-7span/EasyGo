@@ -37,6 +37,23 @@ const bookingStatus = async (req:Request, res:Response) => {
     return res.status(200).json({sucess:true,message:error})
   }
 };
+const rideStatus = async(req:Request,res:Response)=>{
+  try {
+    const response = await bookingService.updateBooking(
+      req.params.id,
+      {
+        status:req.body.status,
+      },
+      { new: true }
+    );
+    if (!response) {
+      return res.status(200).json({sucess:false,message:"Enter Valid Booking ID or Value"});
+    }
+    return res.status(200).json({sucess:true,data:response,message:"Sucessfully Updated status"});
+  } catch (error) {
+    return res.status(200).json({sucess:false,message:error});
+  }
+}
 
 const createBooking = async (req:Request, res:Response) => {
   try {
@@ -111,4 +128,4 @@ const totalBooking = async (req:Request, res:Response) => {
 };
 
 
-export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById}
+export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById,rideStatus}
