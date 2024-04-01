@@ -17,6 +17,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
     - run: echo -e "DB_URL = ${{ secrets.DB_URL }}\nPORT = ${{ secrets.PORT }}\nEXPIRES = ${{ secrets.EXPIRES }}\nTWILIO_ACCOUNT_SID = ${{ secrets.TWILIO_ACCOUNT_SID }}\nTWILIO_AUTH_TOKEN = ${{ secrets.TWILIO_AUTH_TOKEN }}\nTWILIO_SERVICE_SID = ${{ secrets.TWILIO_SERVICE_SID }}\nDISTANCE_MATRIX_KEY = ${{ secrets.DISTANCE_MATRIX_KEY }}\nMAIL_PASS = ${{ secrets.MAIL_PASS }}\n" >> .env
     - run: npm install
     - run: pm2 delete all
