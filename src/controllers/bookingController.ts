@@ -1,6 +1,5 @@
 import { Request,Response } from 'express';
 import { bookingService } from '../services/bookingService';
-import { Booking } from '../models/bookingModel';
 
 const viewBooking = async (req:Request, res:Response)=> {
   try {
