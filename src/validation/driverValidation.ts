@@ -1,4 +1,4 @@
-import Joi, { Schema } from "joi";
+import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 
 const driverJoiSchema = Joi.object({

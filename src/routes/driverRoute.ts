@@ -14,12 +14,12 @@ import {
 import { validateRequest, validateAddVehicle } from '../validation/driverValidation';
 import { validateUpdateRequest, validateUpdateVehicle } from '../validation/updateValidation';
 
-router.post('/register', validateRequest, signUp);
+router.post('/', validateRequest, signUp);
 router.post('/login', login);
-router.put('/update/:id', validateUpdateRequest, updateDriver);
-router.delete('/delete/:id', deleteDriver);
-router.post('/addvehicle', validateAddVehicle, addVehicle);
-router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
-router.get('/available', availableDrivers);
+router.put('/:id', validateUpdateRequest, updateDriver);
+router.delete('/:id', deleteDriver);
+router.post('/vehicle', validateAddVehicle, addVehicle);
+router.put('/:id', validateUpdateVehicle, updateVehicle);
+router.get('/', availableDrivers);
 
 export default router;
