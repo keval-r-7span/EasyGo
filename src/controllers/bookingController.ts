@@ -72,40 +72,15 @@ const updateBooking = async (req:Request, res:Response) => {
 
 const cancelBooking = async (req:Request, res:Response) => {
   try {
-    const response = await bookingService.cancelBooking(req.params.id);
+    const response = await bookingService.updateBooking(
+      req.params.id,
+    {
+      status:'cancelled'
+    },{new:true});    
     if (!response) {
       return res.status(200).json({sucess:false,message:"Enter valid Booking"});
     }
     return res.status(200).json({sucess:true,data:response,message:"Booking Cancel Suceesfully."});
-  } catch (error) {
-    return res.status(404).json({sucess:false,message:error});
-  }
-};
-
-const changeRideStatus = async (req:Request, res:Response) => {
-  try {
-    const { id } = req.params;
-    const response = await bookingService.rideComplete(id);
-    if (!response) {
-      return res.status(200).json({sucess:false,message:"Enter Valid Ride"});
-    }
-    response.status = "completed";
-    await response.save();
-    return res.status(200).json({sucess:true,data:response,message:"Ride change Suceesfully."});
-  } catch (error) {
-    return res.status(404).json({sucess:false,message:error});
-  }
-};
-
-const paymentStatus = async (req:Request, res:Response) => {
-  try {
-    const response = await bookingService.rideComplete(req.params.id);
-    if (!response) {
-       return res.status(200).json({sucess:false,message:"Enter Valid Payment Status id"}); ;
-    }
-    response.payment_status = "completed";
-    await response.save();
-    return res.status(200).json({sucess:true,data:response,message:"payment complete."});
   } catch (error) {
     return res.status(404).json({sucess:false,message:error});
   }
@@ -136,4 +111,4 @@ const totalBooking = async (req:Request, res:Response) => {
 };
 
 
-export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,paymentStatus,changeRideStatus,bookingStatus,viewBookingById}
+export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById}
