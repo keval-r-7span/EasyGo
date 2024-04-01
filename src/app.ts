@@ -14,6 +14,10 @@ app.use("/api/v1", indexRoute);
 app.get("/",(req:Request,res:Response)=>{
   res.status(200).send("Welcome to RideWithMe-API 🚕")
 })
+
+app.use((req:Request,res:Response)=>{
+  res.status(404).json({sucess:false,message:"Bad Gateway"})
+})
 // Connect to MongoDB Atlas .
 connectDB();
 
