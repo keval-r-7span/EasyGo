@@ -18,6 +18,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: echo -e "DB_URL = ${{ secrets.DB_URL }}\nPORT = ${{ secrets.PORT }}\nEXPIRES = ${{ secrets.EXPIRES }}\nTWILIO_ACCOUNT_SID = ${{ secrets.TWILIO_ACCOUNT_SID }}\nTWILIO_AUTH_TOKEN = ${{ secrets.TWILIO_AUTH_TOKEN }}\nTWILIO_SERVICE_SID = ${{ secrets.TWILIO_SERVICE_SID }}\nDISTANCE_MATRIX_KEY = ${{ secrets.DISTANCE_MATRIX_KEY }}\nMAIL_PASS = ${{ secrets.MAIL_PASS }}\n" >> .env
-    - run: yarn install
+    - run: npm install
     - run: pm2 delete all
     - run: npm run deploy
+    - run: pm2 save
