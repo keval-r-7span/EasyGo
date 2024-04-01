@@ -1,5 +1,6 @@
 import { Request,Response } from 'express';
 import { bookingService } from '../services/bookingService';
+import { Booking } from '../models/bookingModel';
 
 const viewBooking = async (req:Request, res:Response)=> {
   try {
@@ -64,7 +65,7 @@ const updateBooking = async (req:Request, res:Response) => {
     if (!response) {
       return res.status(200).json({sucess:false,message:"Enter Valid Booking ID or Value"});
     }
-    return res.status(200).json({sucess:true,data:response});
+    return res.status(200).json({sucess:true,data:response,message:"Sucessfully Updated"});
   } catch (error) {
     return res.status(200).json({sucess:false,message:error});
   }
@@ -105,7 +106,7 @@ const paymentStatus = async (req:Request, res:Response) => {
     }
     response.payment_status = "completed";
     await response.save();
-    return res.status(200).json({sucess:true,data:response,message:"Ride payment complete Suceesfully."});
+    return res.status(200).json({sucess:true,data:response,message:"payment complete."});
   } catch (error) {
     return res.status(404).json({sucess:false,message:error});
   }

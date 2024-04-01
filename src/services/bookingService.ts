@@ -12,7 +12,7 @@ const viewBookingAll = async ()=> {
   }
 };
 
- const viewBooking = async (query:string) => {
+const viewBooking = async (query:string) => {
   try {
     return await BookingSchema.findById(query)
       .sort({ createdAt: -1 })
@@ -21,7 +21,7 @@ const viewBookingAll = async ()=> {
   }
 };
 
-export const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
+const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
   try {
     return await BookingSchema.find(query)
       .sort({ createdAt: -1 })
@@ -46,7 +46,7 @@ const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:Query
   }
 };
 
-export const cancelBooking = async (query:string)=> {
+const cancelBooking = async (query:string)=> {
   try {
     return await BookingSchema.findByIdAndDelete(query);
   } catch (error) {
@@ -54,7 +54,7 @@ export const cancelBooking = async (query:string)=> {
   }
 };
 
-export const rideComplete = async (query:string) => {
+const rideComplete = async (query:string) => {
   try {
     return await BookingSchema.findById(query);
   } catch (error) {
@@ -62,7 +62,7 @@ export const rideComplete = async (query:string) => {
   }
 };
 
-export const getRevenue = async () => {
+const getRevenue = async () => {
   try {
     const monthlyRevenue = await BookingSchema.aggregate([
       {
@@ -84,7 +84,7 @@ export const getRevenue = async () => {
   }
 };
 
-export const aggregateBookings = async () => {
+const aggregateBookings = async () => {
   try {
     const result = await BookingSchema.aggregate([
       {
