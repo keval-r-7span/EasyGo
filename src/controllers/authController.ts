@@ -37,13 +37,13 @@ const signUp = async (req: Request, res: Response) => {
       });
     } else {
       return res.json({
-        sucess: false,
+        success: false,
         message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
     return res.json({
-      sucess: false,
+      success: false,
       message: "Error occured at Sign-Up" + error,
     });
   }
@@ -107,7 +107,7 @@ const verifyOtp = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.json({
-      sucess: false,
+      success: false,
       message: "Error occured while verifying otp" + error,
     });
   }
@@ -119,7 +119,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
     return res.json({
-      sucess: false,
+      success: false,
       message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
     });
   } else {
@@ -131,14 +131,14 @@ const sendLoginOtp = async (req: Request, res: Response) => {
           channel: "sms",
         });
       return res.status(200).json({
-        sucess: true,
+        success: true,
         message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
       });
     } catch (error) {
       logger.error(error);
       return res.json({
-        sucess: false,
-        data: "Error occured at sending OTP",
+        success: false,
+        message: "Error occured at sending OTP",
       });
     }
   }
@@ -174,7 +174,7 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error(error);
     return res.json({
-      sucess: false,
+      success: false,
       message: "Error occured while verifying otp",
     });
   }
