@@ -10,7 +10,7 @@ const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, role } = req.body;
     if(!name || !email || !phoneNumber || !role){
-      res.status(200).json({success:false,message:"Enter valid details."})
+      return res.status(200).json({success:false,message:"Enter valid details."})
     }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
