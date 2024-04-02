@@ -13,20 +13,12 @@ app.use(cors())
 app.use("/api/v1", indexRoute);
 
 app.get("/",(req:Request,res:Response)=>{
-  res.status(200).send(" 🚀Welcome to RideWithMe-API 🚕..")
-})
-
-app.use((req:Request,res:Response)=>{
-  res.status(404).json({sucess:false,message:"Bad Gateway"})
+  res.status(200).send("🚀Welcome to RideWithMe-API 🚕..")
 })
 // Connect to MongoDB Atlas .
 connectDB();
 
-if (parseInt(process.version.slice(1), 10) < 16) {
-  logger.error('Node.js version 16 or higher is required to run this application.');
-  process.exit(1); 
-}
 // Start the server
 app.listen(PORT, ():void => {
-  logger.info(`🚀 Server is running!! on http://localhost:${PORT}🚀..`);
+  logger.info(`🚀 Server is running.. on http://localhost:${PORT}🚀..`);
 });

@@ -8,18 +8,12 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, role } = req.body;
-    if(!name || !email || !phoneNumber){
-      return res.json({
-        success: false,
-        message: "Please Enter Valid Details"
-      })
+    if(!name || !email || !phoneNumber || !role){
+      return res.status(200).json({success:false,message:"Enter valid details."})
     }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
-      return res.json({
-        success: false,
-        message: "User Already exist with same Phone Number"
-      })
+      return res.status(200).json({success:false,message:"User Already exist."})
     }
     if (role !== "admin") {
       const response = await customerService.registeruserTemp({
@@ -47,23 +41,22 @@ const signUp = async (req: Request, res: Response) => {
         message: "OTP sent Please verify within 10 minutes",
       });
     } else {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
-      message: "Error occured at Sign-Up "+error,
+      message: error,
     });
   }
 };
 
 const sendOtp = async (phoneNumber: string) => {
   try {
-    const fourDigit = phoneNumber.substring(6, 10);
-    const response = await client.verify.v2
+     await client.verify.v2
       .services(TWILIO.SERVICE_SID)
       .verifications.create({
         to: `+91${phoneNumber}`,
@@ -71,13 +64,12 @@ const sendOtp = async (phoneNumber: string) => {
       });
     return {
       success: true,
-      data: response,
-      message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+      message: `OTP successfully sent to mobile Number ending with`,
     };
   } catch (error) {
     return {
       success: false,
-      message: "Error occurred while sending OTP "+error,
+      message: error,
     };
   }
 };
@@ -119,7 +111,7 @@ const verifyOtp = async (req: Request, res: Response) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: "Error occured while verifying otp "+error,
+      message: error
     });
   }
 };
@@ -127,42 +119,32 @@ const verifyOtp = async (req: Request, res: Response) => {
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
   if(!phoneNumber){
-    return res.json({
-      success: false,
-      message: "Please Enter valid phone number"
-    })
+   return res.status(200).json({success:false,message:"Enter PhoneNumber"})
   }
-  const fourDigit = phoneNumber?.substring(6, 10);
+  let lastDigit = phoneNumber.substring(5,10)
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
-    return res.status(404).json({
+    return res.json({
       success: false,
       message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
     });
   } else {
     try {
-      const response = await client.verify.v2
+      await client.verify.v2
         .services(TWILIO.SERVICE_SID)
         .verifications.create({
           to: `+91${phoneNumber}`,
           channel: "sms",
         });
-        if(!response){
-          return res.status(404).json({
-            success: false,
-            message: "Response was not sent"
-          })
-        }
-      else{
-        return res.status(200).json({
-          success: true,
-          message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
-        });
-      }
+      return res.status(200).json({
+        success: true,
+        message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
+      });
     } catch (error) {
-      return res.status(500).json({
+      logger.error(error);
+      return res.json({
         success: false,
-        message: "Error occured at sending OTP "+error,
+        message: error,
       });
     }
   }
@@ -202,9 +184,10 @@ const login = async (req: Request, res: Response) => {
       }
     }
   } catch (error) {
-    return res.status(500).json({
+    logger.error(error);
+    return res.json({
       success: false,
-      message: "Error occured while verifying otp "+error,
+      message: error,
     });
   }
 };
