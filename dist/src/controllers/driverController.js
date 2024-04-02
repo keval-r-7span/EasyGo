@@ -7,8 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { driverService } from '../services/driverService';
-import { vehicleService } from '../services/vehicleService';
+import { driverService } from "../services/driverService";
+import { vehicleService } from "../services/vehicleService";
+import { TWILIO } from "../helper/constants";
+import twilio from "twilio";
+import logger from "../utils/logger";
+import jwtToken from "../validation/jwtToken";
+const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, phoneNumber, vehicleDetails, role } = req.body;
@@ -17,24 +22,35 @@ export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             throw new Error("User Already exist with same phoneNumber");
         }
         if (role !== "driver" && role == "") {
-            return res.status(400).json({
-                success: false,
-                message: "check your role",
+            const response = yield driverService.registerUser({
+                name,
+                email: email.toLowerCase(),
+                phoneNumber,
+                vehicleDetails,
+                role,
+            });
+            if (!response) {
+                return res.json({
+                    success: false,
+                    message: "Invalid Data",
+                });
+            }
+            const otpResponse = yield sendOtp(phoneNumber);
+            if (!otpResponse.success) {
+                throw new Error("Failed to send OTP");
+            }
+            yield response.save();
+            return res.json({
+                success: true,
+                message: "OTP sent Please verify within 10 minutes",
             });
         }
-        const response = yield driverService.registerUser({
-            name,
-            email: email.toLowerCase(),
-            phoneNumber,
-            vehicleDetails,
-            role,
-        });
-        yield response.save();
-        return res.status(200).json({
-            success: true,
-            data: response,
-            message: "User created successfully",
-        });
+        else {
+            return res.json({
+                sucess: false,
+                message: "Role Should not be selected as Admin",
+            });
+        }
     }
     catch (error) {
         return res.status(500).json({
@@ -43,27 +59,129 @@ export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-export const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const sendOtp = (phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { phoneNumber } = req.body;
-        if (!phoneNumber) {
-            return res.status(500).json({
-                success: false,
-                message: "Please enter proper info! ",
+        const fourDigit = phoneNumber.substring(5, 9);
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verifications.create({
+            to: `+91${phoneNumber}`,
+            channel: "sms",
+        });
+        return {
+            success: true,
+            data: response,
+            message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+        };
+    }
+    catch (error) {
+        return {
+            success: false,
+            message: "Error occurred while sending OTP",
+        };
+    }
+});
+export const verifyOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber, otp } = req.body;
+    if (!phoneNumber && !otp) {
+        return res.json({
+            success: false,
+            message: "Please Enter phone and otp",
+        });
+    }
+    try {
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verificationChecks.create({
+            to: `+91${phoneNumber}`,
+            code: otp,
+        });
+        if (response.status === "approved") {
+            const existUserTemp = yield driverService.findPhoneNumber({
+                phoneNumber,
+            });
+            if (existUserTemp) {
+                const newUser = yield driverService.registerUser({
+                    name: existUserTemp.name,
+                    email: existUserTemp.email,
+                    phoneNumber: existUserTemp.phoneNumber,
+                    role: existUserTemp.role,
+                });
+                yield (newUser === null || newUser === void 0 ? void 0 : newUser.save());
+                yield driverService.removeTempUser(existUserTemp.id);
+            }
+        }
+        return res.json({
+            success: true,
+            message: "Successfully Verified and Registered ",
+        });
+    }
+    catch (error) {
+        return res.json({
+            sucess: false,
+            message: "Error occured while verifying otp" + error,
+        });
+    }
+});
+export const sendLoginOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber } = req.body;
+    const fourDigit = phoneNumber.substring(5, 10);
+    let registeredUser = yield driverService.findDriver({ phoneNumber });
+    if (!registeredUser) {
+        return res.json({
+            sucess: false,
+            message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
+        });
+    }
+    else {
+        try {
+            const response = yield client.verify.v2
+                .services(TWILIO.SERVICE_SID)
+                .verifications.create({
+                to: `+91${phoneNumber}`,
+                channel: "sms",
+            });
+            return res.status(200).json({
+                sucess: true,
+                message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
             });
         }
-        const registeredUser = yield driverService.findDriver({ phoneNumber });
-        if (!registeredUser) {
+        catch (error) {
+            logger.error(error);
             return res.json({
-                success: false,
-                message: "Please Register First",
+                sucess: false,
+                data: "Error occured at sending OTP",
             });
         }
-        else {
-            return res.json({
-                success: true,
-                message: "User is successfully logged in",
-            });
+    }
+});
+export const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phoneNumber, otp } = req.body;
+    try {
+        const response = yield client.verify.v2
+            .services(TWILIO.SERVICE_SID)
+            .verificationChecks.create({
+            to: `+91${phoneNumber}`,
+            code: otp,
+        });
+        if (response.status === "approved") {
+            const registeredUser = yield driverService.findDriver({ phoneNumber });
+            if (!registeredUser) {
+                return res.json({
+                    success: false,
+                    message: "Oops!! Sign-Up first",
+                });
+            }
+            else {
+                const token = jwtToken(registeredUser);
+                registeredUser.token = token;
+                return res
+                    .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly: true })
+                    .json({
+                    success: true,
+                    message: "User Logged in successfully",
+                });
+            }
         }
     }
     catch (error) {
@@ -77,7 +195,12 @@ export const updateDriver = (req, res) => __awaiter(void 0, void 0, void 0, func
     try {
         const { id } = req.params;
         const { name, phoneNumber, availability, vehicleDetails } = req.body;
-        const response = yield driverService.updateDriver(id, { name, phoneNumber, availability, vehicleDetails });
+        const response = yield driverService.updateDriver(id, {
+            name,
+            phoneNumber,
+            availability,
+            vehicleDetails,
+        });
         return res.status(200).json({
             success: true,
             data: response,
@@ -126,17 +249,23 @@ export const availableDrivers = (req, res, next) => __awaiter(void 0, void 0, vo
 });
 export const addVehicle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { manufacturer, model, year, licensePlate, color, vehicleClass, driverId } = req.body;
+        const { manufacturer, model, year, licensePlate, color, vehicleClass, driverId, } = req.body;
         const vehicleExist = yield vehicleService.findVehicle({ licensePlate });
         if (vehicleExist) {
             throw new Error("vehicle Already exist with same licensePlate");
         }
         const response = yield vehicleService.addVehicle({
-            manufacturer, model, year, licensePlate, color, vehicleClass, driverId,
+            manufacturer,
+            model,
+            year,
+            licensePlate,
+            color,
+            vehicleClass,
+            driverId,
             fare: 0,
             save: function () {
-                throw new Error('Function not implemented.');
-            }
+                throw new Error("Function not implemented.");
+            },
         });
         yield response.save();
         return res.status(200).json({
@@ -156,7 +285,14 @@ export const updateVehicle = (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         const { id } = req.params;
         const { manufacturer, model, year, licensePlate, color, vehicleClass } = req.body;
-        const response = yield vehicleService.updateVehicleDetails(id, { manufacturer, model, year, licensePlate, color, vehicleClass });
+        const response = yield vehicleService.updateVehicleDetails(id, {
+            manufacturer,
+            model,
+            year,
+            licensePlate,
+            color,
+            vehicleClass,
+        });
         return res.status(200).json({
             success: true,
             data: response,
@@ -167,6 +303,38 @@ export const updateVehicle = (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.status(500).json({
             success: false,
             message: "Cannot find ID to update vehicle data : " + error,
+        });
+    }
+});
+export const getDriver = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield driverService.viewDriver();
+        return res.status(200).json({
+            sucess: true,
+            data: response
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.json({
+            sucess: false,
+            message: "Error in GetDriver",
+        });
+    }
+});
+export const getDriverByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield driverService.viewDriverById(req.params.id);
+        return res.status(200).json({
+            sucess: true,
+            data: response,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.json({
+            sucess: false,
+            message: "Error in GetDriver ID",
         });
     }
 });

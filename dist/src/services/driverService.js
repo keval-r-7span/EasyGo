@@ -8,6 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import driverSchema from '../models/driverModel';
+import tempAuthSchema from "../models/tempAuthModal";
+import logger from "../utils/logger";
 export const findDriver = (query) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         return yield driverSchema.findOne(query);
@@ -48,4 +50,36 @@ export const availableDrivers = () => __awaiter(void 0, void 0, void 0, function
         throw error;
     }
 });
-export const driverService = { findDriver, registerUser, updateDriver, deleteDriver, availableDrivers };
+export const findPhoneNumber = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield tempAuthSchema.findOne(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+export const removeTempUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield tempAuthSchema.findByIdAndDelete(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+export const viewDriver = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield driverSchema.find();
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+export const viewDriverById = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        return yield driverSchema.findById(query);
+    }
+    catch (error) {
+        logger.error(error);
+    }
+});
+export const driverService = { findDriver, registerUser, updateDriver, deleteDriver, availableDrivers, findPhoneNumber, removeTempUser, viewDriver, viewDriverById };
