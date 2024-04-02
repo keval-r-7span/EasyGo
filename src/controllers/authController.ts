@@ -141,7 +141,6 @@ const sendLoginOtp = async (req: Request, res: Response) => {
         message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
       });
     } catch (error) {
-      logger.error(error);
       return res.json({
         success: false,
         message: error,
@@ -184,7 +183,6 @@ const login = async (req: Request, res: Response) => {
       }
     }
   } catch (error) {
-    logger.error(error);
     return res.json({
       success: false,
       message: error,
