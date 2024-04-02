@@ -115,7 +115,7 @@ const verifyOtp = async (req: Request, res: Response) => {
 
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const fourDigit = phoneNumber.substring(5, 10);
+  const fourDigit = phoneNumber?.substring(5, 10);
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
     return res.json({
