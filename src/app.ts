@@ -13,7 +13,7 @@ app.use(cors())
 app.use("/api/v1", indexRoute);
 
 app.get("/",(req:Request,res:Response)=>{
-  res.status(200).send("Welcome to RideWithMe-API 🚕")
+  res.status(200).send(" 🚀Welcome to RideWithMe-API 🚕..")
 })
 
 app.use((req:Request,res:Response)=>{
