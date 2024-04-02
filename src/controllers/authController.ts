@@ -117,7 +117,7 @@ const verifyOtp = async (req: Request, res: Response) => {
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
   if(!phoneNumber){
-    res.status(200).json({success:false,message:"Enter PhoneNumber"})
+   return res.status(200).json({success:false,message:"Enter PhoneNumber"})
   }
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
