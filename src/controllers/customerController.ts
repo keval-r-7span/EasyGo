@@ -12,12 +12,12 @@ const getCustomer = async (req: Request, res: Response) => {
     }
     else{
       return res.status(200).json({ 
-        sucess: true, 
+        success: true, 
         data: response });
     }
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Error in GetCustomer "+error,
     });
   }
@@ -34,13 +34,13 @@ const getCustomerByID = async (req: Request, res: Response) => {
     }
     else{
       return res.status(200).json({
-        sucess: true,
+        success: true,
         data: response,
       });
     }
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "Error in GetCustomer ID "+error,
     });
   }
@@ -62,13 +62,13 @@ const updateCustomer = async (req: Request, res: Response) => {
     }
     else{
       return res.status(200).json({
-        sucess: true,
+        success: true,
         data: response,
       });
     }
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "ERROR in Update Customer "+error,
     });
   }
@@ -84,12 +84,12 @@ const deleteCustomer = async (req: Request, res: Response) => {
       })
     }
     return res.status(200).json({
-      sucess: true,
+      success: true,
       data: response,
     });
   } catch (error) {
     return res.status(500).json({
-      sucess: false,
+      success: false,
       message: "ERROR in DeleteCustomer "+error,
     });
   }
