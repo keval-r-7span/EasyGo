@@ -5,7 +5,6 @@ export interface driver {
   email: string; 
   phoneNumber: string; 
   availability: 'available' | 'unavailable';
-  password: string;
   role: 'admin' | 'driver' | 'user'; 
   token?: string; 
 }
@@ -26,9 +25,6 @@ const driverSchema = new mongoose.Schema<driver>({
     type: String,
     enum: ['available', 'unavailable'],
     default: 'unavailable'
-  },
-  password: {
-    type: String
   },
   role:{
     type: String,

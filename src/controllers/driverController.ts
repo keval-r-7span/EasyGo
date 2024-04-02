@@ -5,7 +5,7 @@ import { Request, Response , NextFunction} from "express";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, vehicleDetails, password, role } =
+    const { name, email, phoneNumber, vehicleDetails, role } =
       req.body;
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
@@ -17,13 +17,11 @@ export const signUp = async (req: Request, res: Response) => {
         message: "check your role",
       });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
     const response = await driverService.registerUser({
       name,
       email: email.toLowerCase(),
       phoneNumber,
       vehicleDetails,
-      password: hashedPassword,
       role,
     });
     await response.save();
