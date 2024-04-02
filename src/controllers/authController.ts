@@ -9,6 +9,9 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, role } = req.body;
+    if(!name || !email || !phoneNumber || !role){
+      res.status(200).json({success:false,message:"Enter valid details."})
+    }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
       throw new Error("User Already exist with phoneNumber");
@@ -37,22 +40,21 @@ const signUp = async (req: Request, res: Response) => {
       });
     } else {
       return res.json({
-        sucess: false,
+        success: false,
         message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
     return res.json({
-      sucess: false,
-      message: "Error occured at Sign-Up" + error,
+      success: false,
+      message: error,
     });
   }
 };
 
 const sendOtp = async (phoneNumber: string) => {
   try {
-    const fourDigit = phoneNumber.substring(5, 9);
-    const response = await client.verify.v2
+     await client.verify.v2
       .services(TWILIO.SERVICE_SID)
       .verifications.create({
         to: `+91${phoneNumber}`,
@@ -60,13 +62,12 @@ const sendOtp = async (phoneNumber: string) => {
       });
     return {
       success: true,
-      data: response,
-      message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+      message: `OTP successfully sent to mobile Number ending with`,
     };
   } catch (error) {
     return {
       success: false,
-      message: "Error occurred while sending OTP",
+      message: error,
     };
   }
 };
@@ -107,38 +108,41 @@ const verifyOtp = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.json({
-      sucess: false,
-      message: "Error occured while verifying otp" + error,
+      success: false,
+      message: error
     });
   }
 };
 
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const fourDigit = phoneNumber.substring(5, 10);
+  if(!phoneNumber){
+   return res.status(200).json({success:false,message:"Enter PhoneNumber"})
+  }
+  let lastDigit = phoneNumber.substring(5,10)
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
     return res.json({
-      sucess: false,
+      success: false,
       message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
     });
   } else {
     try {
-      const response = await client.verify.v2
+      await client.verify.v2
         .services(TWILIO.SERVICE_SID)
         .verifications.create({
           to: `+91${phoneNumber}`,
           channel: "sms",
         });
       return res.status(200).json({
-        sucess: true,
-        message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+        success: true,
+        message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
       });
     } catch (error) {
       logger.error(error);
       return res.json({
-        sucess: false,
-        data: "Error occured at sending OTP",
+        success: false,
+        message: error,
       });
     }
   }
@@ -174,8 +178,8 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error(error);
     return res.json({
-      sucess: false,
-      message: "Error occured while verifying otp",
+      success: false,
+      message: error,
     });
   }
 };

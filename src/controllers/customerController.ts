@@ -5,13 +5,12 @@ const getCustomer = async (req: Request, res: Response) => {
   try {
     const response = await customerService.viewCustomer();
     return res.status(200).json({ 
-      sucess: true, 
+      success: true, 
       data: response });
   } catch (error) {
-    console.log(error);
     return res.json({
-      sucess: false,
-      message: "Error in GetCustomer",
+      success: false,
+      message: error,
     });
   }
 };
@@ -20,14 +19,13 @@ const getCustomerByID = async (req: Request, res: Response) => {
   try {
     const response = await customerService.viewCustomerById(req.params.id);
     return res.status(200).json({
-      sucess: true,
+      success: true,
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.json({
-      sucess: false,
-      message: "Error in GetCustomer ID",
+      success: false,
+      message: error,
     });
   }
 };
@@ -41,14 +39,13 @@ const updateCustomer = async (req: Request, res: Response) => {
       role,
     });
     return res.status(200).json({
-      sucess: true,
+      success: true,
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.json({
-      sucess: false,
-      message: "ERROR in Update Customer",
+      success: false,
+      message: error,
     });
   }
 };
@@ -63,14 +60,13 @@ const deleteCustomer = async (req: Request, res: Response) => {
       })
     }
     return res.status(200).json({
-      sucess: true,
+      success: true,
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
-      sucess: false,
-      message: "ERROR in DeleteCustomer",
+      success: false,
+      message: error,
     });
   }
 };
