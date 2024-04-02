@@ -2,16 +2,24 @@ import { Request, Response, response } from "express";
 import { customerService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
-import logger from "../utils/logger";
 import jwtToken from "../validation/jwtToken";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, role } = req.body;
+    if(!name || !email || !phoneNumber){
+      return res.json({
+        success: false,
+        message: "Please Enter Valid Details"
+      })
+    }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
-      throw new Error("User Already exist with phoneNumber");
+      return res.json({
+        success: false,
+        message: "User Already exist with same Phone Number"
+      })
     }
     if (role !== "admin") {
       const response = await customerService.registeruserTemp({
@@ -21,37 +29,40 @@ const signUp = async (req: Request, res: Response) => {
         role,
       });
       if (!response) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: "Invalid Data",
         });
       }
       const otpResponse = await sendOtp(phoneNumber);
       if (!otpResponse.success) {
-        throw new Error("Failed to send OTP");
+        return res.json({
+          success: false,
+          message: "Failed OTP response"
+        })
       }
-      await response.save();
-      return res.json({
+      await response?.save();
+      return res.status(200).json({
         success: true,
         message: "OTP sent Please verify within 10 minutes",
       });
     } else {
-      return res.json({
-        sucess: false,
+      return res.status(400).json({
+        success: false,
         message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
-    return res.json({
-      sucess: false,
-      message: "Error occured at Sign-Up" + error,
+    return res.status(500).json({
+      success: false,
+      message: "Error occured at Sign-Up "+error,
     });
   }
 };
 
 const sendOtp = async (phoneNumber: string) => {
   try {
-    const fourDigit = phoneNumber.substring(5, 9);
+    const fourDigit = phoneNumber.substring(6, 10);
     const response = await client.verify.v2
       .services(TWILIO.SERVICE_SID)
       .verifications.create({
@@ -66,7 +77,7 @@ const sendOtp = async (phoneNumber: string) => {
   } catch (error) {
     return {
       success: false,
-      message: "Error occurred while sending OTP",
+      message: "Error occurred while sending OTP "+error,
     };
   }
 };
@@ -74,9 +85,9 @@ const sendOtp = async (phoneNumber: string) => {
 const verifyOtp = async (req: Request, res: Response) => {
   const { phoneNumber, otp } = req.body;
   if (!phoneNumber && !otp) {
-    return res.json({
+    return res.status(400).json({
       success: false,
-      message: "Please Enter phone and otp",
+      message: "Please Enter Phone number and otp",
     });
   }
   try {
@@ -101,25 +112,31 @@ const verifyOtp = async (req: Request, res: Response) => {
         await customerService.removeTempUser(existUserTemp.id);
       }
     }
-    return res.json({
+    return res.status(201).json({
       success: true,
       message: "Successfully Verified and Registered ",
     });
   } catch (error) {
     return res.json({
-      sucess: false,
-      message: "Error occured while verifying otp" + error,
+      success: false,
+      message: "Error occured while verifying otp "+error,
     });
   }
 };
 
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const fourDigit = phoneNumber?.substring(5, 10);
+  if(!phoneNumber){
+    return res.json({
+      success: false,
+      message: "Please Enter valid phone number"
+    })
+  }
+  const fourDigit = phoneNumber?.substring(6, 10);
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
-    return res.json({
-      sucess: false,
+    return res.status(404).json({
+      success: false,
       message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
     });
   } else {
@@ -130,15 +147,22 @@ const sendLoginOtp = async (req: Request, res: Response) => {
           to: `+91${phoneNumber}`,
           channel: "sms",
         });
-      return res.status(200).json({
-        sucess: true,
-        message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
-      });
+        if(!response){
+          return res.status(404).json({
+            success: false,
+            message: "Response was not sent"
+          })
+        }
+      else{
+        return res.status(200).json({
+          success: true,
+          message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+        });
+      }
     } catch (error) {
-      logger.error(error);
-      return res.json({
-        sucess: false,
-        data: "Error occured at sending OTP",
+      return res.status(500).json({
+        success: false,
+        message: "Error occured at sending OTP "+error,
       });
     }
   }
@@ -146,6 +170,12 @@ const sendLoginOtp = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { phoneNumber, otp } = req.body;
+  if(!phoneNumber || !otp){
+    return res.json({
+      success: false,
+      message: "Please Enter valid phone number and otp"
+    })
+  }
   try {
     const response = await client.verify.v2
       .services(TWILIO.SERVICE_SID)
@@ -156,7 +186,7 @@ const login = async (req: Request, res: Response) => {
     if (response.status === "approved") {
       const existUser = await customerService.findCustomer({ phoneNumber });
       if (!existUser) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: "Oops!! Sign-Up first",
         });
@@ -165,17 +195,16 @@ const login = async (req: Request, res: Response) => {
         existUser.token = token;
         return res
           .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly:true })
-          .json({
+          .status(200).json({
             success: true,
             message: "User Logged in successfully",
           });
       }
     }
   } catch (error) {
-    logger.error(error);
-    return res.json({
-      sucess: false,
-      message: "Error occured while verifying otp",
+    return res.status(500).json({
+      success: false,
+      message: "Error occured while verifying otp "+error,
     });
   }
 };
