@@ -13,17 +13,13 @@ declare module "express" {
   }
 }
 
-const verifyToken = (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => {
+const verifyToken = (req: AuthenticatedRequest, res: Response,next: NextFunction) => {
   try {
     const authHeader =
       req.headers["authorization"] || req.headers["Authorization"];
     const token = (authHeader as string)?.split(" ")[1];
     if (!token) {
-      return res.json({
+      return res.status(404).json({
         success: false,
         messaage: "No Token Found",
       });
@@ -31,7 +27,7 @@ const verifyToken = (
     try {
       const decode = jwt.verify(token, JWT.SECRET) as JwtPayload;
       if (!decode.role) {
-        return res.json({
+        return res.status(404).json({
           success: false,
           message: "Unable to Decode Token",
         });
@@ -39,29 +35,23 @@ const verifyToken = (
       req.user = decode;
       next();
     } catch (error) {
-      logger.error(error);
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: "Error occured at verifying Token",
       });
     }
   } catch (error) {
-    logger.error(error);
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Error occured at verifying Token",
     });
   }
 };
 
-const isDriver = (
-  req: AuthenticatedRequest & { user: { role: string } },
-  res: Response,
-  next: NextFunction
-) => {
+const isDriver = (req: AuthenticatedRequest & { user: { role: string } },res: Response,next: NextFunction) => {
   try {
     if (req.user.role !== "driver") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Protected routes for driver only",
       });
@@ -69,21 +59,17 @@ const isDriver = (
     next();
   } catch (error) {
     logger.error(error);
-    return res.json({
+    return res.status(500).json({
       success: false,
       data: "Error occured at isDriver",
     });
   }
 };
 
-const isAdmin = (
-  req: AuthenticatedRequest & { user: { role: string } },
-  res: Response,
-  next: NextFunction
-) => {
+const isAdmin = (req: AuthenticatedRequest & { user: { role: string } }, res: Response,next: NextFunction) => {
   try {
     if (req.user.role !== "admin") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Protected routes for admin only",
       });
@@ -91,29 +77,24 @@ const isAdmin = (
     next();
   } catch (error) {
     logger.error(error);
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: "Error occured at isAdmin",
     });
   }
 };
 
-const isUser = (
-  req: AuthenticatedRequest & { user: { role: string } },
-  res: Response,
-  next: NextFunction
-) => {
+const isUser = (req: AuthenticatedRequest & { user: { role: string } }, res: Response, next: NextFunction) => {
   try {
     if (req.user.role !== "user") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Protected routes for user only",
       });
     }
     next();
   } catch (error) {
-    logger.error(error);
-    return res.json({
+    return res.status(500).json({
       success: false,
       data: "Error occured at isUser",
     });
