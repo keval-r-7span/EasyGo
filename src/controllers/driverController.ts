@@ -40,8 +40,8 @@ export const signUp = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { phoneNumber, password } = req.body;
-    if (!phoneNumber || !password) {
+    const { phoneNumber } = req.body;
+    if (!phoneNumber) {
       return res.status(500).json({
         success: false,
         message: "Please enter proper info! ",
