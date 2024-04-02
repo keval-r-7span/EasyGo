@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface Customer{
     name: string;
@@ -8,6 +8,7 @@ export interface Customer{
     role: string;
     token: string;
     resetPasswordExpires: Date
+    location: Geolocation
 }
 
 const CustomerSchema = new mongoose.Schema<Customer>(
