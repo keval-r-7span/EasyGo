@@ -4,14 +4,21 @@ import { customerService } from "../services/userService";
 const getCustomer = async (req: Request, res: Response) => {
   try {
     const response = await customerService.viewCustomer();
-    return res.status(200).json({ 
-      sucess: true, 
-      data: response });
+    if(!response){
+      return res.status(404).json({
+        success:false,
+        message: "Unable to get list of Customers"
+      })
+    }
+    else{
+      return res.status(200).json({ 
+        sucess: true, 
+        data: response });
+    }
   } catch (error) {
-    console.log(error);
-    return res.json({
+    return res.status(500).json({
       sucess: false,
-      message: "Error in GetCustomer",
+      message: "Error in GetCustomer "+error,
     });
   }
 };
@@ -19,15 +26,22 @@ const getCustomer = async (req: Request, res: Response) => {
 const getCustomerByID = async (req: Request, res: Response) => {
   try {
     const response = await customerService.viewCustomerById(req.params.id);
-    return res.status(200).json({
-      sucess: true,
-      data: response,
-    });
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+    else{
+      return res.status(200).json({
+        sucess: true,
+        data: response,
+      });
+    }
   } catch (error) {
-    console.log(error);
-    return res.json({
+    return res.status(500).json({
       sucess: false,
-      message: "Error in GetCustomer ID",
+      message: "Error in GetCustomer ID "+error,
     });
   }
 };
@@ -40,15 +54,22 @@ const updateCustomer = async (req: Request, res: Response) => {
       email,
       role,
     });
-    return res.status(200).json({
-      sucess: true,
-      data: response,
-    });
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+    else{
+      return res.status(200).json({
+        sucess: true,
+        data: response,
+      });
+    }
   } catch (error) {
-    console.log(error);
-    return res.json({
+    return res.status(500).json({
       sucess: false,
-      message: "ERROR in Update Customer",
+      message: "ERROR in Update Customer "+error,
     });
   }
 };
@@ -67,10 +88,9 @@ const deleteCustomer = async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       sucess: false,
-      message: "ERROR in DeleteCustomer",
+      message: "ERROR in DeleteCustomer "+error,
     });
   }
 };

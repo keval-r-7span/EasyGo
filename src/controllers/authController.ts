@@ -2,7 +2,6 @@ import { Request, Response, response } from "express";
 import { customerService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
-import logger from "../utils/logger";
 import jwtToken from "../validation/jwtToken";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
@@ -21,7 +20,7 @@ const signUp = async (req: Request, res: Response) => {
         role,
       });
       if (!response) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: "Invalid Data",
         });
@@ -31,20 +30,20 @@ const signUp = async (req: Request, res: Response) => {
         throw new Error("Failed to send OTP");
       }
       await response.save();
-      return res.json({
+      return res.status(200).json({
         success: true,
         message: "OTP sent Please verify within 10 minutes",
       });
     } else {
-      return res.json({
+      return res.status(400).json({
         sucess: false,
         message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       sucess: false,
-      message: "Error occured at Sign-Up" + error,
+      message: "Error occured at Sign-Up "+error,
     });
   }
 };
@@ -74,7 +73,7 @@ const sendOtp = async (phoneNumber: string) => {
 const verifyOtp = async (req: Request, res: Response) => {
   const { phoneNumber, otp } = req.body;
   if (!phoneNumber && !otp) {
-    return res.json({
+    return res.status(400).json({
       success: false,
       message: "Please Enter phone and otp",
     });
@@ -101,7 +100,7 @@ const verifyOtp = async (req: Request, res: Response) => {
         await customerService.removeTempUser(existUserTemp.id);
       }
     }
-    return res.json({
+    return res.status(201).json({
       success: true,
       message: "Successfully Verified and Registered ",
     });
@@ -115,10 +114,10 @@ const verifyOtp = async (req: Request, res: Response) => {
 
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const fourDigit = phoneNumber.substring(5, 10);
+  const fourDigit = phoneNumber.substring(6, 10);
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
-    return res.json({
+    return res.status(404).json({
       sucess: false,
       message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
     });
@@ -135,8 +134,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
         message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
       });
     } catch (error) {
-      logger.error(error);
-      return res.json({
+      return res.status(500).json({
         sucess: false,
         data: "Error occured at sending OTP",
       });
@@ -156,7 +154,7 @@ const login = async (req: Request, res: Response) => {
     if (response.status === "approved") {
       const existUser = await customerService.findCustomer({ phoneNumber });
       if (!existUser) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: "Oops!! Sign-Up first",
         });
@@ -165,17 +163,16 @@ const login = async (req: Request, res: Response) => {
         existUser.token = token;
         return res
           .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly:true })
-          .json({
+          .status(200).json({
             success: true,
             message: "User Logged in successfully",
           });
       }
     }
   } catch (error) {
-    logger.error(error);
-    return res.json({
+    return res.status(500).json({
       sucess: false,
-      message: "Error occured while verifying otp",
+      message: "Error occured while verifying otp "+error,
     });
   }
 };
