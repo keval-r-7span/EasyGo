@@ -8,6 +8,7 @@ const viewCustomer = async () => {
     return await CustomerSchema.find();
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -16,6 +17,7 @@ const viewCustomerById = async (query: string) => {
     return await CustomerSchema.findById(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -24,6 +26,7 @@ const deleteCustomer = async (query: string) => {
     return await CustomerSchema.findByIdAndDelete(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -35,6 +38,7 @@ const updateCustomer = async (
     return await CustomerSchema.findByIdAndUpdate(id, query, {new: true});
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -43,6 +47,7 @@ const findCustomer = async (query: RootQuerySelector<Customer>) => {
     return await CustomerSchema.findOne(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -51,6 +56,7 @@ const registerUser = async (query: RootQuerySelector<Customer>) => {
     return await CustomerSchema.create(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -59,6 +65,7 @@ const registeruserTemp = async (query: RootQuerySelector<Customer>) => {
     return await tempAuthSchema.create(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -67,6 +74,7 @@ const findPhoneNumber = async (query: RootQuerySelector<Customer>) => {
     return await tempAuthSchema.findOne(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 
@@ -75,6 +83,7 @@ const removeTempUser = async (query: string) => {
     return await tempAuthSchema.findByIdAndDelete(query);
   } catch (error) {
     logger.error(error);
+    throw error
   }
 };
 

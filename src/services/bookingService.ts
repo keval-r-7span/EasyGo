@@ -9,6 +9,7 @@ const viewBookingAll = async ()=> {
     //   .populate("driver")
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -18,6 +19,7 @@ const viewBooking = async (query:string) => {
       .sort({ createdAt: -1 })
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -27,6 +29,7 @@ const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
       .sort({ createdAt: -1 })
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -35,6 +38,7 @@ const createBooking = async (query:string) => {
     return await BookingSchema.create(query);
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -43,6 +47,7 @@ const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:Query
     return await BookingSchema.findByIdAndUpdate(id, query, option);
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -51,6 +56,7 @@ const deleteBooking = async (query:string)=> {
     return await BookingSchema.findByIdAndDelete(query);
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -74,6 +80,7 @@ const getRevenue = async () => {
     return monthlyRevenue;
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
@@ -95,6 +102,7 @@ const aggregateBookings = async () => {
     return result;
   } catch (error) {
     logger.error(error)
+    throw error
   }
 };
 
