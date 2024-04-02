@@ -47,14 +47,14 @@ const signUp = async (req: Request, res: Response) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: "Error occured at Sign-Up" + error,
+      message: error,
     });
   }
 };
 
 const sendOtp = async (phoneNumber: string) => {
   try {
-    const response = await client.verify.v2
+     await client.verify.v2
       .services(TWILIO.SERVICE_SID)
       .verifications.create({
         to: `+91${phoneNumber}`,
@@ -67,7 +67,7 @@ const sendOtp = async (phoneNumber: string) => {
   } catch (error) {
     return {
       success: false,
-      message: "Error occurred while sending OTP",
+      message: error,
     };
   }
 };
@@ -109,7 +109,7 @@ const verifyOtp = async (req: Request, res: Response) => {
   } catch (error) {
     return res.json({
       success: false,
-      message: "Error occured while verifying otp" + error,
+      message: error
     });
   }
 };
@@ -119,6 +119,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
   if(!phoneNumber){
    return res.status(200).json({success:false,message:"Enter PhoneNumber"})
   }
+  let lastDigit = phoneNumber.substring(5,10)
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
     return res.json({
@@ -135,13 +136,13 @@ const sendLoginOtp = async (req: Request, res: Response) => {
         });
       return res.status(200).json({
         success: true,
-        message: `OTP successfully sent to mobile Number`,
+        message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
       });
     } catch (error) {
       logger.error(error);
       return res.json({
         success: false,
-        message: "Error occured at sending OTP",
+        message: error,
       });
     }
   }
@@ -178,7 +179,7 @@ const login = async (req: Request, res: Response) => {
     logger.error(error);
     return res.json({
       success: false,
-      message: "Error occured while verifying otp",
+      message: error,
     });
   }
 };
