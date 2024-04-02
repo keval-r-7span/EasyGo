@@ -4,7 +4,6 @@ const driverJoiSchema = Joi.object({
     email: Joi.string().email().required(),
     phoneNumber: Joi.string().min(10).max(10).required(),
     availability: Joi.string().valid("available", "unavailable"),
-    password: Joi.string().min(3).required(),
     role: Joi.string().default("driver"),
 });
 const validateRequest = (req, res, next) => {

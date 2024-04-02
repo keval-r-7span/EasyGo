@@ -16,9 +16,6 @@ const driverSchema = new mongoose.Schema({
         enum: ['available', 'unavailable'],
         default: 'unavailable'
     },
-    password: {
-        type: String
-    },
     role: {
         type: String,
         enum: ["admin", "driver", "user"],

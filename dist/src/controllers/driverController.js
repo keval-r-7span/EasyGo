@@ -9,10 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { driverService } from '../services/driverService';
 import { vehicleService } from '../services/vehicleService';
-import bcrypt from 'bcryptjs';
 export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, phoneNumber, vehicleDetails, password, role } = req.body;
+        const { name, email, phoneNumber, vehicleDetails, role } = req.body;
         const userExist = yield driverService.findDriver({ phoneNumber });
         if (userExist) {
             throw new Error("User Already exist with same phoneNumber");
@@ -23,13 +22,11 @@ export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 message: "check your role",
             });
         }
-        const hashedPassword = yield bcrypt.hash(password, 10);
         const response = yield driverService.registerUser({
             name,
             email: email.toLowerCase(),
             phoneNumber,
             vehicleDetails,
-            password: hashedPassword,
             role,
         });
         yield response.save();
@@ -48,8 +45,8 @@ export const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 export const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { phoneNumber, password } = req.body;
-        if (!phoneNumber || !password) {
+        const { phoneNumber } = req.body;
+        if (!phoneNumber) {
             return res.status(500).json({
                 success: false,
                 message: "Please enter proper info! ",

@@ -19,7 +19,7 @@ router.post('/login', login);
 router.put('/:id', validateUpdateRequest, updateDriver);
 router.delete('/:id', deleteDriver);
 router.post('/vehicle', validateAddVehicle, addVehicle);
-router.put('/:id', validateUpdateVehicle, updateVehicle);
+router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
 router.get('/', availableDrivers);
 
 export default router;
