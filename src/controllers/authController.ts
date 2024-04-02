@@ -14,7 +14,7 @@ const signUp = async (req: Request, res: Response) => {
     }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
-      throw new Error("User Already exist with phoneNumber");
+      return res.status(200).json({success:false,message:"User Already exist."})
     }
     if (role !== "admin") {
       const response = await customerService.registeruserTemp({
