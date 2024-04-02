@@ -9,6 +9,9 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, role } = req.body;
+    if(!name || !email || !phoneNumber || !role){
+      res.status(200).json({success:false,message:"Enter valid details."})
+    }
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
       throw new Error("User Already exist with phoneNumber");
@@ -51,7 +54,6 @@ const signUp = async (req: Request, res: Response) => {
 
 const sendOtp = async (phoneNumber: string) => {
   try {
-    const fourDigit = phoneNumber.substring(5, 9);
     const response = await client.verify.v2
       .services(TWILIO.SERVICE_SID)
       .verifications.create({
@@ -60,8 +62,7 @@ const sendOtp = async (phoneNumber: string) => {
       });
     return {
       success: true,
-      data: response,
-      message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+      message: `OTP successfully sent to mobile Number ending with`,
     };
   } catch (error) {
     return {
@@ -115,7 +116,9 @@ const verifyOtp = async (req: Request, res: Response) => {
 
 const sendLoginOtp = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const fourDigit = phoneNumber?.substring(5, 10);
+  if(!phoneNumber){
+    res.status(200).json({success:false,message:"Enter PhoneNumber"})
+  }
   let registeredUser = await customerService.findCustomer({ phoneNumber });
   if (!registeredUser) {
     return res.json({
@@ -124,7 +127,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
     });
   } else {
     try {
-      const response = await client.verify.v2
+      await client.verify.v2
         .services(TWILIO.SERVICE_SID)
         .verifications.create({
           to: `+91${phoneNumber}`,
@@ -132,7 +135,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
         });
       return res.status(200).json({
         success: true,
-        message: `OTP successfully sent to mobile Number ending with ${fourDigit}`,
+        message: `OTP successfully sent to mobile Number`,
       });
     } catch (error) {
       logger.error(error);
