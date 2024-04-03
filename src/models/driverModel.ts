@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose,{Document} from 'mongoose';
 
-export interface driver {
+export interface driver extends Document {
   name: string;
   email: string; 
   phoneNumber: string; 
