@@ -14,7 +14,7 @@ export const signUp = async (req: Request, res: Response) => {
     if (userExist) {
       throw new Error("User Already exist with same phoneNumber");
     }
-    if (role !== "driver") {
+    if (role !== "driver" && role == "") {
       const response = await driverService.registerUser({
         name,
       email: email.toLowerCase(),
@@ -39,8 +39,8 @@ export const signUp = async (req: Request, res: Response) => {
       });
     } else {
       return res.json({
-        success: false,
-        message: "Role Should not be selected as driver",
+        sucess: false,
+        message: "Role Should not be selected as Admin",
       });
     }
   }catch (error) {
@@ -109,7 +109,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.json({
-      success: false,
+      sucess: false,
       message: "Error occured while verifying otp" + error,
     });
   }
@@ -172,6 +172,11 @@ export const login = async (req: Request, res: Response) => {
             message: "User Logged in successfully",
           });
       }
+
+
+
+
+
     }
   } catch (error) {
     res.status(500).json({
