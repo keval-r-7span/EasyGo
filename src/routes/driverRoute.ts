@@ -18,7 +18,7 @@ import {
 import { validateRequest, validateAddVehicle } from '../validation/driverValidation';
 import { validateUpdateRequest, validateUpdateVehicle } from '../validation/updateValidation';
 
-router.post('/', validateRequest, signUp);
+router.post('/signup', validateRequest, signUp);
 router.post('/verify-otp', verifyOtp);
 router.post('/send-login-otp', sendLoginOtp);
 router.post('/login', login);
