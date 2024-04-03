@@ -2,7 +2,7 @@ import { Router } from 'express';
 const router = Router()
 
 import {
- viewBooking,createBooking,updateBooking,cancelBooking,bookingStatus,viewBookingById,getRevenue,totalBooking,changeRideStatus,paymentStatus
+ viewBooking,createBooking,updateBooking,cancelBooking,bookingStatus,viewBookingById,getRevenue,totalBooking,changeRideStatus
 } from '../controllers/bookingController';
 import validateRequest from '../validation/bookingValidation';
 
@@ -14,7 +14,7 @@ router.get("/monthly/total",totalBooking)
 router.post("/create",validateRequest,createBooking);
 router.post("/:id/completed", changeRideStatus);
 router.put("/update/:id", updateBooking);
-router.post("/payment/status/:id", paymentStatus);
+// router.post("/payment/status/:id", paymentStatus);
 router.delete("/cancel/:id", cancelBooking);
 
 export default router

@@ -12,9 +12,12 @@ const bookingJoiSchema= Joi.object({
   status: Joi.string().lowercase(),
   fare: Joi.number().required(),
   rating: Joi.number(),
-  payment_status: Joi.string().lowercase(),
   comments: Joi.string(),
 });
+
+const paymentJoiSchema = Joi.object({
+  
+})
 
 const validateRequest = (req:Request, res:Response, next:NextFunction) => {
   const { error } = bookingJoiSchema.validate(req.body);
