@@ -16,7 +16,7 @@ export const signUp = async (req: Request, res: Response) => {
     }
     if (role !== "driver" && role == "") {
       const response = await driverService.registerUser({
-        name,
+      name,
       email: email.toLowerCase(),
       phoneNumber,
       vehicleDetails,
