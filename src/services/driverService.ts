@@ -1,5 +1,7 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
 import  driverSchema, { driver } from '../models/driverModel';
+import tempAuthSchema, {tempAuth} from "../models/tempAuthModal";
+import logger from "../utils/logger";
 
 export const findDriver = async (query: RootQuerySelector<driver>) => { 
   try {
@@ -41,5 +43,37 @@ export const availableDrivers = async () => {
   }
 };
 
+export const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
+  try {
+    return await tempAuthSchema.findOne(query);
+  } catch (error) {
+    logger.error(error);
+  }
+};
 
-export const driverService =  {findDriver,registerUser,updateDriver,deleteDriver,availableDrivers}
+export const removeTempUser = async (query: string) => {
+  try {
+    return await tempAuthSchema.findByIdAndDelete(query);
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+export const viewDriver = async () => {
+  try {
+    return await driverSchema.find();
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+export const viewDriverById = async (query: string) => {
+  try {
+    return await driverSchema.findById(query);
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+
+export const driverService =  {findDriver,registerUser,updateDriver,deleteDriver,availableDrivers,findPhoneNumber,removeTempUser,viewDriver,viewDriverById}
