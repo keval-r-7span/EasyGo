@@ -12,11 +12,11 @@ export const signUp = async (req: Request, res: Response) => {
     const { name, email, phoneNumber, vehicleDetails, role } = req.body;
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
-      throw new Error("User Already exist with same phoneNumber");
+      return res.json({success:false,message:"User is already exites"})
     }
     if (role !== "driver" && role == "") {
       const response = await driverService.registerUser({
-        name,
+      name,
       email: email.toLowerCase(),
       phoneNumber,
       vehicleDetails,
@@ -28,17 +28,17 @@ export const signUp = async (req: Request, res: Response) => {
           message: "Invalid Data",
         });
       }
-      const otpResponse = await sendOtp(phoneNumber);
+      const otpResponse = await sendOtp(phoneNumber);    
       if (!otpResponse.success) {
-        throw new Error("Failed to send OTP");
+        return res.status(404).json({success:false,message:"OTP not sent"})
       }
-      await response.save();
+      await response?.save();
       return res.json({
         success: true,
         message: "OTP sent Please verify within 10 minutes",
       });
     } else {
-      return res.json({
+      return res.status(404).json({
         sucess: false,
         message: "Role Should not be selected as Admin",
       });
@@ -172,11 +172,6 @@ export const login = async (req: Request, res: Response) => {
             message: "User Logged in successfully",
           });
       }
-
-
-
-
-
     }
   } catch (error) {
     res.status(500).json({

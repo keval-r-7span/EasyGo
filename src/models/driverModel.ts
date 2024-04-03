@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose,{Document} from 'mongoose';
 
-export interface driver {
+export interface driver extends Document {
   name: string;
   email: string; 
   phoneNumber: string; 
@@ -34,7 +34,6 @@ const driverSchema = new mongoose.Schema<driver>({
   token: {
     type: String,
   },
-  
 });
 
 export default mongoose.model<driver>("driver", driverSchema);

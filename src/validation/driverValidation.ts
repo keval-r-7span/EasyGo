@@ -17,8 +17,6 @@ const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-
-
 const addVehicleSchema = Joi.object({
   manufacturer: Joi.string().required(),
   model: Joi.string().required(),
