@@ -5,7 +5,7 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "rmdir /s /q dist && tsc-watch --onSuccess \"npm run watch\"",
+    "start": " tsc-watch --onSuccess \"npm run watch\"",
     "deploy": "pm2 start ecosystem.config.cjs --env production",
     "watch": "nodemon --watch './**/*.{ts}' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/app.ts",
     "build": "tsc",
@@ -23,7 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.2",
     "pre-commit": "^1.2.2",
-    "twilio": "^5.0.1",
+    "twilio": "^5.0.2",
     "winston": "^3.13.0"
   },
   "devDependencies": {
