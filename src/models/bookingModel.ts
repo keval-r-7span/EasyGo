@@ -12,7 +12,6 @@ export interface Booking extends Document {
   fare: number;
   rating:number;
   status: string;
-  payment_status:string;
   comments:string;
 }
 
@@ -51,11 +50,6 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     fare: {
       type:Number,
-    },
-    payment_status: {
-      type: String,
-      enum: ["pending", "completed"],
-      default:"pending"
     },
     rating: {
       type: Number,
