@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+
 const userJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
-  phoneNumber: Joi.string().min(10).max(10).required(),
+  phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
   role: Joi.string(),
 });
 
