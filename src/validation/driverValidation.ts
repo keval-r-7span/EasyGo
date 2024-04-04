@@ -5,7 +5,7 @@ const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).required(),
-  availability: Joi.string().valid("available", "unavailable"),
+  // availability: Joi.string().valid("available", "unavailable"),
   role: Joi.string().default("driver"),
 });
 
