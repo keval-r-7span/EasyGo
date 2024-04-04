@@ -17,26 +17,26 @@ const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-const addVehicleSchema = Joi.object({
-  manufacturer: Joi.string().required(),
-  model: Joi.string().required(),
-  year: Joi.string().min(4).max(4).required(),
-  licensePlate: Joi.string().required(),
-  color: Joi.string(),
-  vehicleClass: Joi.string()
-    .valid("Bike", "Rickshaw", "mini", "premius", "xl")
-    .required(),
-  baseFare: Joi.number().required(),
-  driverId: Joi.string().required(),
-});
+// const addVehicleSchema = Joi.object({
+//   manufacturer: Joi.string().required(),
+//   model: Joi.string().required(),
+//   year: Joi.string().min(4).max(4).required(),
+//   licensePlate: Joi.string().required(),
+//   color: Joi.string(),
+//   vehicleClass: Joi.string()
+//     .valid("Bike", "Rickshaw", "mini", "premius", "xl")
+//     .required(),
+//   baseFare: Joi.number().required(),
+//   driverId: Joi.string().required(),
+// });
 
-const validateAddVehicle = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = addVehicleSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-  next();
-};
+// const validateAddVehicle = (req: Request, res: Response, next: NextFunction) => {
+//   const { error } = addVehicleSchema.validate(req.body);
+//   if (error) {
+//     return res.status(400).json({ error: error.details[0].message });
+//   }
+//   next();
+// };
 
 
-export { validateRequest, validateAddVehicle };
+export { validateRequest };
