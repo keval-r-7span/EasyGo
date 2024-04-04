@@ -5,10 +5,10 @@ export interface driver extends Document {
   name: string;
   email: string; 
   phoneNumber: string; 
-  // availability: 'available' | 'unavailable';
-  // password: string;
+  availability: 'available' | 'unavailable';
+  password: string;
   role: 'admin' | 'driver' | 'user'; 
-  // token?: string; 
+  token?: string; 
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -23,19 +23,22 @@ const driverSchema = new mongoose.Schema<driver>({
     type: String,
     unique: true
   },
-  // availability: {
-  //   type: String,
-  //   enum: ['available', 'unavailable'],
-  //   default: 'unavailable'
-  // },
+  availability: {
+    type: String,
+    enum: ['available', 'unavailable'],
+    default: 'unavailable'
+  },
+  password: {
+    type: String
+  },
   role:{
     type: String,
     enum: ["admin", "driver", "user"],
     default: "driver"
   },
-  // token: {
-  //   type: String,
-  // },
+  token: {
+    type: String,
+  },
   
 });
 

@@ -1,9 +1,7 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
 import  driverSchema, { driver } from '../models/driverModel';
-import tempAuthSchema, {tempAuth} from "../models/tempAuthModal";
-import logger from "../utils/logger";
 
-const findDriver = async (query: RootQuerySelector<driver>) => { 
+export const findDriver = async (query: RootQuerySelector<driver>) => { 
   try {
     return await driverSchema.findOne(query);
   } catch (error) {
@@ -11,7 +9,7 @@ const findDriver = async (query: RootQuerySelector<driver>) => {
   }
 };
 
-const registerUser = async (query: RootQuerySelector<driver>) => {
+export const registerUser = async (query: RootQuerySelector<driver>) => {
   try {
     return await driverSchema.create(query);
   } catch (error) {
@@ -19,7 +17,7 @@ const registerUser = async (query: RootQuerySelector<driver>) => {
   }
 };
 
-const updateDriver = async (id: string, query: UpdateQuery<driver>) => {
+export const updateDriver = async (id: string, query: UpdateQuery<driver>) => {
   try {
     return await driverSchema.findByIdAndUpdate(id, query);
   } catch (error) {
@@ -27,7 +25,7 @@ const updateDriver = async (id: string, query: UpdateQuery<driver>) => {
   }
 };
 
-const deleteDriver = async (query: string) => {
+export const deleteDriver = async (query: string) => {
   try {
     return await driverSchema.findByIdAndDelete(query);
   } catch (error) {
@@ -35,7 +33,7 @@ const deleteDriver = async (query: string) => {
   }
 };
 
-const availableDrivers = async () => {
+export const availableDrivers = async () => {
   try {
     return await driverSchema.find({ availability: 'available' }).select('name');
   } catch (error) {

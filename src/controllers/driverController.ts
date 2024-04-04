@@ -62,14 +62,14 @@ export const login = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    return res.json({
+    res.status(500).json({
       success: false,
-      message: error,
+      message: "Error in login " + error,
     });
   }
 };
 
-const sendOtp = async (phoneNumber: string) => {
+export const updateDriver = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, phoneNumber, availability, vehicleDetails } = req.body;
@@ -79,22 +79,30 @@ const sendOtp = async (phoneNumber: string) => {
     );
     return res.status(200).json({
       success: true,
-      message: `OTP successfully sent to mobile Number ending with`,
-    };
+      data: response,
+      message: "driver details updated Successfully",
+    });
   } catch (error) {
-    return {
+    return res.status(500).json({
       success: false,
-      message: error,
-    };
+      message: "Cannot find ID to update : " + error,
+    });
   }
 };
 
-const verifyOtp = async (req: Request, res: Response) => {
-  const { phoneNumber, otp } = req.body;
-  if (!phoneNumber && !otp) {
-    return res.status(400).json({
+export const deleteDriver = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const response = await driverService.deleteDriver(id);
+    return res.status(200).json({
+      success: true,
+      data: response,
+      message: "Driver deleted successfully!",
+    });
+  } catch (error) {
+    return res.status(500).json({
       success: false,
-      message: "Please Enter Phone number and otp",
+      message: "Error while deleting driver " + error,
     });
   }
 };
@@ -104,12 +112,13 @@ export const availableDrivers = async (req:Request, res: Response, next: NextFun
     const availableDrivers = await driverService.availableDrivers();
     res.status(200).json({
       success: true,
-      message: "Successfully Verified and Registered ",
+      drivers: availableDrivers,
     });
-  } catch (error) {
-    return res.json({
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
       success: false,
-      message: error
+      message: "Failed to fetch available drivers",
     });
   }
 };
@@ -157,9 +166,9 @@ export const updateVehicle = async (req: Request, res: Response) => {
       message: "vehicle details updated Successfully",
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
-      message: error,
+      message: "Cannot find ID to update vehicle data : " + error,
     });
   }
 };
@@ -192,5 +201,3 @@ export const getDriverByID = async (req: Request, res: Response) => {
     });
   }
 };
-
-export { signUp, verifyOtp, sendLoginOtp, login };
