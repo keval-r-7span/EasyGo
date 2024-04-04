@@ -28,6 +28,9 @@ const viewBookingById = async (req:Request, res:Response) => {
 const bookingStatus = async (req:Request, res:Response) => {
   try {
     const status = req.body.status || req.query.status;
+    if(!status){
+      return res.status(404).json({sucess:false,message:"enter status"})
+    }
     const response = await bookingService.viewBookingFilter({ status });
     if(!response){
       return res.status(404).json({success:true,message:"No Data Found."})
