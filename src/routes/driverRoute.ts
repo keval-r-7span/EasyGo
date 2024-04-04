@@ -2,32 +2,32 @@ import express from 'express';
 const router = express.Router();
 
 import {
-  signUp, 
+  signUp,
+  verifyOtp, 
+  sendLoginOtp,
   login,
-  sendLoginOtp, 
-  verifyOtp 
-  // deleteDriver,
-  // updateDriver,
-  // availableDrivers,
-  // addVehicle,
-  // updateVehicle,
+  deleteDriver,
+  updateDriver,
+  availableDrivers,
+  addVehicle,
+  updateVehicle,
+  getDriver,
+  getDriverByID,
 } from '../controllers/driverController';
 
-// import { validateRequest, 
-//       // validateAddVehicle 
-// } from '../validation/driverValidation';
-// import { validateUpdateRequest, validateUpdateVehicle } from '../validation/updateValidation';
+import { validateRequest, validateAddVehicle } from '../validation/driverValidation';
+import { validateUpdateRequest, validateUpdateVehicle } from '../validation/updateValidation';
 
-// router.post('/register', validateRequest, signUp);
-router.post('/register',  signUp);
+router.post('/', validateRequest, signUp);
+router.post('/verify-otp', verifyOtp);
+router.post('/send-login-otp', sendLoginOtp);
 router.post('/login', login);
-router.post("/send-login-otp", sendLoginOtp);
-router.post("/verify-otp", verifyOtp);
-
-// router.put('/update/:id', validateUpdateRequest, updateDriver);
-// router.delete('/delete/:id', deleteDriver);
-// router.post('/addvehicle', validateAddVehicle, addVehicle);
-// router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
-// router.get('/available', availableDrivers);
+router.put('/:id', validateUpdateRequest, updateDriver);
+router.delete('/:id', deleteDriver);
+router.post('/vehicle', validateAddVehicle, addVehicle);
+router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
+router.get('/', availableDrivers);
+router.get('/getall', getDriver);
+router.get('/:id', getDriverByID);
 
 export default router;
