@@ -107,7 +107,7 @@ const deleteCustomer = async (query: string) => {
 
 const updateCustomer = async (
   id:string,
-  query: UpdateQuery<driver>,
+  query: UpdateQuery<tempAuth>,
 ) => {
   try {
     return await driverSchema.findByIdAndUpdate(id, query, {new: true});
@@ -117,7 +117,7 @@ const updateCustomer = async (
   }
 };
 
-const findCustomer = async (query: RootQuerySelector<driver>) => {
+const findCustomer = async (query: RootQuerySelector<tempAuth>) => {
   try {
     return await driverSchema.findOne(query);
   } catch (error) {
@@ -126,7 +126,7 @@ const findCustomer = async (query: RootQuerySelector<driver>) => {
   }
 };
 
-const registerUser = async (query: RootQuerySelector<driver>) => {
+const registerUser = async (query: RootQuerySelector<tempAuth>) => {
   try {
     return await driverSchema.create(query);
   } catch (error) {
@@ -135,7 +135,7 @@ const registerUser = async (query: RootQuerySelector<driver>) => {
   }
 };
 
-const registeruserTemp = async (query: RootQuerySelector<driver>) => {
+const registeruserTemp = async (query: RootQuerySelector<tempAuth>) => {
   try {
     return await tempAuthSchema.create(query);
   } catch (error) {
@@ -144,7 +144,7 @@ const registeruserTemp = async (query: RootQuerySelector<driver>) => {
   }
 };
 
-const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
+const findPhoneNumber = async (query: RootQuerySelector<tempAuth>) => {
   try {
     return await tempAuthSchema.findOne(query);
   } catch (error) {
