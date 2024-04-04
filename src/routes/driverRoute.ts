@@ -29,5 +29,4 @@ router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
 router.get('/', availableDrivers);
 router.get('/getall', getDriver);
 router.get('/:id', getDriverByID);
-
 export default router;

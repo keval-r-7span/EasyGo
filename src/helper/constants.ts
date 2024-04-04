@@ -41,4 +41,15 @@ const MAIL = {
   PASS: process.env.MAIL_PASS,
 };
 
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL };
+interface CLOUDINARYCONFIG {
+  NAME: string;
+  KEY: string;
+  SECRET: string;
+}
+const CLOUDINARY:CLOUDINARYCONFIG = {
+  NAME:process.env.CLOUD_NAME || "",
+  KEY:process.env.API_KEY|| "",
+  SECRET:process.env.API_SECRET|| ""
+};
+
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,CLOUDINARY };

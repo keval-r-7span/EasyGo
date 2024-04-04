@@ -1,3 +1,4 @@
+import { array } from 'joi';
 import mongoose,{Document} from 'mongoose';
 
 export interface driver extends Document {
@@ -7,6 +8,7 @@ export interface driver extends Document {
   availability: 'available' | 'unavailable';
   role: 'admin' | 'driver' | 'user'; 
   token?: string; 
+  cloudinaryUrl:object
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -30,6 +32,13 @@ const driverSchema = new mongoose.Schema<driver>({
     type: String,
     enum: ["admin", "driver", "user"],
     default: "driver"
+  },
+  cloudinaryUrl:{
+    type: [
+      {
+        url: { type: String, required: true },
+      },
+    ],
   },
   token: {
     type: String,
