@@ -1,174 +1,192 @@
-import { driverService } from '../services/driverService';
-import { vehicleService } from '../services/vehicleService';
-import bcrypt from 'bcryptjs';
-import { Request, Response , NextFunction} from "express";
+import { Request, Response, response } from "express";
+import { driverService } from "../services/driverService";
+import { TWILIO } from "../helper/constants";
+import twilio from "twilio";
+// import jwtToken from "../helper/jwtToken";
+const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
-export const signUp = async (req: Request, res: Response) => {
+const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, vehicleDetails, password, role } =
-      req.body;
+    const { name, email, phoneNumber, role } = req.body;
+    if(!name || !email || !phoneNumber || !role){
+      return res.status(200).json({success:false,message:"Enter valid details."})
+    }
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
-      throw new Error("User Already exist with same phoneNumber");
+      return res.status(200).json({success:false,message:"User Already exist."})
     }
-    if (role !== "driver" && role == "") {
-      return res.status(400).json({
-        success: false,
-        message: "check your role",
+    if (role !== "admin") {
+      const response = await driverService.registeruserTemp({
+        name,
+        email: email.toLowerCase(),
+        phoneNumber,
+        role,
       });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const response = await driverService.registerUser({
-      name,
-      email: email.toLowerCase(),
-      phoneNumber,
-      vehicleDetails,
-      password: hashedPassword,
-      role,
-    });
-    await response.save();
-    return res.status(200).json({
-      success: true,
-      data: response,
-      message: "User created successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong in signUp " + error,
-    });
-  }
-};
-
-export const login = async (req: Request, res: Response) => {
-  try {
-    const { phoneNumber, password } = req.body;
-    if (!phoneNumber || !password) {
-      return res.status(500).json({
-        success: false,
-        message: "Please enter proper info! ",
-      });
-    }
-    const registeredUser = await driverService.findDriver({ phoneNumber });
-    if (!registeredUser) {
-      return res.json({
-        success: false,
-        message: "Please Register First",
+      if (!response) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Data",
+        });
+      }
+      const otpResponse = await sendOtp(phoneNumber);
+      if (!otpResponse.success) {
+        return res.json({
+          success: false,
+          message: "Failed OTP response"
+        })
+      }
+      await response?.save();
+      return res.status(200).json({
+        success: true,
+        message: "OTP sent Please verify within 10 minutes",
       });
     } else {
       return res.json({
-        success: true,
-        message: "User is successfully logged in",
+        success: false,
+        message: "Role Should not be selected as Admin",
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.json({
       success: false,
-      message: "Error in login " + error,
+      message: error,
     });
   }
 };
 
-export const updateDriver = async (req: Request, res: Response) => {
+const sendOtp = async (phoneNumber: string) => {
   try {
-    const { id } = req.params;
-    const { name, phoneNumber, availability, vehicleDetails } = req.body;
-    const response = await driverService.updateDriver(
-      id,
-      { name, phoneNumber, availability, vehicleDetails }
-    );
-    return res.status(200).json({
+     await client.verify.v2
+      .services(TWILIO.SERVICE_SID)
+      .verifications.create({
+        to: `+91${phoneNumber}`,
+        channel: "sms",
+      });
+    return {
       success: true,
-      data: response,
-      message: "driver details updated Successfully",
-    });
+      message: `OTP successfully sent to mobile Number ending with`,
+    };
   } catch (error) {
-    return res.status(500).json({
+    return {
       success: false,
-      message: "Cannot find ID to update : " + error,
-    });
+      message: error,
+    };
   }
 };
 
-export const deleteDriver = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const response = await driverService.deleteDriver(id);
-    return res.status(200).json({
-      success: true,
-      data: response,
-      message: "Driver deleted successfully!",
-    });
-  } catch (error) {
-    return res.status(500).json({
+const verifyOtp = async (req: Request, res: Response) => {
+  const { phoneNumber, otp } = req.body;
+  if (!phoneNumber && !otp) {
+    return res.status(400).json({
       success: false,
-      message: "Error while deleting driver " + error,
+      message: "Please Enter Phone number and otp",
     });
   }
-};
-
-export const availableDrivers = async (req:Request, res: Response, next: NextFunction) => {
   try {
-    const availableDrivers = await driverService.availableDrivers();
-    res.status(200).json({
-      success: true,
-      drivers: availableDrivers,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch available drivers",
-    });
-  }
-};
-
-export const addVehicle = async (req: Request, res: Response) => {
-  try {
-    const { manufacturer, model, year, licensePlate, color, vehicleClass, driverId } = req.body;
-    const vehicleExist = await vehicleService.findVehicle({ licensePlate });
-    if (vehicleExist) {
-      throw new Error("vehicle Already exist with same licensePlate");
-    }
-    const response = await vehicleService.addVehicle({
-      manufacturer, model, year, licensePlate, color, vehicleClass, driverId,
-      fare: 0,
-      save: function (): unknown {
-        throw new Error('Function not implemented.');
+    const response = await client.verify.v2
+      .services(TWILIO.SERVICE_SID)
+      .verificationChecks.create({
+        to: `+91${phoneNumber}`,
+        code: otp,
+      });
+    if (response.status === "approved") {
+      const existUserTemp = await driverService.findPhoneNumber({
+        phoneNumber,
+      });
+      if (existUserTemp) {
+        const newUser = await driverService.registerUser({
+          name: existUserTemp.name,
+          email: existUserTemp.email,
+          phoneNumber: existUserTemp.phoneNumber,
+          role: existUserTemp.role,
+        });
+        await newUser?.save();
+        await driverService.removeTempUser(existUserTemp.id);
       }
-    });
-    await response.save();
-    return res.status(200).json({
+    }
+    return res.status(201).json({
       success: true,
-      data: response,
-      message: "vehicle added successfully",
+      message: "Successfully Verified and Registered ",
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.json({
       success: false,
-      message: "Something went wrong while addind vehicle " + error,
+      message: error
     });
   }
 };
 
-export const updateVehicle = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { manufacturer, model, year, licensePlate, color, vehicleClass } =
-      req.body;
-    const response = await vehicleService.updateVehicleDetails(
-      id,
-      { manufacturer, model, year, licensePlate, color, vehicleClass }
-    );
-    return res.status(200).json({
-      success: true,
-      data: response,
-      message: "vehicle details updated Successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
+const sendLoginOtp = async (req: Request, res: Response) => {
+  const { phoneNumber } = req.body;
+  if(!phoneNumber){
+   return res.status(200).json({success:false,message:"Enter PhoneNumber"})
+  }
+  let lastDigit = phoneNumber.substring(5,10)
+  let registeredUser = await driverService.findDriver({ phoneNumber });
+  if (!registeredUser) {
+    return res.json({
       success: false,
-      message: "Cannot find ID to update vehicle data : " + error,
+      message: `No user exist with such ${phoneNumber} please Sign-Up first!!`,
+    });
+  } else {
+    try {
+      await client.verify.v2
+        .services(TWILIO.SERVICE_SID)
+        .verifications.create({
+          to: `+91${phoneNumber}`,
+          channel: "sms",
+        });
+      return res.status(200).json({
+        success: true,
+        message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
+      });
+    } catch (error) {
+      return res.json({
+        success: false,
+        message: error,
+      });
+    }
+  }
+};
+
+const login = async (req: Request, res: Response) => {
+  const { phoneNumber, otp } = req.body;
+  if(!phoneNumber || !otp){
+    return res.json({
+      success: false,
+      message: "Please Enter valid phone number and otp"
+    })
+  }
+  try {
+    const response = await client.verify.v2
+      .services(TWILIO.SERVICE_SID)
+      .verificationChecks.create({
+        to: `+91${phoneNumber}`,
+        code: otp,
+      });
+    if (response.status === "approved") {
+      const existUser = await driverService.findDriver({ phoneNumber });
+      if (!existUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Oops!! Sign-Up first",
+        });
+      } else {
+        // const token = jwtToken(existUser);
+        // existUser.token = token;
+        return res.status(200).json({
+          success: true,
+          message: "User Logged in successfully",
+        });
+          // .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly:true })
+      }
+    }
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error,
     });
   }
 };
+
+export { signUp, verifyOtp, sendLoginOtp, login };

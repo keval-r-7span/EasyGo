@@ -13,14 +13,20 @@ interface DBData {
   DB_URL: string;
 }
 
+interface TwilioData {
+  ACCOUNT_SID: string;
+  AUTH_TOKEN:string;
+  SERVICE_SID: string
+}
+
 const DB_DATA: DBData = {
   DB_URL: process.env.DB_URL || '',
 };
 
-const TWILIO = {
-  ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
-  AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
-  SERVICE_SID: process.env.TWILIO_SERVICE_SID,
+const TWILIO : TwilioData = {
+  ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID || " ",
+  AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN || "",
+  SERVICE_SID: process.env.TWILIO_SERVICE_SID || " ",
 };
 
 const MAIL={
