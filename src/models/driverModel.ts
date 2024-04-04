@@ -15,7 +15,7 @@ const driverSchema = new mongoose.Schema<driver>({
   name: {
     type: String
   },
-  email: {
+  email: {  
     type: String,
     unique: true
   },
