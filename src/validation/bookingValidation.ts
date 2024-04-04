@@ -16,7 +16,12 @@ const bookingJoiSchema= Joi.object({
 });
 
 const paymentJoiSchema = Joi.object({
-  
+  customer:Joi.string(),
+  booking:Joi.string(),
+  amount:Joi.number(),
+  paymentMethod:Joi.string().lowercase(),
+  status:Joi.string().lowercase(),
+  transactionId:Joi.string(),
 })
 
 const validateRequest = (req:Request, res:Response, next:NextFunction) => {
