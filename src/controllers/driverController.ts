@@ -33,7 +33,7 @@ export const signUp = async (req: Request, res: Response) => {
         return res.status(404).json({success:false,message:"OTP not sent"})
       }
       await response?.save();
-      return res.json({
+      return res.status(200).json({
         success: true,
         message: "OTP sent Please verify within 10 minutes",
       });

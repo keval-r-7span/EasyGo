@@ -24,7 +24,6 @@ const getCustomerByID = async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.json({
       sucess: false,
       message: "Error in GetCustomer ID",
@@ -45,7 +44,6 @@ const updateCustomer = async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.json({
       sucess: false,
       message: "ERROR in Update Customer",
