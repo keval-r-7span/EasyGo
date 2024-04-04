@@ -3,7 +3,6 @@ import mongoose, { Document } from 'mongoose';
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
-  vehicle:mongoose.Schema.Types.ObjectId;
   vehicleClass: 'Bike' | 'Rickshaw' | 'mini' | 'premius' | 'xl';
   pickupLocation: string;
   dropoffLocation:string;
@@ -23,10 +22,6 @@ const bookingSchema = new mongoose.Schema<Booking>(
       ref: "Customer",
     },
     driver: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Driver",
-    },
-    vehicle:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Driver",
     },

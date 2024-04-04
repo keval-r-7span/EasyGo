@@ -2,7 +2,7 @@
 // import { customerService } from "../services/userService";
 // import { TWILIO } from "../helper/constants";
 // import twilio from "twilio";
-// import jwtToken from "../validation/jwtToken";
+// import jwtToken from "../helper/jwtToken";
 // const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 // const signUp = async (req: Request, res: Response) => {

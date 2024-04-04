@@ -4,7 +4,7 @@ import { vehicleService } from "../services/vehicleService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import logger from "../utils/logger";
-import jwtToken from "../validation/jwtToken";
+import jwtToken from "../helper/jwtToken";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 export const signUp = async (req: Request, res: Response) => {
@@ -172,11 +172,6 @@ export const login = async (req: Request, res: Response) => {
             message: "User Logged in successfully",
           });
       }
-
-
-
-
-
     }
   } catch (error) {
     res.status(500).json({
