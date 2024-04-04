@@ -5,11 +5,11 @@ const viewBooking = async (req:Request, res:Response)=> {
   try {
     const response = await bookingService.viewBookingAll()
     if (!response) {
-     return res.json({sucess:false,data:"No Booking Available"})
+     return res.status(404).json({success:false,data:"No Booking Available"})
     }
-    return res.status(200).json({sucess:true,data:response})
+    return res.status(200).json({success:true,data:response})
   } catch (error) {
-    return res.json({sucess:false,data:error})
+    return res.status(500).json({success:false,data:error})
   }
 };
 
@@ -17,11 +17,11 @@ const viewBookingById = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.viewBooking(req.params.id);
     if (!response) {
-      return res.json({sucess:false,data:"No Booking Available"})
+      return res.status(404).json({success:false,data:"No Booking Available"})
     }
-    return res.status(200).json({sucess:true,data:response})
+    return res.status(200).json({success:true,data:response})
   } catch (error) {
-    return res.status(200).json({sucess:true,message:error})
+    return res.status(500).json({success:true,message:error})
   }
 };
 
@@ -30,11 +30,11 @@ const bookingStatus = async (req:Request, res:Response) => {
     const status = req.body.status || req.query.status;
     const response = await bookingService.viewBookingFilter({ status });
     if(!response){
-      return res.status(200).json({sucess:true,message:"No Data Found."})
+      return res.status(404).json({success:true,message:"No Data Found."})
     }
-    return res.status(200).json({sucess:true,data:response})
+    return res.status(200).json({success:true,data:response})
   } catch (error) {
-    return res.status(200).json({sucess:true,message:error})
+    return res.status(500).json({success:true,message:error})
   }
 };
 const rideStatus = async(req:Request,res:Response)=>{
@@ -47,11 +47,11 @@ const rideStatus = async(req:Request,res:Response)=>{
       { new: true }
     );
     if (!response) {
-      return res.status(200).json({sucess:false,message:"Enter Valid Booking ID or Value"});
+      return res.status(404).json({success:false,message:"Enter Valid Booking ID or Value"});
     }
-    return res.status(200).json({sucess:true,data:response,message:"Sucessfully Updated status"});
+    return res.status(200).json({success:true,data:response,message:"Sucessfully Updated status"});
   } catch (error) {
-    return res.status(200).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 }
 
@@ -59,13 +59,13 @@ const createBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.createBooking(req.body);
     if(!response){
-      return res.status(400).json({sucess:false,message:'Enter Valid Field'})
+      return res.status(404).json({success:false,message:'Enter Valid Field'})
     }
     await response.save();
     // mailForBooking(response);     //send mail after booking sucess
-    return res.status(200).json({sucess:true,data:response})
+    return res.status(200).json({success:true,data:response})
   } catch (error) {
-    return res.status(200).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 };
 
@@ -79,11 +79,11 @@ const updateBooking = async (req:Request, res:Response) => {
       { new: true }
     );
     if (!response) {
-      return res.status(200).json({sucess:false,message:"Enter Valid Booking ID or Value"});
+      return res.status(404).json({success:false,message:"Enter Valid Booking ID or Value"});
     }
-    return res.status(200).json({sucess:true,data:response,message:"Sucessfully Updated"});
+    return res.status(200).json({success:true,data:response,message:"Sucessfully Updated"});
   } catch (error) {
-    return res.status(200).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 };
 
@@ -95,11 +95,11 @@ const cancelBooking = async (req:Request, res:Response) => {
       status:'cancelled'
     },{new:true});    
     if (!response) {
-      return res.status(200).json({sucess:false,message:"Enter valid Booking"});
+      return res.status(404).json({success:false,message:"Enter valid Booking"});
     }
-    return res.status(200).json({sucess:true,data:response,message:"Booking Cancel Suceesfully."});
+    return res.status(200).json({success:true,data:response,message:"Booking Cancel Suceesfully."});
   } catch (error) {
-    return res.status(404).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 };
 
@@ -107,11 +107,11 @@ const getRevenue = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.getRevenue();
     if (!response) {
-      return res.status(200).json({sucess:false,message:"No Any Revenue Found "});
+      return res.status(404).json({success:false,message:"No Any Revenue Found "});
     }
-    return res.status(200).json({sucess:true,data:response,message:"Generate total Revenue"});
+    return res.status(200).json({success:true,data:response,message:"Generate total Revenue"});
   } catch (error) {
-    return res.status(404).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 };
 
@@ -119,11 +119,11 @@ const totalBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.aggregateBookings();
     if (!response) {
-      return res.status(200).json({sucess:false,message:"No Any Booking Found "});
+      return res.status(404).json({success:false,message:"No Any Booking Found "});
     }
-    return res.status(200).json({sucess:true,data:response,message:"Generate total Booking"});
+    return res.status(200).json({success:true,data:response,message:"Generate total Booking"});
   } catch (error) {
-    return res.status(404).json({sucess:false,message:error});
+    return res.status(500).json({success:false,message:error});
   }
 };
 
