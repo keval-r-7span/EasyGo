@@ -1,41 +1,55 @@
 import dotenv from 'dotenv'
-
 dotenv.config()
 
-const PORT = parseInt(process.env.PORT || "3200");
-
-const JWT = {
-  SECRET: process.env.JWT_SECRET,
-  EXPIRES: process.env.EXPIRES,
-};
-
-interface DBData {
+interface JWTConfig {
+  SECRET: string;
+  EXPIRES: string;
+}
+interface DBDATA {
   DB_URL: string;
 }
-
-interface TwilioData {
+interface TwilloConfig {
   ACCOUNT_SID: string;
-  AUTH_TOKEN:string;
-  SERVICE_SID: string
+  AUTH_TOKEN: string;
+  SERVICE_SID: string;
 }
 
-const DB_DATA: DBData = {
-  DB_URL: process.env.DB_URL || '',
+const PORT = process.env.PORT;
+
+const JWT: JWTConfig = {
+  SECRET: process.env.JWT_SECRET || "",
+  EXPIRES: process.env.EXPIRES || "",
 };
 
-const TWILIO : TwilioData = {
-  ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID || " ",
+const DB_DATA: DBDATA = {
+  DB_URL: process.env.DB_URL || "",
+};
+
+const TWILIO: TwilloConfig = {
+  ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID || "",
   AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN || "",
-  SERVICE_SID: process.env.TWILIO_SERVICE_SID || " ",
+  SERVICE_SID: process.env.TWILIO_SERVICE_SID || "",
 };
 
-const MAIL={
-    HOST:process.env.MAIL_HOST,
-    USER:process.env.MAIL_USER,
-    PASS:process.env.MAIL_PASS
-}
 const DISTANCE = {
   DISTANCE_MATRIX: process.env.DISTANCE_MATRIX_KEY,
 };
 
-export { PORT, JWT, DB_DATA, TWILIO,MAIL, DISTANCE };
+const MAIL = {
+  HOST: process.env.MAIL_HOST,
+  USER: process.env.MAIL_USER,
+  PASS: process.env.MAIL_PASS,
+};
+
+interface CLOUDINARYCONFIG {
+  NAME: string;
+  KEY: string;
+  SECRET: string;
+}
+const CLOUDINARY:CLOUDINARYCONFIG = {
+  NAME:process.env.CLOUD_NAME || "",
+  KEY:process.env.API_KEY|| "",
+  SECRET:process.env.API_SECRET|| ""
+};
+
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,CLOUDINARY };

@@ -1,4 +1,4 @@
-import Joi, { Schema } from "joi";
+import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 
 const driverJoiSchema = Joi.object({
@@ -16,8 +16,6 @@ const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
-
-
 
 const addVehicleSchema = Joi.object({
   manufacturer: Joi.string().required(),

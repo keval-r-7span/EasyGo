@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import { array } from 'joi';
+import mongoose,{Document} from 'mongoose';
 
-export interface driver {
+export interface driver extends Document {
   name: string;
   email: string; 
   phoneNumber: string; 
@@ -14,7 +15,7 @@ const driverSchema = new mongoose.Schema<driver>({
   name: {
     type: String
   },
-  email: {
+  email: {  
     type: String,
     unique: true
   },
