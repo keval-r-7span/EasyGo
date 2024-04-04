@@ -29,7 +29,7 @@ const bookingStatus = async (req:Request, res:Response) => {
   try {
     const status = req.body.status || req.query.status;
     if(!status){
-      return res.status(404).json({sucess:false,message:"enter status"})
+      return res.status(404).json({success:false,message:"enter status"})
     }
     const response = await bookingService.viewBookingFilter({ status });
     if(!response){
