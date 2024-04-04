@@ -21,7 +21,7 @@ const signUp = async (req: Request, res: Response) => {
       .json({ success: false, message: "User Already exist." });
   }
   if (role !== "admin") {
-    const response = await driverService.registeruserTemp({
+    const response = await driverService.registerUser({
       name,
       email: email.toLowerCase(),
       phoneNumber,
