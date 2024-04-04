@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
 interface JWTConfig {
   SECRET: string;
@@ -41,15 +41,4 @@ const MAIL = {
   PASS: process.env.MAIL_PASS,
 };
 
-interface CLOUDINARYCONFIG {
-  NAME: string;
-  KEY: string;
-  SECRET: string;
-}
-const CLOUDINARY:CLOUDINARYCONFIG = {
-  NAME:process.env.CLOUD_NAME || "",
-  KEY:process.env.API_KEY|| "",
-  SECRET:process.env.API_SECRET|| ""
-};
-
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,CLOUDINARY };
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL };
