@@ -14,7 +14,7 @@ export const signUp = async (req: Request, res: Response) => {
     if (userExist) {
       return res.json({success:false,message:"User is already exites"})
     }
-    if (role !== "driver" && role == "") {
+    if (role === "driver") {
       const response = await driverService.registerUser({
       name,
       email: email.toLowerCase(),
@@ -316,10 +316,9 @@ export const getDriver = async (req: Request, res: Response) => {
       sucess: true, 
       data: response });
   } catch (error) {
-    console.log(error);
     return res.json({
       sucess: false,
-      message: "Error in GetDriver",
+      message: "Error in GetDriver"+error,
     });
   }
 };
@@ -332,10 +331,9 @@ export const getDriverByID = async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error) {
-    console.log(error);
     return res.json({
       sucess: false,
-      message: "Error in GetDriver ID",
+      message: "Error in GetDriver ID" + error,
     });
   }
 };
