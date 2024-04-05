@@ -7,7 +7,7 @@ const viewBooking = async (req:Request, res:Response)=> {
     if (!response) {
      return res.status(404).json({success:false,data:"No Booking Available"})
     }
-    return res.status(200).json({success:true,data:response})
+    return res.status(200).json({success:true,data:response,message:"all booking here."})
   } catch (error) {
     return res.status(500).json({success:false,data:error})
   }
@@ -35,7 +35,7 @@ const bookingStatus = async (req:Request, res:Response) => {
     if(!response){
       return res.status(404).json({success:true,message:"No Data Found."})
     }
-    return res.status(200).json({success:true,data:response})
+    return res.status(200).json({success:true,data:response,message:"all booking here.."})
   } catch (error) {
     return res.status(500).json({success:true,message:error})
   }
@@ -90,7 +90,7 @@ const updateBooking = async (req:Request, res:Response) => {
   }
 };
 
-const cancelBooking = async (req:Request, res:Response) => {
+const deleteBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.updateBooking(
       req.params.id,
