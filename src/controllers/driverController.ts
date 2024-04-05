@@ -35,7 +35,6 @@ const signUp = async (req: Request, res: Response) => {
     }
     return res.json({
       success: true,
-      data: response,
       message: "OTP sent successfully"
     })
   }
