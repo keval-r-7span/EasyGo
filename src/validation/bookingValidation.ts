@@ -4,7 +4,6 @@ import Joi from 'joi';
 const bookingJoiSchema= Joi.object({
   customer:Joi.string(),
   driver:Joi.string(),
-  vehicle:Joi.string(),
   vehicleClass:Joi.string(),
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
