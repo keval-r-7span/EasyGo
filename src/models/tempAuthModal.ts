@@ -5,11 +5,7 @@ export interface tempAuth{
     email: string;
     phoneNumber: string;
     role: string;
-    createdAt: Date,
-    location: {
-      type: string; 
-      coordinates: [number];
-  };
+    createdAt: Date
 }
 
 const tempAuthSchema = new mongoose.Schema<tempAuth>(
@@ -30,13 +26,6 @@ const tempAuthSchema = new mongoose.Schema<tempAuth>(
         enum: ["admin", "driver", "user"],
         default: "user",
       },
-      location: {
-        type: { type: String, default: "Point" }, 
-        coordinates: {
-          Longitude: Number,
-          Latitude: Number
-        }, //long, lat
-    },
       createdAt:{
         type: Date,
         default: Date.now(),
