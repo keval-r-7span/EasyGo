@@ -162,13 +162,6 @@ const removeTempUser = async (query: string) => {
   }
 };
 
-export const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
-  try {
-    return await tempAuthSchema.findOne(query);
-  } catch (error) {
-    logger.error(error);
-  }
-};
 
 export const driverService = {
   viewCustomer,
