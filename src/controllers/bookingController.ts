@@ -7,7 +7,7 @@ const viewBooking = async (req:Request, res:Response)=> {
     if (!response) {
      return res.status(404).json({success:false,message:"No Booking Available"})
     }
-    return res.status(200).json({success:true,data:response})
+    return res.status(200).json({success:true,data:response,message:"all booking here."})
   } catch (error) {
     return res.status(500).json({success:false,message:error})
   }
@@ -35,7 +35,7 @@ const bookingStatus = async (req:Request, res:Response) => {
     if(!response){
       return res.status(404).json({success:false,message:"No Booking Available"})
     }
-    return res.status(200).json({success:true,data:response})
+    return res.status(200).json({success:true,data:response,message:"all booking here.."})
   } catch (error) {
     return res.status(500).json({success:true,message:error})
   }
@@ -49,7 +49,7 @@ const createBooking = async (req:Request, res:Response) => {
     }
     await response.save();
     // mailForBooking(response);     //send mail after booking success
-    return res.status(200).json({success:true,data:response})
+    return res.status(200).json({success:true,data:response,message:"Ride booking successfully."})
   } catch (error) {
     return res.status(500).json({success:false,message:error});
   }
@@ -67,15 +67,15 @@ const updateBooking = async (req:Request, res:Response) => {
     if (!response) {
       return res.status(404).json({success:false,message:"Enter Valid Booking ID or Value"});
     }
-    return res.status(200).json({success:true,data:response});
+    return res.status(200).json({success:true,data:response,message:"Booking updated successfully.."});
   } catch (error) {
     return res.status(500).json({success:false,message:error});
   }
 };
 
-const cancelBooking = async (req:Request, res:Response) => {
+const deleteBooking = async (req:Request, res:Response) => {
   try {
-    const response = await bookingService.cancelBooking(req.params.id);
+    const response = await bookingService.deleteBooking(req.params.id);
     if (!response) {
       return res.status(404).json({success:false,message:"Enter valid Booking"});
     }
@@ -111,4 +111,4 @@ const totalBooking = async (req:Request, res:Response) => {
 };
 
 
-export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById}
+export {viewBooking,createBooking,updateBooking,deleteBooking,getRevenue,totalBooking,bookingStatus,viewBookingById}

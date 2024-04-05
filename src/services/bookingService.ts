@@ -46,7 +46,7 @@ const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:Query
   }
 };
 
-export const cancelBooking = async (query:string)=> {
+export const deleteBooking = async (query:string)=> {
   try {
     return await BookingSchema.findByIdAndDelete(query);
   } catch (error) {
@@ -105,4 +105,4 @@ export const aggregateBookings = async () => {
   }
 };
 
-export const bookingService =  {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,cancelBooking,rideComplete,getRevenue,aggregateBookings}
+export const bookingService =  {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,rideComplete,getRevenue,aggregateBookings}
