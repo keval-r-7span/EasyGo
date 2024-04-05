@@ -8,12 +8,12 @@ const STATIC_OTP = "9999";
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, role, location } = req.body;
-  // if (!name || !email || !phoneNumber || !role) {
-  //   return res
-  //     .status(200)
-  //     .json({ success: false, message: "Enter valid details of driver." });
-  // }
+    const { name, email, phoneNumber,role } = req.body;
+  if (!name || !email || !phoneNumber) {
+    return res
+      .status(200)
+      .json({ success: false, message: "Enter valid details." });
+  }
   const userExist = await driverService.findCustomer({ phoneNumber });
   if (userExist) {
     return res
@@ -97,6 +97,12 @@ const login = async (req: Request, res: Response) => {
       success: true,
       message: "successfully logged in",
     });
+    else{
+      return res.json({
+        success: false,
+        message: "Invalid OTP or Number",
+      });
+    }
   } catch (error) {
     return res.json({
       success: false,
