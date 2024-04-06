@@ -1,18 +1,22 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+
 const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
-  phoneNumber: Joi.string().min(10).max(10).required(),
-  // availability: Joi.string().valid("available", "unavailable"),
-  role: Joi.string().default("driver"),
+  phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
+  role: Joi.string(),
 });
 
 const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   const { error } = driverJoiSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(200).json({
+      success: false, 
+      message: error.details[0].message
+    });
   }
   next();
 };
@@ -26,14 +30,16 @@ const addVehicleSchema = Joi.object({
   vehicleClass: Joi.string()
     .valid("Bike", "Rickshaw", "mini", "premius", "xl")
     .required(),
-  baseFare: Joi.number().required(),
   driverId: Joi.string().required(),
 });
 
 const validateAddVehicle = (req: Request, res: Response, next: NextFunction) => {
   const { error } = addVehicleSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    return res.status(200).json({
+      success: false, 
+      message: error.details[0].message
+    });
   }
   next();
 };

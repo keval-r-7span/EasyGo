@@ -11,7 +11,6 @@ interface vehicle {
   licensePlate: string;
   color: string;
   vehicleClass: 'Bike' | 'Rickshaw' | 'mini' | 'premius' | 'xl';
-  fare: number;
   driverId: driver | string;
 }
 
@@ -34,9 +33,6 @@ const vehicleDetails = new mongoose.Schema<vehicle>({
   vehicleClass: {
     type: String,
     enum: ["Bike", "Rickshaw", "mini", "premius", "xl"],
-  },
-  fare: {
-    type: Number,
   },
   driverId: {
     type: mongoose.Types.ObjectId,
