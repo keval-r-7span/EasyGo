@@ -7,7 +7,7 @@ import {
   updateCustomer,
   deleteCustomer,
 } from "../controllers/customerController";
-import { signUp, verifyOtp, sendLoginOtp, login  } from "../controllers/authController";
+import { signUp, verifyOtp, sendLoginOtp, login  } from "../controllers/userAuthController";
 import validateRequest from "../validation/userValidation";
 import { verifyToken } from "../middleware/authMiddleware";
 
