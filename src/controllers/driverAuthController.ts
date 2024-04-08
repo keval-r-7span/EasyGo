@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, response } from 'express';
 import  {driverService}  from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
+import logger from "../utils/logger";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
@@ -123,20 +124,23 @@ const sendLoginOtp = async (req: Request, res: Response) => {
     });
   } else {
     try {
-      await client.verify.v2
+      const response = await client.verify.v2
         .services(TWILIO.SERVICE_SID)
         .verifications.create({
           to: `+91${phoneNumber}`,
           channel: "sms",
         });
+      console.log(response);
       return res.status(200).json({
         success: true,
         message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
       });
+      
     } catch (error) {
+      logger.error(error)
       return res.status(500).json({
         success: false,
-        message: error,
+        message: "Failed to Send OTP, "+ error,
       });
     }
   }
@@ -176,6 +180,7 @@ const login = async (req: Request, res: Response) => {
       }
     }
   } catch (error) {
+    logger.error(error)
     return res.status(500).json({
       success: false,
       message: error,

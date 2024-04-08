@@ -14,7 +14,7 @@ const viewBooking = async (req:Request, res:Response)=> {
 };
 
 const viewBookingById = async (req:Request, res:Response) => {
-  try {
+  try {    
     const response = await bookingService.viewBooking(req.params.id);
     if (!response) {
       return res.status(404).json({success:false,data:"No Booking Available"})

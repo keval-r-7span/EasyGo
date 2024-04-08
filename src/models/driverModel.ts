@@ -11,7 +11,8 @@ export interface driver extends Document {
 
 const driverSchema = new mongoose.Schema<driver>({
   name: {
-    type: String
+    type: String,
+    required:true
   },
   email: {  
     type: String,

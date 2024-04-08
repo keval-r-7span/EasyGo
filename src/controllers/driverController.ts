@@ -40,7 +40,10 @@ export const addVehicle = async (req: Request, res: Response) => {
     const { manufacturer, model, year, licensePlate, color, vehicleClass, driverId } = req.body;
     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
     if (vehicleExist) {
-      throw new Error("vehicle Already exist with same licensePlate");
+      return res.status(500).json({
+        success: false,
+        message: "Already Register Vehicle ",
+      });
     }
     const response = await vehicleService.addVehicle({
       manufacturer, model, year, licensePlate, color, vehicleClass, driverId,
@@ -50,8 +53,9 @@ export const addVehicle = async (req: Request, res: Response) => {
       }
     });
     await response.save();
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
+      data:response,
       message: "vehicle added successfully",
     });
   } catch (error) {
