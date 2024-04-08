@@ -114,7 +114,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
   if(!phoneNumber){
    return res.status(404).json({success:false,message:"Enter PhoneNumber"})
   }
-  let lastDigit = phoneNumber.substring(5,10)
+  let lastDigit = phoneNumber?.substring(5,10)
   let registeredUser = await driverService.findDriver({ phoneNumber });
   if (!registeredUser) {
     return res.status(404).json({

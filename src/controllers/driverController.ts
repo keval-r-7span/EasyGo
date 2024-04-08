@@ -5,6 +5,9 @@ import { Request, Response, NextFunction } from "express";
 export const getDriver = async (req: Request, res: Response) => {
   try {
     const response = await driverService.viewDriver();
+    if(!response){
+      return res.status(404).json({success:true,message:"No Any Driver Register."})
+    }
     return res.status(200).json({
       sucess: true,
       data: response,
@@ -128,13 +131,13 @@ export const availableDrivers = async (req:Request, res: Response, next: NextFun
   try {
     const response = await driverService.availableDrivers();
     if (!response){ return res.status(404).json({success:false,message:"Not Available Any Driver"})}
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data:response,
       message: "all available driver",
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: error
     });

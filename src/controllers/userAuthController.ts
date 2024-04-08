@@ -89,6 +89,7 @@ const verifyOtp = async (req: Request, res: Response) => {
         to: `+91${phoneNumber}`,
         code: otp,
       });
+      
     if (response.status === "approved") {
       const existUserTemp = await customerService.findPhoneNumber({
         phoneNumber,
