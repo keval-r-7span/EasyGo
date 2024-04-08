@@ -7,7 +7,8 @@ export const getDriver = async (req: Request, res: Response) => {
     const response = await driverService.viewDriver();
     return res.status(200).json({
       sucess: true,
-      data: response });
+      data: response,
+      message:"All Available Driver" });
   } catch (error) {
     return res.json({
       sucess: false,
@@ -69,6 +70,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
     );
     return res.status(200).json({
       success: true,
+      data:response,
       message: "vehicle details updated Successfully",
     });
   } catch (error) {
@@ -89,6 +91,7 @@ export const updateDriver = async (req: Request, res: Response) => {
     });
     return res.status(200).json({
       success: true,
+      data:response,
       message: "Driver updated Successfully"
     });
   } catch (error) {
@@ -105,11 +108,12 @@ export const deleteDriver = async (req: Request, res: Response) => {
     if(!response){
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
+        message: "Invalid driverID"
       })
     }
     return res.status(200).json({
       success: true,
+      data:response,
       message: "Driver deleted Successfully"
     });
   } catch (error) {
@@ -120,17 +124,19 @@ export const deleteDriver = async (req: Request, res: Response) => {
   }
 };
 
-// export const availableDrivers = async (req:Request, res: Response, next: NextFunction) => {
-//   try {
-//     const availableDrivers = await driverService.availableDrivers();
-//     res.status(200).json({
-//       success: true,
-//       message: "Successfully Verified and Registered ",
-//     });
-//   } catch (error) {
-//     return res.json({
-//       success: false,
-//       message: error
-//     });
-//   }
-// };
+export const availableDrivers = async (req:Request, res: Response, next: NextFunction) => {
+  try {
+    const response = await driverService.availableDrivers();
+    if (!response){ return res.status(404).json({success:false,message:"Not Available Any Driver"})}
+    res.status(200).json({
+      success: true,
+      data:response,
+      message: "all available driver",
+    });
+  } catch (error) {
+    return res.json({
+      success: false,
+      message: error
+    });
+  }
+};

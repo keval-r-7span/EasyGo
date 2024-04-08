@@ -7,20 +7,19 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, role } = req.body;
-    if(!name || !email || !phoneNumber || !role){
+    const { name, email, phoneNumber } = req.body;
+    if(!name || !email || !phoneNumber){
       return res.status(404).json({success:false,message:"Enter valid details."})
     }
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
       return res.status(400).json({success:false,message:"User Already exist."})
     }
-    if (role !== "admin") {
       const response = await driverService.registeruserTemp({
         name,
         email: email.toLowerCase(),
         phoneNumber,
-        role,
+        role:'driver',
       });
       if (!response) {
         return res.status(400).json({
@@ -40,12 +39,6 @@ const signUp = async (req: Request, res: Response) => {
         success: true,
         message: "OTP sent Please verify within 10 minutes",
       });
-    } else {
-      return res.status(401).json({
-        success: false,
-        message: "Role Should not be selected as Admin",
-      });
-    }
   } catch (error) {
     return res.status(500).json({
       success: false,

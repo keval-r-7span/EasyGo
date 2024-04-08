@@ -1,11 +1,10 @@
-import { boolean } from 'joi';
 import mongoose,{Document} from 'mongoose';
 
-export interface driver {
+export interface driver extends Document {
   name: string;
   email: string; 
   phoneNumber: string; 
-  // availability: boolean;
+  availability: boolean;
   role: string; 
   token: string; 
 }
@@ -25,17 +24,15 @@ const driverSchema = new mongoose.Schema<driver>({
   role:{
     type: String,
     enum: ["admin", "driver", "user"],
-    default: "driver"
+    default: 'driver'
   },
-  // availability: {
-  //   type: String,
-  //   enum: boolean,
-  //   default: 0
-  // },
+  availability: {
+    type: Boolean,
+    default: true
+  },
   token: {
     type: String,
   },
-  
 });
 
 export default mongoose.model<driver>("driver", driverSchema);
