@@ -81,7 +81,7 @@ const updateBooking = async (req:Request, res:Response) => {
     if (!response) {
       return res.status(404).json({success:false,message:"Enter Valid Booking ID or Value"});
     }
-    return res.status(204).json({success:true,data:response,message:"Sucessfully Updated"});
+    return res.status(200).json({success:true,data:response,message:"Sucessfully Updated"});
   } catch (error) {
     return res.status(500).json({success:false,message:error});
   }
