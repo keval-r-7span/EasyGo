@@ -30,7 +30,7 @@ const updateVehicleSchema = Joi.object({
   licensePlate: Joi.string(),
   color: Joi.string(),
   vehicleClass: Joi.string()
-    .valid("Bike", "Rickshaw", "mini", "premius", "xl")
+    .valid("Bike", "Rickshaw", "Mini", "Premius", "XL")
     .required(),
 });
 

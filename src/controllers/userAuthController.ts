@@ -35,7 +35,7 @@ const signUp = async (req: Request, res: Response) => {
           message: "Failed OTP response"
         })
       }
-      await response?.save();
+      await response.save();
       return res.status(200).json({
         success: true,
         message: "OTP sent Please verify within 10 minutes",
@@ -104,6 +104,8 @@ const verifyOtp = async (req: Request, res: Response) => {
         await newUser?.save();
         await customerService.removeTempUser(existUserTemp.id);
       }
+    }else{
+      return res.status(500).json({success:false,message:"OTP Are Invalid"})
     }
     return res.status(201).json({
       success: true,

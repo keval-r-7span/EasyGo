@@ -10,7 +10,7 @@ interface vehicle {
   year: number;
   licensePlate: string;
   color: string;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'mini' | 'premius' | 'xl';
+  vehicleClass: 'Bike' | 'Rickshaw' | 'Mini' | 'Premius' | 'XL';
   driverId: driver | string;
 }
 
