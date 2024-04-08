@@ -4,7 +4,6 @@ import indexRoute from './routes';
 import {PORT} from './helper/constants';
 import logger from './utils/logger';
 import cors from 'cors'
-
 const app = express();
 
 app.use(express.json());
@@ -17,6 +16,10 @@ app.get("/",(req:Request,res:Response)=>{
 })
 // Connect to MongoDB Atlas .
 connectDB();
+if (parseInt(process.version.slice(1), 10) < 16) {
+  logger.error('Node.js version 16 or higher is required to run this application.');
+  process.exit(1); 
+}
 // Start the server
 app.listen(PORT, ():void => {
   logger.info(`🚀 Server is running.. on http://localhost:${PORT}🚀..`);

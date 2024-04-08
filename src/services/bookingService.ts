@@ -60,7 +60,6 @@ const deleteBooking = async (query:string)=> {
   }
 };
 
-
 const getRevenue = async () => {
   try {
     const monthlyRevenue = await BookingSchema.aggregate([
