@@ -91,6 +91,7 @@ const availableDrivers = async () => {
   try {
     return await driverSchema.find({ availability:true }).select('name').select('phoneNumber')
   } catch (error) {
+    logger.error(error)
     throw error;
   }
 };

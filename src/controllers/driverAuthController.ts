@@ -57,7 +57,7 @@ const sendOtp = async (phoneNumber: string) => {
       });
     return {
       success: true,
-      message: `OTP successfully sent to mobile Number ending with`,
+      message: `OTP successfully sent to mobile Number`,
     };
   } catch (error) {
     return {
