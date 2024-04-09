@@ -13,7 +13,7 @@ const userJoiSchema = Joi.object({
 const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   const { error } = userJoiSchema.validate(req.body);
   if (error) {
-    return res.status(200).json({
+    return res.status(403).json({
       success: false, 
       message: error.details[0].message
     });

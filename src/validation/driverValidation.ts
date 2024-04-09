@@ -35,7 +35,7 @@ const addVehicleSchema = Joi.object({
 const validateAddVehicle = (req: Request, res: Response, next: NextFunction) => {
   const { error } = addVehicleSchema.validate(req.body);
   if (error) {
-    return res.status(200).json({
+    return res.status(403).json({
       success: false, 
       message: error.details[0].message
     });

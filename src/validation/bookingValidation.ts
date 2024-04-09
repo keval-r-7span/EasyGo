@@ -18,7 +18,7 @@ const bookingJoiSchema= Joi.object({
 const validateRequest = (req:Request, res:Response, next:NextFunction) => {
   const { error } = bookingJoiSchema.validate(req.body);
   if (error) {
-      return res.status(400).json({success:false,message: `validation error: ${error.details[0].message}`});
+      return res.status(403).json({success:false,message: `validation error: ${error.details[0].message}`});
   }
   next();
 };

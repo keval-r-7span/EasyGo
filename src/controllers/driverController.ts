@@ -3,7 +3,7 @@ import { vehicleService } from '../services/vehicleService';
 import { Request, Response, NextFunction } from "express";
 import logger from '../utils/logger';
 import { AWS_S3 } from '../helper/constants';
-import { s3 } from '../configs/awsS3';
+import  s3  from '../configs/awsS3';
 import AWS from 'aws-sdk'
 
 export const getDriver = async (req: Request, res: Response) => {
@@ -165,7 +165,6 @@ export const imgUpload = async (req: Request, res: Response) => {
           Body: file.buffer,
           ContentType: "image/jpeg/jpg"
       };
-
     s3.upload(params, (err, data) => {
       if (err) {
         console.error(err);
