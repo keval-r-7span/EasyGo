@@ -15,6 +15,7 @@ import {
   updateVehicle,
   updateDriver,
   deleteDriver,
+  imgUpload
   // availableDrivers
 } from '../controllers/driverController';
 
@@ -27,6 +28,7 @@ import {
    validateUpdateRequest, 
    validateUpdateVehicle 
 } from '../validation/updateValidation';
+import {upload} from '../middleware/multer';
 
 router.post('/register', validateRequest, signUp);
 router.post("/verify-otp", verifyOtp);
@@ -38,6 +40,7 @@ router.post('/addvehicle', validateAddVehicle, addVehicle);
 router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
 router.put('/update/:id', validateUpdateRequest, updateDriver);
 router.delete('/delete/:id', deleteDriver);
-// router.get('/available', availableDrivers);
+router.post('/upload',upload,imgUpload)
+
 
 export default router;
