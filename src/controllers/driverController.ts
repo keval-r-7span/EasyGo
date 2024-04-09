@@ -149,10 +149,8 @@ export const availableDrivers = async (req:Request, res: Response, next: NextFun
       success: false,
       message: error
     });
-
   }
 }
-
 
 export const imgUpload = async (req: Request, res: Response) => {
   try {
@@ -167,15 +165,15 @@ export const imgUpload = async (req: Request, res: Response) => {
           Body: file.buffer,
           ContentType: "image/jpeg/jpg"
       };
-  s3.upload(params, (err, data) => {
+
+    s3.upload(params, (err, data) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ message: 'Failed to upload file.' });
       }
   });
 });
-    return res.status(200).json({ success: true, message: "Files uploaded to S3 successfully" });
-
+    return res.status(200).json({ success: true, message: "Files uploaded successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: "Error uploading files to S3" });
