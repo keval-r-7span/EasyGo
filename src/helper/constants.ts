@@ -41,4 +41,10 @@ const MAIL = {
   PASS: process.env.MAIL_PASS,
 };
 
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL };
+const AWS_S3={
+  NAME:process.env.AWS_BUCKET_NAME,
+  API_KEY:process.env.AWS_ACCESS_KEY_ID,
+  SECRET:process.env.AWS_ACCESS_KEY_SECRET
+}
+
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };
