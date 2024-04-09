@@ -44,7 +44,8 @@ const MAIL = {
 const AWS_S3={
   NAME:process.env.AWS_BUCKET_NAME,
   API_KEY:process.env.AWS_ACCESS_KEY_ID,
-  SECRET:process.env.AWS_ACCESS_KEY_SECRET
+  SECRET:process.env.AWS_ACCESS_KEY_SECRET,
+  REGION:process.env.REGION
 }
 
 export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };

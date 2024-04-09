@@ -1,6 +1,10 @@
 import  {driverService}  from '../services/driverService';
 import { vehicleService } from '../services/vehicleService';
 import { Request, Response, NextFunction } from "express";
+import logger from '../utils/logger';
+import { AWS_S3 } from '../helper/constants';
+import { s3 } from '../configs/awsS3';
+import AWS from 'aws-sdk'
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -145,5 +149,36 @@ export const availableDrivers = async (req:Request, res: Response, next: NextFun
       success: false,
       message: error
     });
+
+  }
+}
+
+
+export const imgUpload = async (req: Request, res: Response) => {
+  try {
+      const files = req.files as Express.Multer.File[];
+    if (!req.files || req.files.length === 0) {
+      return res.status(404).json({success:false,message:'No files uploaded'});
+    }
+    files.map((file) => {
+      const params:AWS.S3.PutObjectRequest = {
+          Bucket: AWS_S3.NAME as string,
+          Key: file.originalname,
+          Body: file.buffer,
+          ContentType: "image/jpeg/jpg"
+      };
+
+  s3.upload(params, (err, data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Failed to upload file.' });
+      }
+  });
+});
+    return res.status(200).json({ success: true, message: "Files uploaded to S3 successfully" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Error uploading files to S3" });
   }
 };
