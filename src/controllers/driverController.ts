@@ -137,7 +137,6 @@ export const imgUpload = async (req: Request, res: Response) => {
           Body: file.buffer,
           ContentType: "image/jpeg/jpg"
       };
-
   s3.upload(params, (err, data) => {
       if (err) {
         console.error(err);
