@@ -15,7 +15,7 @@ import {
   updateVehicle,
   updateDriver,
   deleteDriver,
-  imgUpload
+  // imgUpload
   // availableDrivers
 } from '../controllers/driverController';
 
@@ -40,7 +40,7 @@ router.post('/addvehicle', validateAddVehicle, addVehicle);
 router.put('/vehicle/:id', validateUpdateVehicle, updateVehicle);
 router.put('/update/:id', validateUpdateRequest, updateDriver);
 router.delete('/delete/:id', deleteDriver);
-router.post('/upload',upload,imgUpload)
+// router.post('/upload',upload,imgUpload)
 
 
 export default router;
