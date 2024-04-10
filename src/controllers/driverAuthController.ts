@@ -130,7 +130,6 @@ const sendLoginOtp = async (req: Request, res: Response) => {
           to: `+91${phoneNumber}`,
           channel: "sms",
         });
-      console.log(response);
       return res.status(200).json({
         success: true,
         message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
