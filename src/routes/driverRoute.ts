@@ -27,7 +27,7 @@ import {
    validateUpdateRequest, 
    validateUpdateVehicle 
 } from '../validation/updateValidation';
-import {upload} from '../middleware/multer';
+// import {upload} from '../middleware/multer';
 
 router.post('/register', validateRequest, signUp);
 router.post("/verify-otp", verifyOtp);
