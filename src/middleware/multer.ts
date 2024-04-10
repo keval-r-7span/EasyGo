@@ -17,4 +17,4 @@ export const upload = multer({
             return cb(null, true);
         }
         cb(new Error('Please upload a JPEG, JPG or PNG image'));
-}}).array('images',5);
+}}).array('images',2);
