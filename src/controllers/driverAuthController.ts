@@ -124,7 +124,7 @@ const sendLoginOtp = async (req: Request, res: Response) => {
     });
   } else {
     try {
-      const response = await client.verify.v2
+       await client.verify.v2
         .services(TWILIO.SERVICE_SID)
         .verifications.create({
           to: `+91${phoneNumber}`,

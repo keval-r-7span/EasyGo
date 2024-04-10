@@ -50,7 +50,7 @@ export const addVehicle = async (req: Request, res: Response) => {
       });
     }
     const response = await vehicleService.addVehicle({
-      manufacturer, model, year, licensePlate, color, vehicleClass, driverId,
+      model, year, licensePlate, vehicleClass, driverId,
       fare: 0,
       save: function (): unknown {
         throw new Error('Function not implemented.');
@@ -73,11 +73,11 @@ export const addVehicle = async (req: Request, res: Response) => {
 export const updateVehicle = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { manufacturer, model, year, licensePlate, color, vehicleClass } =
+    const {model, year, licensePlate, vehicleClass } =
       req.body;
     const response = await vehicleService.updateVehicleDetails(
       id,
-      { manufacturer, model, year, licensePlate, color, vehicleClass }
+      { model, year, licensePlate,vehicleClass }
     );
     return res.status(200).json({
       success: true,
