@@ -8,9 +8,10 @@
     "node": ">=16"
   },
   "scripts": {
-    "start": "tsc-watch --onSuccess \"npm run watch\"",
+    "start": "rmdir /s /q dist && tsc-watch --onSuccess \"npm run watch\"",
+    "dev":"nodemon src/app.ts",
     "watch": "nodemon --watch './**/*.{ts}' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/app.ts",
-    "build": "tsc",
+    "build": "rimraf dist && npx tsc",
     "prod": "tsc && node --es-module-specifier-resolution=node dist/app.js"
   },
   "author": "7Span Interns",
