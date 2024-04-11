@@ -7,7 +7,7 @@ export interface driver extends Document {
   availability: boolean;
   role: string; 
   token: string; 
-  // images:object
+  images:object
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -32,13 +32,13 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: true
   },
-  // images: [
-  //   {
-  //     name: { type: String, required: true },
-  //     imageUrl: { type: String, required: true },
-  //     createdAt: { type: Date, default: Date.now },
-  //   }
-  // ],
+  images: [
+    {
+      name: { type: String, required: true },
+      imageUrl: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+    }
+  ],
   token: {
     type: String,
   },
