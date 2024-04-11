@@ -4,7 +4,6 @@ import indexRoute from './routes';
 import {PORT} from './helper/constants';
 import logger from './utils/logger';
 import cors from 'cors'
-import { concloudinary } from './configs/cloudinary';
 const app = express();
 
 app.use(express.json());
@@ -17,7 +16,7 @@ app.get("/",(req:Request,res:Response)=>{
 })
 // Connect to MongoDB Atlas .
 connectDB();
-concloudinary()
+
 // Start the server
 app.listen(PORT, ():void => {
   logger.info(`🚀 Server is running.. on http://localhost:${PORT}🚀..`);

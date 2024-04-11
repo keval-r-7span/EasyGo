@@ -7,13 +7,14 @@ const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
-  role: Joi.string().default('driver'),
+  // role: Joi.string().default('driver'),
+  location: Joi.object()
 });
 
 const validateRequest = (req: Request, res: Response, next: NextFunction) => {
   const { error } = driverJoiSchema.validate(req.body);
   if (error) {
-    return res.status(200).json({
+    return res.status(404).json({
       success: false, 
       message: error.details[0].message
     });
