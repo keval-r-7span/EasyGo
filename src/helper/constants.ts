@@ -32,20 +32,20 @@ const TWILIO: TwilloConfig = {
 };
 
 const DISTANCE = {
-  DISTANCE_MATRIX: process.env.DISTANCE_MATRIX_KEY,
+  DISTANCE_MATRIX: process.env.DISTANCE_MATRIX_KEY || "",
 };
 
 const MAIL = {
-  HOST: process.env.MAIL_HOST,
-  USER: process.env.MAIL_USER,
-  PASS: process.env.MAIL_PASS,
+  HOST: process.env.MAIL_HOST || "",
+  USER: process.env.MAIL_USER || "",
+  PASS: process.env.MAIL_PASS || "",
 };
 
 const AWS_S3={
-  NAME:process.env.AWS_BUCKET_NAME,
-  API_KEY:process.env.AWS_ACCESS_KEY_ID,
-  SECRET:process.env.AWS_ACCESS_KEY_SECRET,
-  REGION:process.env.AWS_REGION
+  NAME:process.env.AWS_BUCKET_NAME || "",
+  API_KEY:process.env.AWS_ACCESS_KEY_ID || "",
+  SECRET:process.env.AWS_ACCESS_KEY_SECRET || "",
+  REGION:process.env.AWS_REGION || ""
 }
 
 export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };

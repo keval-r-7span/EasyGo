@@ -169,6 +169,7 @@ export const availableDrivers = async (
 };
 
 export const imageUpload = async (req: Request, res: Response) => {
+  try {
   const fileName = Date.now().toString();
   const config: S3ClientConfig = {
     credentials: {
@@ -178,14 +179,11 @@ export const imageUpload = async (req: Request, res: Response) => {
     region: AWS_S3.REGION,
   };
   const client = new S3Client(config);
-
   const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
   const command = new PutObjectCommand({
     Bucket: AWS_S3.NAME,
     Key: fileName,
   });
-
-  // await the signed URL and return it
   const preSignedUrl = await getSignedUrl(client, command);
   return res.status(200).json({
     success: true,
@@ -195,4 +193,7 @@ export const imageUpload = async (req: Request, res: Response) => {
     },
     message: "preSignedUrl Generated...",
   });
+  } catch (error) {
+    return res.status(500).json({success:false,message:"preSigned URL failed:"+error})
+  }
 };
