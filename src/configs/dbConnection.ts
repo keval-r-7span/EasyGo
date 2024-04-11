@@ -9,7 +9,7 @@ const connectDB = async () => {
     await mongoose.connect(DB_DATA.DB_URL);
     logger.info("Connected to MongoDB Atlas");
   } catch (error) {
-    logger.error("Error connecting to MongoDB Atlas:", error);
+    logger.error("Error in connecting to MongoDB Atlas:", error);
   }
 };
 

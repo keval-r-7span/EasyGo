@@ -1,5 +1,4 @@
 /dist
 /node_modules
-.env
-.vercel
-/package-lock.json
+/.env
+/.vercel

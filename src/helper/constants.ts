@@ -41,15 +41,11 @@ const MAIL = {
   PASS: process.env.MAIL_PASS,
 };
 
-interface CLOUDINARYCONFIG {
-  NAME: string;
-  KEY: string;
-  SECRET: string;
+const AWS_S3={
+  NAME:process.env.AWS_BUCKET_NAME,
+  API_KEY:process.env.AWS_ACCESS_KEY_ID,
+  SECRET:process.env.AWS_ACCESS_KEY_SECRET,
+  REGION:process.env.REGION
 }
-const CLOUDINARY:CLOUDINARYCONFIG = {
-  NAME:process.env.CLOUD_NAME || "",
-  KEY:process.env.API_KEY|| "",
-  SECRET:process.env.API_SECRET|| ""
-};
 
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,CLOUDINARY };
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };
