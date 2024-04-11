@@ -4,6 +4,7 @@ import indexRoute from './routes';
 import {PORT} from './helper/constants';
 import logger from './utils/logger';
 import cors from 'cors'
+import { concloudinary } from './configs/cloudinary';
 const app = express();
 
 app.use(express.json());
