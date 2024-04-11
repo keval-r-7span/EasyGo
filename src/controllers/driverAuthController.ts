@@ -2,7 +2,7 @@ import { Request, Response, response } from 'express';
 import  {driverService}  from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
-import jwtToken from "../validation/jwtToken";
+import jwtToken from "../helper/jwtToken";
 import logger from "../utils/logger";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
