@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from "express";
 import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3Client, S3ClientConfig, PutObjectCommand } from "@aws-sdk/client-s3";
-import driverSchema from "../models/driverModel";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -170,31 +169,51 @@ export const availableDrivers = async (
 
 export const imageUpload = async (req: Request, res: Response) => {
   try {
-  const fileName = Date.now().toString();
-  const config: S3ClientConfig = {
-    credentials: {
-      accessKeyId: AWS_S3.API_KEY ?? "",
-      secretAccessKey: AWS_S3.SECRET ?? "",
-    },
-    region: AWS_S3.REGION,
-  };
-  const client = new S3Client(config);
-  const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
-  const command = new PutObjectCommand({
-    Bucket: AWS_S3.NAME,
-    Key: fileName,
-  });
-  const preSignedUrl = await getSignedUrl(client, command);
-  return res.status(200).json({
-    success: true,
-    data: {
-      preSignedUrl,
-      fileUrl,
-    },
-    message: "preSignedUrl Generated...",
-  });
+    const config: S3ClientConfig = {
+      credentials: {
+        accessKeyId: AWS_S3.API_KEY ?? "",
+        secretAccessKey: AWS_S3.SECRET ?? "",
+      },
+      region: AWS_S3.REGION,
+    };
+    const client = new S3Client(config);
+
+    const getPresignedUrl = async (client: S3Client) => {
+      const fileName = Date.now().toString() + (Math.random()*100000).toFixed(0);
+      const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
+
+      const command = new PutObjectCommand({
+        Bucket: AWS_S3.NAME,
+        Key: fileName,
+      });
+
+      const preSignedUrl = await getSignedUrl(client, command);
+      return {
+        fileUrl,
+        preSignedUrl,
+      };
+    };
+    const count = req.query.count ?? 1;
+
+    const presignedUrlArray = [];
+    for (let index = 0; index < +count; index++) {
+      presignedUrlArray.push(getPresignedUrl(client));
+    }
+    const presignedUrlResult = await Promise.allSettled(presignedUrlArray);
+    const uploadUrls = [];
+    for (const result of presignedUrlResult) {
+      if (result.status === "fulfilled") {
+        uploadUrls.push(result);
+      }
+    }
+    return res.status(200).json({
+      success: true,
+      data: uploadUrls,
+      message: "preSignedUrl Generated...",
+    });
   } catch (error) {
-    return res.status(500).json({success:false,message:"preSigned URL failed:"+error})
+    return res
+      .status(500)
+      .json({ success: false, message: "preSigned URL failed:" + error });
   }
 };
-
