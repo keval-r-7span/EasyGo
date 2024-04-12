@@ -3,8 +3,8 @@ import { vehicleService } from "../services/vehicleService";
 import { Request, Response, NextFunction } from "express";
 import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3Client, GetObjectCommand, S3ClientConfig, PutObjectCommand } from "@aws-sdk/client-s3";
-import logger from "../utils/logger";
+import { S3Client, S3ClientConfig, PutObjectCommand } from "@aws-sdk/client-s3";
+import driverSchema from "../models/driverModel";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -197,3 +197,4 @@ export const imageUpload = async (req: Request, res: Response) => {
     return res.status(500).json({success:false,message:"preSigned URL failed:"+error})
   }
 };
+

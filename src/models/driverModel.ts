@@ -1,5 +1,9 @@
 import mongoose,{Document} from 'mongoose';
 
+interface ImageObject {
+  name: string;
+  imageUrl: string;
+}
 export interface driver extends Document {
   name: string;
   email: string; 
@@ -7,7 +11,7 @@ export interface driver extends Document {
   availability: boolean;
   role: string; 
   token: string; 
-  images:object
+  images:ImageObject[]
 }
 
 const driverSchema = new mongoose.Schema<driver>({
