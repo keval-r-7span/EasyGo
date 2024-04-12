@@ -15,7 +15,7 @@ export const getDriver = async (req: Request, res: Response) => {
       data: response,
       message:"All Available Driver" });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       sucess: false,
       message: "Error in GetDriver"+error,
     });
@@ -30,7 +30,7 @@ export const getDriverByID = async (req: Request, res: Response) => {
       data: response,
     });
   } catch (error) {
-    return res.json({
+    return res.status(404).json({
       sucess: false,
       message: "Error in GetDriver ID" + error,
     });
@@ -55,7 +55,7 @@ export const addVehicle = async (req: Request, res: Response) => {
       }
     });
     await response.save();
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       data:response,
       message: "vehicle added successfully",
@@ -83,7 +83,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
       message: "vehicle details updated Successfully",
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: error,
     });
@@ -104,7 +104,7 @@ export const updateDriver = async (req: Request, res: Response) => {
       message: "Driver updated Successfully"
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: error,
     });
