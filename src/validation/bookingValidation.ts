@@ -1,34 +1,28 @@
 import { NextFunction,Request,Response } from 'express';
-import Joi from 'joi';
+import { bookingJoiSchema} from '../models/bookingModel';
+import logger from '../utils/logger'
+import {ValidationResult,Schema}from 'joi';
 
-const bookingJoiSchema= Joi.object({
-  customer:Joi.string(),
-  driver:Joi.string(),
-  vehicleClass:Joi.string(),
-  pickupLocation: Joi.string().min(3).max(100).required(),
-  dropoffLocation: Joi.string().min(3).max(100).required(),
-  pickupTime: Joi.string().required().default(Date.now()),
-  status: Joi.string().lowercase(),
-  fare: Joi.number().required(),
-  rating: Joi.number(),
-  comments: Joi.string(),
-});
+const schemas:Record<string,Schema> = {
+  booking:bookingJoiSchema
+}
+const validateData = (model:string,data:any):ValidationResult=>{
+  const schema = schemas[model];
+    if (!schema) {
+        throw new Error("Model/Schema not found")
+    }
+    return schema.validate(data)
+}
 
-const paymentJoiSchema = Joi.object({
-  customer:Joi.string(),
-  booking:Joi.string(),
-  amount:Joi.number(),
-  paymentMethod:Joi.string().lowercase(),
-  status:Joi.string().lowercase(),
-  transactionId:Joi.string(),
-})
-
-const validateRequest = (req:Request, res:Response, next:NextFunction) => {
-  const { error } = bookingJoiSchema.validate(req.body);
+export const validateRequest = (req:Request, res:Response, next:NextFunction) => { 
+  try {
+    const {error} = validateData('booking',req.body)
   if (error) {
-      return res.status(400).json({sucess:false,error: `JoiSchema validation error: ${error.details[0].message}`});
+    return res.status(500).json({success:false,message:"joischema validation error"+error.details[0].message})
+   } 
+next()
+} catch (error) {
+    logger.error(error);
   }
-  next();
 };
 
-export default validateRequest;
