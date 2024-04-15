@@ -127,5 +127,15 @@ const totalBooking = async (req:Request, res:Response) => {
   }
 };
 
-
-export {viewBooking,createBooking,updateBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById,rideStatus}
+const deleteBooking = async(req:Request,res:Response)=>{
+  try {
+    const response = await bookingService.deleteBooking(req.params.id)
+    if (!response) {
+      return res.status(404).json({success:false,message:"No Any Booking Found "});
+    }
+    return res.status(200).json({success:true,message:"Deleted booking recored"});   
+  } catch (error) {
+    return res.status(500).json({success:false,message:error});
+  }
+}
+export {viewBooking,createBooking,updateBooking,deleteBooking,cancelBooking,getRevenue,totalBooking,bookingStatus,viewBookingById,rideStatus}
