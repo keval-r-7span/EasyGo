@@ -63,7 +63,7 @@ const createBooking = async (req:Request, res:Response) => {
     }
     await response.save();
     // mailForBooking(response);     //send mail after booking sucess
-    return res.status(201).json({success:true,data:response})
+    return res.status(201).json({success:true,data:response,message:"booking successfully created.."})
   } catch (error) {
     return res.status(500).json({success:false,message:error});
   }

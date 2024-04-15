@@ -4,7 +4,7 @@ import Joi from 'joi';
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'mini' | 'premius' | 'xl';
+  vehicleClass: 'Bike' | 'Auto' | 'Mini' | 'Premium' | 'XL';
   pickupLocation: string;
   dropoffLocation:string;
   pickupTime:Date;
@@ -28,8 +28,8 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     vehicleClass: {
       type: String,
-      enum: ["Bike", "Rickshaw", "mini", "premius", "xl"],
-      default:'Rickshaw'
+      enum: ["Bike", "Auto", "Mini", "Premium", "XL"],
+      default:'Auto'
     },
     pickupLocation: {
       type: String,
@@ -39,6 +39,7 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     pickupTime: {
       type: Date,
+      default:Date.now()
     },
     dropoffTime: {
       type: Date,
@@ -73,7 +74,7 @@ export const bookingJoiSchema= Joi.object({
   vehicleClass:Joi.string(),
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
-  pickupTime: Joi.string().required().default(Date.now()),
+  pickupTime: Joi.string().default(Date.now()),
   status: Joi.string().lowercase(),
   fare: Joi.number().required(),
   rating: Joi.number(),
