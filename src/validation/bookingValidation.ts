@@ -9,7 +9,8 @@ const schemas:Record<string,Schema> = {
 const validateData = (model:string,data:any):ValidationResult=>{
   const schema = schemas[model];
     if (!schema) {
-        throw new Error("Model/Schema not found")
+        logger.error("Schema not found..");
+        throw new Error("Schema not found for validation..")
     }
     return schema.validate(data)
 }
