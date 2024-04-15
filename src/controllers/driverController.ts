@@ -3,7 +3,8 @@ import { vehicleService } from "../services/vehicleService";
 import { Request, Response, NextFunction } from "express";
 import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3Client, S3ClientConfig, PutObjectCommand } from "@aws-sdk/client-s3";
+import {client} from '../configs/awsS3Client'
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -169,24 +170,13 @@ export const availableDrivers = async (
 
 export const imageUpload = async (req: Request, res: Response) => {
   try {
-    const config: S3ClientConfig = {
-      credentials: {
-        accessKeyId: AWS_S3.API_KEY ?? "",
-        secretAccessKey: AWS_S3.SECRET ?? "",
-      },
-      region: AWS_S3.REGION,
-    };
-    const client = new S3Client(config);
-
     const getPresignedUrl = async (client: S3Client) => {
       const fileName = Date.now().toString() + (Math.random()*100000).toFixed(0);
       const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
-
       const command = new PutObjectCommand({
         Bucket: AWS_S3.NAME,
         Key: fileName,
       });
-
       const preSignedUrl = await getSignedUrl(client, command);
       return {
         fileUrl,
@@ -194,7 +184,6 @@ export const imageUpload = async (req: Request, res: Response) => {
       };
     };
     const count = req.query.count ?? 1;
-
     const presignedUrlArray = [];
     for (let index = 0; index < +count; index++) {
       presignedUrlArray.push(getPresignedUrl(client));
@@ -203,7 +192,7 @@ export const imageUpload = async (req: Request, res: Response) => {
     const uploadUrls = [];
     for (const result of presignedUrlResult) {
       if (result.status === "fulfilled") {
-        uploadUrls.push(result);
+        uploadUrls.push(result.value);
       }
     }
     return res.status(200).json({
