@@ -4,6 +4,9 @@
   "description": "bike taxi booking web applications",
   "type": "module",
   "main": "app.js",
+  "engines": {
+    "node": ">16"
+  },
   "scripts": {
     "start": "rmdir /s /q dist && tsc-watch --onSuccess \"npm run watch\"",
     "watch": "nodemon --watch './**/*.{ts}' --exec node --experimental-specifier-resolution=node --loader ts-node/esm src/app.ts",

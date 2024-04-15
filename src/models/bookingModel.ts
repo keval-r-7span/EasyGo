@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 
 export interface Booking extends Document {
@@ -59,5 +60,18 @@ const bookingSchema = new mongoose.Schema<Booking>(
   },
   { timestamps: true }
 );
+
+export const bookingJoiSchema= Joi.object({
+  customer:Joi.string(),
+  driver:Joi.string(),
+  vehicleClass:Joi.string(),
+  pickupLocation: Joi.string().min(3).max(100).required(),
+  dropoffLocation: Joi.string().min(3).max(100).required(),
+  pickupTime: Joi.string().required().default(Date.now()),
+  status: Joi.string().lowercase(),
+  fare: Joi.number().required(),
+  rating: Joi.number(),
+  comments: Joi.string(),
+});
 
 export default mongoose.model<Booking>("Booking", bookingSchema);
