@@ -4,7 +4,7 @@ import mongoose, { Document } from 'mongoose';
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'mini' | 'premius' | 'xl';
+  vehicleClass: 'Bike' | 'Rickshaw' | 'Mini' | 'Premiue' | 'XL';
   pickupLocation: string;
   dropoffLocation:string;
   pickupTime:Date;
@@ -27,7 +27,7 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     vehicleClass: {
       type: String,
-      enum: ["Bike", "Rickshaw", "mini", "premius", "xl"],
+      enum: ["Bike", "Rickshaw", "Mini", "Premiue", "XL"],
       default:'Rickshaw'
     },
     pickupLocation: {
