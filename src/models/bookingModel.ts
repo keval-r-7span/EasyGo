@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 import Joi from 'joi';
 
