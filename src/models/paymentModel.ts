@@ -24,7 +24,7 @@ const paymentSchema = new mongoose.Schema({
     type: Number,
     required: true 
 },
-  paymentMethod: {
+  Method: {
     type: String,
     enum: ["card", "cash", "wallet"],
     required: true,
