@@ -7,7 +7,7 @@
 //    return await transporter.sendMail({
 //       from: "Ride-With-ME",
 //       to: "kevalrabadiya27@gmail.com",
-//       subject: "Ride-ME🚕",
+//       subject: "Easy GO🚕",
 //       text: "Hello world?",
 //       html: `
 //       <p>Dear Customer,</p>

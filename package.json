@@ -5,7 +5,7 @@
   "type": "module",
   "main": "app.js",
   "engines": {
-    "node": ">16"
+    "node": ">20"
   },
   "scripts": {
     "start": "rmdir /s /q dist && tsc-watch --onSuccess \"npm run watch\"",
