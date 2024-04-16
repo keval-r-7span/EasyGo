@@ -2,13 +2,13 @@ import { Request, Response, response } from 'express';
 import  {driverService}  from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
-import jwtToken from "../validation/jwtToken";
+import jwtToken from "../helper/jwtToken";
 import logger from "../utils/logger";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location } = req.body;
+    const { name, email, phoneNumber } = req.body;
     if(!name || !email || !phoneNumber){
       return res.status(404).json({success:false,message:"Enter valid details."})
     }
@@ -21,7 +21,6 @@ const signUp = async (req: Request, res: Response) => {
         email: email.toLowerCase(),
         phoneNumber,
         role:'driver',
-        location
       });
       if (!response) {
         return res.status(400).json({
@@ -94,7 +93,6 @@ const verifyOtp = async (req: Request, res: Response) => {
           email: existUserTemp.email,
           phoneNumber: existUserTemp.phoneNumber,
           role: existUserTemp.role,
-          location: existUserTemp.location
         });
         await newUser?.save();
         await driverService.removeTempUser(existUserTemp.id);

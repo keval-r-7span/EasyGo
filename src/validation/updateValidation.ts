@@ -1,9 +1,7 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
-const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
 
 // Update Driver Schema
-
 const updateDriverSchema = Joi.object({
   name: Joi.string().min(3).max(30),
   email: Joi.string().email(),

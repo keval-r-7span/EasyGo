@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JWT } from "../helper/constants";
+import { JWT } from "./constants";
 
 const generateAccessToken = (user: { _id: any; phoneNumber: string; email: string; role: string; }) => {
   const payload = {

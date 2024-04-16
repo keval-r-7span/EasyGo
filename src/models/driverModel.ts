@@ -7,10 +7,7 @@ export interface driver extends Document {
   availability: boolean;
   role: string; 
   token: string; 
-  location: {
-    type: string; 
-    coordinates: [number, number];
-};
+  verificationStatus: 'Pending' | 'Verified';
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -18,7 +15,7 @@ const driverSchema = new mongoose.Schema<driver>({
     type: String,
     required:true
   },
-  email: {
+  email: {  
     type: String,
     unique: true
   },
@@ -38,17 +35,10 @@ const driverSchema = new mongoose.Schema<driver>({
   token: {
     type: String,
   },
-  location: {
-    type: { 
-      type: String, 
-      default: "Point" }, 
-    coordinates: {
-      type: [Number],
-      index: "2dsphere"
-    }, //long, lat
-},
+  verificationStatus: {
+    type: String,
+    enum: ["Pending", "Verified"]
+  }
 });
-
-driverSchema.index({location: "2dsphere"})
 
 export default mongoose.model<driver>("driver", driverSchema);
