@@ -1,4 +1,5 @@
-import mongoose,{Document} from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import Joi from 'joi';
 
 export interface driver extends Document {
   name: string;
@@ -40,5 +41,20 @@ const driverSchema = new mongoose.Schema<driver>({
     enum: ["Pending", "Verified"]
   }
 });
+
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+export const driverJoiSchema = Joi.object({
+  name: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
+  role: Joi.string().default('driver'),
+});
+
+export const updateDriverSchema = Joi.object({
+  name: Joi.string().min(3).max(30),
+  email: Joi.string().email(),
+  role: Joi.string(),
+});
+
 
 export default mongoose.model<driver>("driver", driverSchema);
