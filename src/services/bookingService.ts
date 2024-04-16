@@ -16,7 +16,6 @@ const viewBookingAll = async ()=> {
 const viewBooking = async (query:string) => {
   try {
     return await BookingSchema.findById(query)
-      .sort({ createdAt: -1 })
   } catch (error) {
     logger.error(error)
     throw error
