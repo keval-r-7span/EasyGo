@@ -5,6 +5,7 @@ import {
  viewBooking,createBooking,updateBooking,deleteBooking,bookingStatus,viewBookingById,getRevenue,totalBooking
 } from '../controllers/bookingController';
 import {validateRequest} from '../validation/bookingValidation';
+import { isAdmin, isUser, verifyToken } from '../middleware/authMiddleware';
 
 router.get("/list", viewBooking);
 router.get("/status", bookingStatus);

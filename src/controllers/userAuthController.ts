@@ -204,10 +204,10 @@ const STATIC_OTP = "9999";
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, role, location } = req.body;
-  if (!name || !email || !phoneNumber || !role || !location) {
+    const { name, email, phoneNumber, role } = req.body;
+  if (!name || !email || !phoneNumber || !role) {
     return res
-      .status(200)
+      .status(404)
       .json({ success: false, message: "Enter valid details." });
   }
   const userExist = await customerService.findCustomer({ phoneNumber });
@@ -222,7 +222,6 @@ const signUp = async (req: Request, res: Response) => {
       email: email.toLowerCase(),
       phoneNumber,
       role,
-      location,
     });
     if (!response) {
       return res.status(400).json({
@@ -254,7 +253,7 @@ const verifyOtp = async (req: Request, res: Response) => {
       message: "OTP successfully verified",
     });
   } else {
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
       message: "Invalid phone number or OTP",
     });
@@ -289,12 +288,12 @@ const login = async (req: Request, res: Response) => {
   }
   try {
     if(phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP)
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "successfully logged in",
     });
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
       message: error,
     });

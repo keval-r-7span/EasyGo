@@ -30,6 +30,7 @@ const vehicleDetails = new mongoose.Schema<vehicle>({
     type: String,
     enum: ["Bike", "Rickshaw", "mini", "premius", "xl"],
   },
+  
 });
 
 export default mongoose.model<vehicle>('Vehicle', vehicleDetails);
