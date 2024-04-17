@@ -15,15 +15,15 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
       req.headers["authorization"] || req.headers["Authorization"];
     const token = (authHeader as string)?.split(" ")[1];
     if (!token) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
-        messaage: "No Token Found",
+        message: "No Token Found",
       });
     }
     try {
       const decode = jwt.verify(token, JWT.SECRET) as JwtPayload;
       if (!decode.role) {
-        return res.status(404).json({
+        return res.status(401).json({
           success: false,
           message: "Unable to Decode Token",
         });
@@ -31,7 +31,7 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
       req.user = decode;
       next();
     } catch (error) {
-      return res.status(500).json({
+      return res.status(401).json({
         success: false,
         message: "Invalid Token",
       });
@@ -86,9 +86,9 @@ const isAdmin = (req: Request, res:Response,next: NextFunction) => {
   }
 };
 
-const isUser = (req: Request & { user: { role: string } }, res: Response, next: NextFunction) => {
+const isUser = (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.user.role !== "user") {
+    if (req.user?.role !== "user") {
       return res.status(401).json({
         success: false,
         message: "Protected routes for user only",

@@ -106,8 +106,8 @@
 //     });
 //   } catch (error) {
 //     return res.status(500).json({
-//       success: false,
-//       message: error
+//       isLogin:false,
+//       message:`Enter Invalid OTP`
 //     });
 //   }
 // };
@@ -138,8 +138,8 @@
 //       });
 //     } catch (error) {
 //       return res.status(500).json({
-//         success: false,
-//         message: error,
+//         isLogin:false,
+//         message: `error in send OTP `+error,
 //       });
 //     }
 //   }
@@ -149,7 +149,7 @@
 //   const { phoneNumber, otp } = req.body;
 //   if(!phoneNumber || !otp){
 //     return res.status(404).json({
-//       success: false,
+//       sisLogin: false,
 //       message: "Please Enter valid phone number and otp"
 //     })
 //   }
@@ -164,24 +164,24 @@
 //       const existUser = await customerService.findCustomer({ phoneNumber });
 //       if (!existUser) {
 //         return res.status(400).json({
-//           success: false,
+//           isLogin:false,
 //           message: "Oops!! Sign-Up first",
 //         });
 //       } else {
 //         const token = jwtToken(existUser);
 //         existUser.token = token;
 //         return res
-//           .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly:true })
 //           .status(200).json({
-//             success: true,
+//             isLogin:true,
+//             token,
 //             message: "User Logged in successfully",
 //           });
 //       }
 //     }
 //   } catch (error) {
 //     return res.status(500).json({
-//       success: false,
-//       message: error,
+//       isLogin: false,
+//       message: `Error in Login `+error,
 //     });
 //   }
 // };
