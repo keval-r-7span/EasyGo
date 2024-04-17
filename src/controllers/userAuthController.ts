@@ -2,7 +2,7 @@
 // import { customerService } from "../services/userService";
 // import { TWILIO } from "../helper/constants";
 // import twilio from "twilio";
-// import jwtToken from "../validation/jwtToken";
+// import jwtToken from "../helper/jwtToken";
 // const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 // const signUp = async (req: Request, res: Response) => {
@@ -15,7 +15,6 @@
 //     if (userExist) {
 //       return res.status(400).json({success:false,message:"User Already exist."})
 //     }
-//     if (role !== "admin") {
 //       const response = await customerService.registeruserTemp({
 //         name,
 //         email: email.toLowerCase(),
@@ -40,12 +39,6 @@
 //         success: true,
 //         message: "OTP sent Please verify within 10 minutes",
 //       });
-//     } else {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Role Should not be selected as Admin",
-//       });
-//     }
 //   } catch (error) {
 //     return res.status(500).json({
 //       success: false,
