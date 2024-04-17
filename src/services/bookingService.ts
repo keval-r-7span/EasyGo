@@ -15,7 +15,7 @@ const viewBookingAll = async ()=> {
 
 const viewBooking = async (query:string) => {
   try {
-    return await BookingSchema.findById(query)
+    return await BookingSchema.findById(id)
   } catch (error) {
     logger.error(error)
     throw error
@@ -32,9 +32,9 @@ const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
   }
 };
 
-const createBooking = async (query:string) => {
+const createBooking = async (id:string) => {
   try {
-    return await BookingSchema.create(query);
+    return await BookingSchema.create(id);
   } catch (error) {
     logger.error(error)
     throw error
@@ -52,7 +52,7 @@ const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:Query
 
 const deleteBooking = async (query:string)=> {
   try {
-    return await BookingSchema.findByIdAndDelete(query);
+    return await BookingSchema.findByIdAndDelete(id);
   } catch (error) {
     logger.error(error)
     throw error
