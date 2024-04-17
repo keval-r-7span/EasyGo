@@ -1,7 +1,6 @@
 import express from 'express';
-const router = express()
-
 import bookingRoute from './bookingRoute'
+const router = express()
 
 router.use("/booking",bookingRoute)
 

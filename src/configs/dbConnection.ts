@@ -6,7 +6,7 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(DB_DATA.DB_URL);
+    await mongoose.connect(DB_DATA.URL);
     logger.info("Connected to MongoDB Atlas");
   } catch (error) {
     logger.error("Error connecting to MongoDB Atlas:", error);
