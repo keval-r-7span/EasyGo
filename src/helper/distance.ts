@@ -11,9 +11,9 @@ const calcDistance = async (req:Request, res:Response) => {
     const data = await response.json();
     const traveledDistance = data.rows[0].elements[0].distance.value;
     const totalFare = Math.ceil(traveledDistance * 0.022);
-    return res.status(200).json({sucess:true,data:totalFare,distance:traveledDistance})
+    return res.status(200).json({success:true,data:totalFare,distance:traveledDistance})
   } catch (error) {
-    return res.status(500).json({sucess:false,message:"error in calc totalfare"})
+    return res.status(500).json({success:false,message:"error in calc totalfare"})
   }
 };
 

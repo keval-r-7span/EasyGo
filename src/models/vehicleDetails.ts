@@ -8,7 +8,7 @@ interface vehicle {
   model: string; 
   year: number;
   licensePlate: string;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'Mini' | 'Premius' | 'XL';
+  vehicleClass: 'Bike' | 'Auto' | 'Mini' | 'Premium' | 'XL';
   driverId: driver | string;
 }
 
@@ -28,7 +28,7 @@ const vehicleDetails = new mongoose.Schema<vehicle>({
   },
   vehicleClass: {
     type: String,
-    enum: ["Bike", "Rickshaw", "mini", "premius", "xl"],
+    enum: ["Bike", "Auto", "Mini", "premium", "XL"],
   },
   
 });

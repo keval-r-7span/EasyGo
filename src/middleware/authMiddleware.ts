@@ -73,7 +73,7 @@ const isAdmin = (req: Request, res:Response,next: NextFunction) => {
     if (req.user.role !== "admin") {
       return res.status(401).json({
         success: false,
-        message:`sorry it is protected for ${req.user.role}`,
+        message:`Sorry It's Protected for ${req.user.role}`,
       });
     }
     next();

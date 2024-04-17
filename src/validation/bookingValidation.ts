@@ -4,7 +4,7 @@ import logger from '../utils/logger'
 import {ValidationResult,Schema}from 'joi';
 
 const schemas:Record<string,Schema> = {
-  booking:bookingJoiSchema
+  booking:bookingJoiSchema,
 }
 const validateData = (model:string,data:any):ValidationResult=>{
   const schema = schemas[model];

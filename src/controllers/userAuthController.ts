@@ -8,7 +8,7 @@
 // const signUp = async (req: Request, res: Response) => {
 //   try {
 //     const { name, email, phoneNumber, role } = req.body;
-//     if(!name || !email || !phoneNumber || !role){
+//     if(!name || !email || !phoneNumber){
 //       return res.status(404).json({success:false,message:"Enter valid details."})
 //     }
 //     const userExist = await customerService.findCustomer({ phoneNumber });
@@ -19,7 +19,6 @@
 //         name,
 //         email: email.toLowerCase(),
 //         phoneNumber,
-//         role,
 //       });
 //       if (!response) {
 //         return res.status(400).json({
@@ -92,7 +91,7 @@
 //           name: existUserTemp.name,
 //           email: existUserTemp.email,
 //           phoneNumber: existUserTemp.phoneNumber,
-//           role: existUserTemp.role,
+//           role: 'user',
 //         });
 //         await newUser?.save();
 //         await customerService.removeTempUser(existUserTemp.id);
@@ -101,7 +100,7 @@
 //       return res.status(500).json({success:false,message:"OTP Are Invalid"})
 //     }
 //     return res.status(201).json({
-//       success: true,
+//       isLogin: true,
 //       message: "Successfully Verified and Registered ",
 //     });
 //   } catch (error) {
@@ -197,8 +196,8 @@ const STATIC_OTP = "9999";
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, role } = req.body;
-  if (!name || !email || !phoneNumber || !role) {
+    const { name, email, phoneNumber } = req.body;
+  if (!name || !email || !phoneNumber) {
     return res
       .status(404)
       .json({ success: false, message: "Enter valid details." });
@@ -209,12 +208,11 @@ const signUp = async (req: Request, res: Response) => {
       .status(200)
       .json({ success: false, message: "User Already exist." });
   }
-  if (role !== "admin") {
     const response = await customerService.registeruserTemp({
       name,
       email: email.toLowerCase(),
       phoneNumber,
-      role,
+      role:'user'
     });
     if (!response) {
       return res.status(400).json({
@@ -227,14 +225,14 @@ const signUp = async (req: Request, res: Response) => {
       data: response,
       message: "OTP sent successfully"
     })
-  }
   } catch (error) {
     return res.json({
       success: false,
       message:"Error at signing up "+ error
     })
-  }
 };
+}
+
 const verifyOtp = async (req: Request, res: Response) => {
   const { phoneNumber, otp } = req.body;
 

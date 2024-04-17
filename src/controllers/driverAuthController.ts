@@ -92,19 +92,19 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //           name: existUserTemp.name,
 //           email: existUserTemp.email,
 //           phoneNumber: existUserTemp.phoneNumber,
-//           role: existUserTemp.role,
+//           role: 'driver',
 //         });
 //         await newUser?.save();
 //         await driverService.removeTempUser(existUserTemp.id);
 //       }
 //     }
 //     return res.status(201).json({
-//       success: true,
+//       isLogin: true,
 //       message: "Successfully Verified and Registered ",
 //     });
 //   } catch (error) {
 //     return res.status(500).json({
-//       success: false,
+//       isLogin:false,
 //       message: error
 //     });
 //   }
@@ -138,7 +138,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //     } catch (error) {
 //       logger.error(error)
 //       return res.status(500).json({
-//         success: false,
+//         isLogin: false,
 //         message: "Failed to Send OTP, "+ error,
 //       });
 //     }
@@ -164,7 +164,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //       const existUser = await driverService.findDriver({ phoneNumber });
 //       if (!existUser) {
 //         return res.status(400).json({
-//           success: false,
+//           isLogin: false,
 //           message: "Oops!! Sign-Up first",
 //         });
 //       } else {
@@ -174,6 +174,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //           .cookie("token", token, { maxAge: 3 * 24 * 60 * 60 * 1000, httpOnly:true })
 //           .status(200).json({
 //             success: true,
+//             token,
 //             message: "User Logged in successfully",
 //           });
 //       }
@@ -181,8 +182,8 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //   } catch (error) {
 //     logger.error(error)
 //     return res.status(500).json({
-//       success: false,
-//       message: error,
+//       isLogin: false,
+//       message: `Error in Login:`+ error,
 //     });
 //   }
 // };
