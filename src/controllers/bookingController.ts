@@ -1,61 +1,55 @@
-import { Request,Response } from 'express';
-import { bookingService } from '../services/bookingService';
+import { Request, Response, response } from 'express';
+import  {bookingService}  from  '../services/bookingService';
+import logger from '../utils/logger';
 
-const viewBooking = async (req:Request, res:Response)=> {
+export const viewBooking = async (req:Request, res:Response)=> {
   try {
-    const response = await bookingService.viewBookingAll()
-    if (!response) {
-     return res.status(404).json({success:false,message:"No Booking Available"})
-    }
-    return res.status(200).json({success:true,data:response,message:"all booking here."})
-  } catch (error) {
-    return res.status(500).json({success:false,message:error})
-  }
-};
-
-const viewBookingById = async (req:Request, res:Response) => {
-  try {
-    const response = await bookingService.viewBooking(req.params.id);
-    if (!response) {
-      return res.status(404).json({success:false,message:"No Booking Available"})
-    }
-    return res.status(200).json({success:true,data:response})
-  } catch (error) {
-    return res.status(500).json({success:true,message:error})
-  }
-};
-
-const bookingStatus = async (req:Request, res:Response) => {
-  try {
+    const { id } = req.query as { id: string };
     const status = req.body.status || req.query.status;
-    if(!status){
-      return res.status(404).json({success:false,message:"enter status"})
+    if(id || status){
+      if(id){
+      const response = await bookingService.viewBooking(id);
+      if (!response) {
+        return res.status(404).json({success:false,message:"No Booking Available"})
+      }
+      return res.status(200).json({success:true,data:response})
     }
-    const response = await bookingService.viewBookingFilter({ status });
-    if(!response){
-      return res.status(404).json({success:false,message:"No Booking Available"})
+    else{
+      const response = await bookingService.viewBookingFilter({ status });
+      if(!response){
+        return res.status(404).json({success:false,message:"No Booking Available"})
+      }
+      return res.status(200).json({success:true,data:response,message:"all booking here.."})
     }
-    return res.status(200).json({success:true,data:response,message:"all booking here.."})
+    }
+    else{
+      const response = await bookingService.viewBookingAll()
+      if (!response) {
+       return res.status(404).json({success:false,message:"No Booking Available"})
+      }
+      return res.status(200).json({success:true,data:response,message:"all booking here."})
+    }
   } catch (error) {
-    return res.status(500).json({success:true,message:error})
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in viewBooking:`+error})
   }
 };
 
-const createBooking = async (req:Request, res:Response) => {
+export const createBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.createBooking(req.body);
     if(!response){
       return res.status(404).json({success:false,message:'Enter Valid Field'})
     }
     await response.save();
-    // mailForBooking(response);     //send mail after booking success
     return res.status(200).json({success:true,data:response,message:"Ride booking successfully."})
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in createBooking:`+ error});
   }
 };
 
-const updateBooking = async (req:Request, res:Response) => {
+export const updateBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.updateBooking(
       req.params.id,
@@ -69,11 +63,12 @@ const updateBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Booking updated successfully.."});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in updateBooking:`+ error});
   }
 };
 
-const deleteBooking = async (req:Request, res:Response) => {
+export const deleteBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.deleteBooking(req.params.id);
     if (!response) {
@@ -81,12 +76,13 @@ const deleteBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Booking Cancel Suceesfully."});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in deleteBooking:`+ error});
   }
 };
 
 
-const getRevenue = async (req:Request, res:Response) => {
+export const getRevenue = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.getRevenue();
     if (!response) {
@@ -94,11 +90,12 @@ const getRevenue = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Generate total Revenue"});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in getRevenue:`+ error});
   }
 };
 
-const totalBooking = async (req:Request, res:Response) => {
+export const totalBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.aggregateBookings();
     if (!response) {
@@ -106,9 +103,8 @@ const totalBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Generate total Booking"});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in totalBooking: `+error});
   }
 };
 
-
-export {viewBooking,createBooking,updateBooking,deleteBooking,getRevenue,totalBooking,bookingStatus,viewBookingById}

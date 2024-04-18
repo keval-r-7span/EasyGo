@@ -1,68 +1,35 @@
-import { QueryOptions, RootQuerySelector, UpdateQuery } from 'mongoose';
+import { QueryOptions, RootQuerySelector, UpdateQuery}from 'mongoose';
 import BookingSchema,{Booking} from '../models/bookingModel';
-import logger from '../utils/logger';
+
 
 const viewBookingAll = async ()=> {
-  try {
      return await BookingSchema.find()
     //   .populate("customer")
     //   .populate("driver")
-  } catch (error) {
-    logger.error(error)
-  }
 };
 
- const viewBooking = async (id:string) => {
-  try {
+const viewBooking = async (id:string) => {
     return await BookingSchema.findById(id)
-  } catch (error) {
-    logger.error(error)
-  }
 };
 
-export const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
-  try {
-    return await BookingSchema.find(query)
-      .sort({ createdAt: -1 })
-  } catch (error) {
-    logger.error(error)
-  }
+const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
+  return await BookingSchema.find(query)
+  .sort({ createdAt: -1 })
 };
 
 const createBooking = async (id:string) => {
-  try {
-    return await BookingSchema.create(id);
-  } catch (error) {
-    logger.error(error)
-  }
+  return await BookingSchema.create(id);
 };
 
 const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:QueryOptions<Booking>) => {
-  try {
-    return await BookingSchema.findByIdAndUpdate(id, query, option);
-  } catch (error) {
-    logger.error(error)
-  }
+  return await BookingSchema.findByIdAndUpdate(id, query, option);
 };
 
-export const deleteBooking = async (id:string)=> {
-  try {
-    return await BookingSchema.findByIdAndDelete(id);
-  } catch (error) {
-    logger.error(error)
-  }
+const deleteBooking = async (id:string)=> {
+  return await BookingSchema.findByIdAndDelete(id);
 };
 
-export const rideComplete = async (id:string) => {
-  try {
-    return await BookingSchema.findById(id);
-  } catch (error) {
-    logger.error(error)   
-  }
-};
-
-export const getRevenue = async () => {
-  try {
+const getRevenue = async () => {
     const monthlyRevenue = await BookingSchema.aggregate([
       {
         $group: {
@@ -78,13 +45,9 @@ export const getRevenue = async () => {
       },
     ]);
     return monthlyRevenue;
-  } catch (error) {
-    logger.error(error)
-  }
 };
 
-export const aggregateBookings = async () => {
-  try {
+const aggregateBookings = async () => {
     const result = await BookingSchema.aggregate([
       {
         $group: {
@@ -99,9 +62,6 @@ export const aggregateBookings = async () => {
       },
     ]);
     return result;
-  } catch (error) {
-    logger.error(error)
-  }
 };
 
-export const bookingService =  {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,rideComplete,getRevenue,aggregateBookings}
+export const bookingService =  {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,getRevenue,aggregateBookings}
