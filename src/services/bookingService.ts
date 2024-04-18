@@ -1,9 +1,8 @@
-import { QueryOptions, RootQuerySelector, UpdateQuery } from 'mongoose';
+import { QueryOptions, RootQuerySelector, UpdateQuery}from 'mongoose';
 import BookingSchema,{Booking} from '../models/bookingModel';
-import logger from '../utils/logger';
+
 
 const viewBookingAll = async ()=> {
-  try {
      return await BookingSchema.find()
     //   .populate("customer")
     //   .populate("driver")

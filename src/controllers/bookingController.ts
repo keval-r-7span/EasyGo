@@ -1,5 +1,6 @@
-import { Request,Response } from 'express';
-import { bookingService } from '../services/bookingService';
+import { Request, Response, response } from 'express';
+import  {bookingService}  from  '../services/bookingService';
+import logger from '../utils/logger';
 
 const viewBooking = async (req:Request, res:Response)=> {
   try {
@@ -27,17 +28,23 @@ const viewBookingById = async (req:Request, res:Response) => {
 
 const bookingStatus = async (req:Request, res:Response) => {
   try {
+    const { id } = req.query as { id: string };
     const status = req.body.status || req.query.status;
-    if(!status){
-      return res.status(404).json({success:false,message:"enter status"})
+    if(id || status){
+      if(id){
+      const response = await bookingService.viewBooking(id);
+      if (!response) {
+        return res.status(404).json({success:false,message:"No Booking Available"})
+      }
+      return res.status(200).json({success:true,data:response})
     }
     const response = await bookingService.viewBookingFilter({ status });
     if(!response){
       return res.status(404).json({success:true,message:"No Data Found."})
     }
-    return res.status(200).json({success:true,data:response,message:"all booking here.."})
   } catch (error) {
-    return res.status(500).json({success:true,message:error})
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in viewBooking:`+error})
   }
 };
 const rideStatus = async(req:Request,res:Response)=>{
@@ -58,7 +65,7 @@ const rideStatus = async(req:Request,res:Response)=>{
   }
 }
 
-const createBooking = async (req:Request, res:Response) => {
+export const createBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.createBooking(req.body);
     if(!response){
@@ -68,11 +75,12 @@ const createBooking = async (req:Request, res:Response) => {
     // mailForBooking(response);     //send mail after booking sucess
     return res.status(201).json({success:true,data:response,message:"booking successfully created.."})
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in createBooking:`+ error});
   }
 };
 
-const updateBooking = async (req:Request, res:Response) => {
+export const updateBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.updateBooking(
       req.params.id,
@@ -86,11 +94,12 @@ const updateBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Sucessfully Updated"});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in updateBooking:`+ error});
   }
 };
 
-const deleteBooking = async (req:Request, res:Response) => {
+export const deleteBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.updateBooking(
       req.params.id,
@@ -102,7 +111,8 @@ const deleteBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Booking Cancel Suceesfully."});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in deleteBooking:`+ error});
   }
 };
 
@@ -114,11 +124,12 @@ const getRevenue = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Generate total Revenue"});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in getRevenue:`+ error});
   }
 };
 
-const totalBooking = async (req:Request, res:Response) => {
+export const totalBooking = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.aggregateBookings();
     if (!response) {
@@ -126,7 +137,8 @@ const totalBooking = async (req:Request, res:Response) => {
     }
     return res.status(200).json({success:true,data:response,message:"Generate total Booking"});
   } catch (error) {
-    return res.status(500).json({success:false,message:error});
+    logger.error(error)
+    return res.status(500).json({success:false,message:`Error in totalBooking: `+error});
   }
 };
 
