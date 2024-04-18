@@ -1,6 +1,10 @@
 import mongoose, { Document } from 'mongoose';
 import Joi from 'joi';
 
+interface ImageObject {
+  name: string;
+  imageUrl: string;
+}
 export interface driver extends Document {
   name: string;
   email: string; 
@@ -9,6 +13,7 @@ export interface driver extends Document {
   role: string; 
   token: string; 
   verificationStatus: 'Pending' | 'Verified';
+  images: ImageObject[];
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -39,7 +44,13 @@ const driverSchema = new mongoose.Schema<driver>({
   verificationStatus: {
     type: String,
     enum: ["Pending", "Verified"]
-  }
+  },
+  images: [
+    {
+      name: { type: String, required: true },
+      imageUrl: { type: String, required: true }
+    }
+  ],
 });
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/

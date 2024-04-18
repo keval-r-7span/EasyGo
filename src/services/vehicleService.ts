@@ -1,6 +1,6 @@
 import  vehicleDetails  from '../models/vehicleDetails';
 
-export const findVehicle = async (query: any) => { 
+const findVehicle = async (query: any) => { 
   try {
     return await vehicleDetails.findOne(query);
   } catch (error) {
@@ -8,7 +8,7 @@ export const findVehicle = async (query: any) => {
   }
 };
 
-export const addVehicle = async (query: any) => {
+const addVehicle = async (query: any) => {
   try {
     return await vehicleDetails.create(query);
   } catch (error) {
@@ -16,7 +16,7 @@ export const addVehicle = async (query: any) => {
   }
 };
 
-export const updateVehicleDetails = async (id: string, query: any) => {
+const updateVehicleDetails = async (id: string, query: any) => {
   try {
     return await vehicleDetails.findByIdAndUpdate(id, query);
   } catch (error) {
