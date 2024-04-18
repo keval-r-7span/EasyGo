@@ -43,7 +43,8 @@ const driverSchema = new mongoose.Schema<driver>({
   },
   verificationStatus: {
     type: String,
-    enum: ["Pending", "Verified"]
+    enum: ["Pending", "Verified"],
+    default: "Pending"
   },
   images: [
     {

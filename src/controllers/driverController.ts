@@ -67,11 +67,11 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
 export const updateDriver = async (req: Request, res: Response) => {
   try {
-    const { name, email, role } = req.body;
+    const { name, email, verificationStatus } = req.body;
     const response = await driverService.updateDriver(req.params.id, {
       name,
       email,
-      role,
+      verificationStatus
     });
     return res.status(200).json({
       success: true,
