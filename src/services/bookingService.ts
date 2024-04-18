@@ -1,66 +1,35 @@
-import { QueryOptions, RootQuerySelector, UpdateQuery } from 'mongoose';
+import { QueryOptions, RootQuerySelector, UpdateQuery}from 'mongoose';
 import BookingSchema,{Booking} from '../models/bookingModel';
-import logger from '../utils/logger';
+
 
 const viewBookingAll = async ()=> {
-  try {
      return await BookingSchema.find()
     //   .populate("customer")
     //   .populate("driver")
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
 };
 
-const viewBooking = async (query:string) => {
-  try {
+const viewBooking = async (id:string) => {
     return await BookingSchema.findById(id)
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
 };
 
 const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
-  try {
-    return await BookingSchema.find(query)
-      .sort({ createdAt: -1 })
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
+  return await BookingSchema.find(query)
+  .sort({ createdAt: -1 })
 };
 
 const createBooking = async (id:string) => {
-  try {
-    return await BookingSchema.create(id);
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
+  return await BookingSchema.create(id);
 };
 
 const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:QueryOptions<Booking>) => {
-  try {
-    return await BookingSchema.findByIdAndUpdate(id, query, option);
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
+  return await BookingSchema.findByIdAndUpdate(id, query, option);
 };
 
-const deleteBooking = async (query:string)=> {
-  try {
-    return await BookingSchema.findByIdAndDelete(id);
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
+const deleteBooking = async (id:string)=> {
+  return await BookingSchema.findByIdAndDelete(id);
 };
 
 const getRevenue = async () => {
-  try {
     const monthlyRevenue = await BookingSchema.aggregate([
       {
         $group: {
@@ -76,14 +45,9 @@ const getRevenue = async () => {
       },
     ]);
     return monthlyRevenue;
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
 };
 
 const aggregateBookings = async () => {
-  try {
     const result = await BookingSchema.aggregate([
       {
         $group: {
@@ -98,10 +62,6 @@ const aggregateBookings = async () => {
       },
     ]);
     return result;
-  } catch (error) {
-    logger.error(error)
-    throw error
-  }
 };
 
 export const bookingService =  {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,getRevenue,aggregateBookings}
