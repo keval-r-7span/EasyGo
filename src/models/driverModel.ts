@@ -12,7 +12,7 @@ export interface driver extends Document {
   availability: boolean;
   role: string; 
   token: string; 
-  verificationStatus: 'Pending' | 'Verified';
+  isVerify: boolean;
   images: ImageObject[];
 }
 
@@ -41,10 +41,9 @@ const driverSchema = new mongoose.Schema<driver>({
   token: {
     type: String,
   },
-  verificationStatus: {
-    type: String,
-    enum: ["Pending", "Verified"],
-    default: "Pending"
+  isVerify: {
+    type: Boolean,
+    default: false
   },
   images: [
     {

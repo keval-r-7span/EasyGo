@@ -9,20 +9,23 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 export const getDriver = async (req: Request, res: Response) => {
   try {
     const response = await driverService.viewDriver();
-    if (!response) {
-      return res
-        .status(404)
-        .json({ success: true, message: "No Any Driver Register." });
+    if(!response){
+      return res.status(404).json({
+        success:false,
+        message: "Unable to get list of Driver."
+      })
     }
-    return res.status(200).json({
-      sucess: true,
-      data: response,
-      message: "All Available Driver",
-    });
+    else{
+      return res.status(200).json({ 
+        success: true, 
+        data: response,
+        message: "All Driver List."
+      });
+    }
   } catch (error) {
-    return res.json({
-      sucess: false,
-      message: "Error in GetDriver" + error,
+    return res.status(500).json({
+      success: false,
+      message: "Error in GetDriver "+error,
     });
   }
 };
@@ -30,14 +33,22 @@ export const getDriver = async (req: Request, res: Response) => {
 export const getDriverByID = async (req: Request, res: Response) => {
   try {
     const response = await driverService.viewDriverById(req.params.id);
-    return res.status(200).json({
-      sucess: true,
-      data: response,
-    });
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+    else{
+      return res.status(200).json({
+        success: true,
+        data: response
+      });
+    }
   } catch (error) {
-    return res.json({
-      sucess: false,
-      message: "Error in GetDriver ID" + error,
+    return res.status(500).json({
+      success: false,
+      message: "Error in GetCustomer ID "+error,
     });
   }
 };
@@ -52,15 +63,23 @@ export const updateVehicle = async (req: Request, res: Response) => {
       licensePlate,
       vehicleClass,
     });
-    return res.status(200).json({
-      success: true,
-      data: response,
-      message: "vehicle details updated Successfully",
-    });
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+    else{
+      return res.status(200).json({
+        success: true,
+        data: response,
+        message: "vehicle details updated Successfully."
+      });
+    }
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
-      message: error,
+      message: "ERROR in Update Vehicle "+error,
     });
   }
 };
@@ -73,15 +92,23 @@ export const updateDriver = async (req: Request, res: Response) => {
       email,
       verificationStatus
     });
-    return res.status(200).json({
-      success: true,
-      data: response,
-      message: "Driver updated Successfully",
-    });
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+    else{
+      return res.status(200).json({
+        success: true,
+        data: response,
+        message: "Driver data updated Successfully",
+      });
+    }
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       success: false,
-      message: error,
+      message: "ERROR in Update Driver "+error,
     });
   }
 };
