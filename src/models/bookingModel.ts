@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
-import Joi from 'joi';
+
 
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
