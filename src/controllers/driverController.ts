@@ -42,41 +42,6 @@ export const getDriverByID = async (req: Request, res: Response) => {
   }
 };
 
-export const addVehicle = async (req: Request, res: Response) => {
-  try {
-    const { model, year, licensePlate, vehicleClass, driverId } = req.body;
-    const vehicleExist = await vehicleService.findVehicle({ licensePlate });
-    if (vehicleExist) {
-      return res.status(500).json({
-        success: false,
-        message: "Already Register Vehicle ",
-      });
-    }
-    const response = await vehicleService.addVehicle({
-      model,
-      year,
-      licensePlate,
-      vehicleClass,
-      driverId,
-      fare: 0,
-      save: function (): unknown {
-        throw new Error("Function not implemented.");
-      },
-    });
-    await response.save();
-    return res.status(201).json({
-      success: true,
-      data: response,
-      message: "vehicle added successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong while addind vehicle " + error,
-    });
-  }
-};
-
 export const updateVehicle = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -206,3 +171,114 @@ export const imageUpload = async (req: Request, res: Response) => {
       .json({ success: false, message: "preSigned URL failed:" + error });
   }
 };
+
+export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
+  try {
+    const { model, year, licensePlate, vehicleClass, driverId, imageUrls } = req.body;
+    // Check if the vehicle already exists
+    const vehicleExist = await vehicleService.findVehicle({ licensePlate });
+    if (vehicleExist) {
+      return res.status(500).json({
+        success: false,
+        message: "Already Registered Vehicle",
+      });
+    }
+    // Add the vehicle
+    const response = await vehicleService.addVehicle({
+      model,
+      year,
+      licensePlate,
+      vehicleClass,
+      driverId,
+      fare: 0,
+      save: function (): unknown {
+        throw new Error("Function not implemented.");
+      },
+    });
+    await response.save();
+    // Find the driver by ID
+    const driver = await driverService.findDriver({ _id: driverId });
+    if (!driver) {
+      return res.status(404).json({ success: false, message: 'Driver not found' });
+    }
+    // Add each image URL to the driver's images array
+    for (const imageUrl of imageUrls) {
+      driver.images.push(imageUrl);
+    }
+    // Save the updated driver document
+    await driver.save();
+    return res.status(201).json({
+      success: true,
+      message: "Vehicle added successfully, and image URLs saved",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while adding vehicle or saving image URLs: " + error,
+    });
+  }
+};
+
+
+// export const addVehicle = async (req: Request, res: Response) => {
+//   try {
+//     const { model, year, licensePlate, vehicleClass, driverId } = req.body;
+//     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
+//     if (vehicleExist) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Already Register Vehicle ",
+//       });
+//     }
+//     const response = await vehicleService.addVehicle({
+//       model,
+//       year,
+//       licensePlate,
+//       vehicleClass,
+//       driverId,
+//       fare: 0,
+//       save: function (): unknown {
+//         throw new Error("Function not implemented.");
+//       },
+//     });
+//     await response.save();
+//     return res.status(201).json({
+//       success: true,
+//       data: response,
+//       message: "vehicle added successfully",
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while addind vehicle " + error,
+//     });
+//   }
+// };
+
+// export const saveImageUrl = async (req: Request, res: Response) => {
+//   try {
+//     const { driverId, imageUrls } = req.body; // Assuming you pass driverId and imageUrls in the request body
+
+//     // Find the driver by ID
+//     const driver = await driverService.findDriver({ _id: driverId }); // Pass an object with the _id field
+
+//     if (!driver) {
+//       return res.status(404).json({ success: false, message: 'Driver not found' });
+//     }
+
+//     // Add each image URL to the driver's images array
+//     for (const imageUrl of imageUrls) {
+//       driver.images.push(imageUrl);
+//     }
+
+//     // Save the updated driver document
+//     await driver.save();
+
+//     return res.status(200).json({
+//       success: true,
+//       message: 'Image URLs saved successfully',
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: 'Error saving image URLs: ' + error });
+//   }
+// };

@@ -1,4 +1,5 @@
-import mongoose,{Document} from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import Joi from 'joi';
 
 interface ImageObject {
   name: string;
@@ -11,7 +12,8 @@ export interface driver extends Document {
   availability: boolean;
   role: string; 
   token: string; 
-  images:ImageObject[]
+  verificationStatus: 'Pending' | 'Verified';
+  images: ImageObject[];
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -19,7 +21,7 @@ const driverSchema = new mongoose.Schema<driver>({
     type: String,
     required:true
   },
-  email: {  
+  email: {
     type: String,
     unique: true
   },
@@ -36,16 +38,34 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: true
   },
-  images: [
-    {
-      name: { type: String, required: true },
-      imageUrl: { type: String, required: true },
-      createdAt: { type: Date, default: Date.now },
-    }
-  ],
   token: {
     type: String,
   },
+  verificationStatus: {
+    type: String,
+    enum: ["Pending", "Verified"]
+  },
+  images: [
+    {
+      name: { type: String, required: true },
+      imageUrl: { type: String, required: true }
+    }
+  ],
 });
+
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+export const driverJoiSchema = Joi.object({
+  name: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
+  role: Joi.string().default('driver'),
+});
+
+export const updateDriverSchema = Joi.object({
+  name: Joi.string().min(3).max(30),
+  email: Joi.string().email(),
+  role: Joi.string(),
+});
+
 
 export default mongoose.model<driver>("driver", driverSchema);
