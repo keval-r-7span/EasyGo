@@ -8,7 +8,7 @@ import {
   deleteCustomer,
 } from "../controllers/customerController";
 import { signUp, verifyOtp, sendLoginOtp, login  } from "../controllers/userAuthController";
-import validateRequest from "../validation/userValidation";
+import {validateRequest} from "../validation/joiValidation";
 import { verifyToken } from "../middleware/authMiddleware";
 
 router.post("/register", validateRequest, signUp);

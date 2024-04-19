@@ -140,9 +140,9 @@ export const imageUpload = async (req: Request, res: Response) => {
       const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
       const command = new PutObjectCommand({
         Bucket: AWS_S3.NAME,
-        Key: fileName,
+        Key: fileName
       });
-      const preSignedUrl = await getSignedUrl(client, command);
+      const preSignedUrl = await getSignedUrl(client, command,{expiresIn:100000});
       return {
         fileUrl,
         preSignedUrl,
