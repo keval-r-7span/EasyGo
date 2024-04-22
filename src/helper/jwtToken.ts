@@ -10,7 +10,7 @@ const generateAccessToken = (user: { _id: Types.ObjectId; phoneNumber: string; e
     role: user.role,
   };
   const options = { expiresIn: JWT.EXPIRES };
-  return jwt.sign(payload, JWT.SECRET, options);
+  return jwt.sign(user, JWT.SECRET, options);
 };
 
 export default generateAccessToken;
