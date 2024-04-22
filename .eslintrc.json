@@ -1,14 +1,14 @@
 {
     "parser": "@typescript-eslint/parser",
     "extends": [
-      // "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended",
       // "prettier",
-      // "plugin:prettier/recommended"
+      // "plugin:prettier/recommended",
       "eslint:recommended"
       ],
-      "plugins": ["prettier"],
+    "plugins": ["@typescript-eslint"],
     "parserOptions": {
-      "ecmaVersion": 2020,
+      "ecmaVersion": 2015,
       "sourceType": "module"
     },
     "env": {
