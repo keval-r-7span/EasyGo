@@ -230,7 +230,7 @@ const signUp = async (req: Request, res: Response) => {
       success: false,
       message:"Error at signing up "+ error
     })
-};
+}
 }
 
 const verifyOtp = async (req: Request, res: Response) => {

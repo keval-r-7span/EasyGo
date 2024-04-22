@@ -1,14 +1,14 @@
 import { NextFunction,Request,Response } from 'express';
-import { bookingJoiSchema,updateJoiSchema } from '../models/bookingModel';
+import { bookingJoiSchema} from '../models/bookingModel';
 import logger from '../utils/logger'
 import {ValidationResult,Schema}from 'joi';
 import { driverJoiSchema } from '../models/driverModel';
-import { userJoiSchema } from '../models/customerModel';
+// import { customerJoiSchema } from '../models/customerModel';
 
 const schemas:Record<string,Schema> = {
   booking:bookingJoiSchema,
   driver:driverJoiSchema,
-  user:userJoiSchema
+  // user:userJoiSchema
 }
 const validateData = (model:string,data:any):ValidationResult=>{
   const schema = schemas[model];

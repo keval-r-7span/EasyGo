@@ -1,6 +1,6 @@
 import { driverService } from "../services/driverService";
 import { vehicleService } from "../services/vehicleService";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {client} from '../configs/awsS3Client'
@@ -111,7 +111,6 @@ export const deleteDriver = async (req: Request, res: Response) => {
 export const availableDrivers = async (
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   try {
     const response = await driverService.availableDrivers();

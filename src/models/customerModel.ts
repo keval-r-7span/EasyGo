@@ -1,14 +1,17 @@
-import mongoose, { Schema } from "mongoose";
-import Joi from "joi";
-export interface Customer{
+import mongoose, { Document } from "mongoose";
+
+export interface Customer extends Document{
     name: string;
     email: string;
     phoneNumber: string;
     password: string;
     role: string;
     token: string;
-    resetPasswordExpires: Date
-    location: Geolocation
+    resetPasswordExpires: Date;
+    location: {
+      type: string; 
+      coordinates: [number, number];
+  };
 }
 
 const CustomerSchema = new mongoose.Schema<Customer>(
@@ -35,17 +38,19 @@ const CustomerSchema = new mongoose.Schema<Customer>(
       resetPasswordExpires: {
         type: Date,
       },
+      location: {
+        type: { 
+          type: String, 
+          default: "Point" }, 
+        coordinates: {
+          type: [Number],
+          index: "2dsphere"
+        },
+    },
     },
     { timestamps: true }
   );
 
-const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
-export const userJoiSchema = Joi.object({
-  name: Joi.string().min(3).max(30).required(),
-  email: Joi.string().email().required(),
-  phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
-  role: Joi.string(),
-});
-  
-export default mongoose.model<Customer>("Customer", CustomerSchema);
-  
+  CustomerSchema.index({location: "2dsphere"})
+
+  export default mongoose.model<Customer>("Customer", CustomerSchema);
