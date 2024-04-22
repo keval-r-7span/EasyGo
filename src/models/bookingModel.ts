@@ -1,10 +1,11 @@
 import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 
+
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'Mini' | 'Premiue' | 'XL';
+  vehicleClass: 'Bike' | 'Auto' | 'Mini' | 'Premium' | 'XL';
   pickupLocation: string;
   dropoffLocation:string;
   pickupTime:Date;
@@ -27,8 +28,8 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     vehicleClass: {
       type: String,
-      enum: ["Bike", "Rickshaw", "Mini", "Premiue", "XL"],
-      default:'Rickshaw'
+      enum: ["Bike", "Auto", "Mini", "Premium", "XL"],
+      default:'Auto'
     },
     pickupLocation: {
       type: String,
@@ -38,6 +39,7 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     pickupTime: {
       type: Date,
+      default:Date.now()
     },
     dropoffTime: {
       type: Date,
@@ -67,11 +69,18 @@ export const bookingJoiSchema= Joi.object({
   vehicleClass:Joi.string(),
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
-  pickupTime: Joi.string().required().default(Date.now()),
+  pickupTime: Joi.string().default(Date.now()),
   status: Joi.string().lowercase(),
   fare: Joi.number().required(),
   rating: Joi.number(),
+  payment_status: Joi.string().lowercase(),
   comments: Joi.string(),
 });
+
+export const updateJoiSchema = Joi.object({
+  pickupLocation: Joi.string().min(3).max(100).required(),
+  dropoffLocation: Joi.string().min(3).max(100).required(),
+  vehicleClass:Joi.string(),
+})
 
 export default mongoose.model<Booking>("Booking", bookingSchema);

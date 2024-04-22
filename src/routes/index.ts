@@ -1,8 +1,13 @@
 import express from 'express';
-import bookingRoute from './bookingRoute'
 const router = express()
 
-router.use("/booking",bookingRoute)
+import customerRoute from './customerRoute'
+import driverRoute from './driverRoute'
+import bookingRoute from './bookingRoute'
+// import { verifyToken } from '../middleware/authMiddleware';
 
+router.use("/driver",driverRoute)
+router.use("/user",customerRoute)
+router.use("/booking",bookingRoute)
 
 export default router

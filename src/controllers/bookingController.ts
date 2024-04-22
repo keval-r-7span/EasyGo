@@ -81,7 +81,6 @@ export const deleteBooking = async (req:Request, res:Response) => {
   }
 };
 
-
 export const getRevenue = async (req:Request, res:Response) => {
   try {
     const response = await bookingService.getRevenue();
@@ -107,4 +106,3 @@ export const totalBooking = async (req:Request, res:Response) => {
     return res.status(500).json({success:false,message:`Error in totalBooking: `+error});
   }
 };
-
