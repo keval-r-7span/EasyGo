@@ -1,10 +1,10 @@
-import { Request, Response, response } from 'express';
-import  {driverService}  from '../services/driverService';
-import { TWILIO } from "../helper/constants";
-import twilio from "twilio";
-import jwtToken from "../helper/jwtToken";
-import logger from "../utils/logger";
-const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
+// import { Request, Response, response } from 'express';
+// import  {driverService}  from '../services/driverService';
+// import { TWILIO } from "../helper/constants";
+// import twilio from "twilio";
+// import jwtToken from "../helper/jwtToken";
+// import logger from "../utils/logger";
+// const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 // const signUp = async (req: Request, res: Response) => {
 //   try {
@@ -191,6 +191,10 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 
 
+
+
+import { Request, Response } from 'express';
+import  {driverService}  from '../services/driverService';
 
 const STATIC_PHONE_NUMBER = "9999999999";
 const STATIC_OTP = "9999";

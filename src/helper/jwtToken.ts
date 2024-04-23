@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import { JWT } from "./constants";
+import { Types } from 'mongoose';
 
-const generateAccessToken = (user: { _id: any; phoneNumber: string; email: string; role: string; }) => {
+const generateAccessToken = (user: { _id: Types.ObjectId; phoneNumber: string; email: string; role: string; }) => {
   const payload = {
     _id:  user._id,
     phoneNumber: user.phoneNumber,
