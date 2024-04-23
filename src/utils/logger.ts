@@ -5,8 +5,17 @@ const myFormat = printf(({ level, message, timestamp }) => {
   return `${timestamp}  ${level}: ${message}`;
 });
 
+const logLevels = {
+  fatal: 0,
+  error: 1,
+  warn: 2,
+  info: 3,
+  debug: 4,
+  trace: 5,
+};
+
 const logger: Logger = createLogger({
-  level: "info",
+  levels: logLevels,
   format: combine(
     format.colorize(),
     timestamp({ format: "HH:mm:ss" }),
