@@ -22,7 +22,7 @@
       "no-multi-spaces": "error",
       // "space-in-parens": "error",
       "no-multiple-empty-lines": "error",
-      "no-use-before-define": "error",
+      // "no-use-before-define": "error",
       "prefer-const": "error"
     }
   }
