@@ -16,7 +16,7 @@
     "prod": "tsc && node --es-module-specifier-resolution=node dist/app.js",
     "lint": "eslint src/**/*.ts --fix",
     "test": "jest --watchAll",
-    "coverage":"npx jest --coverage"
+    "coverage": "npx jest --coverage"
   },
   "author": "7Span Interns",
   "license": "ISC",
@@ -32,6 +32,7 @@
     "joi": "^17.12.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.2",
+    "stripe": "^15.5.0",
     "twilio": "^5.0.3",
     "winston": "^3.13.0"
   },

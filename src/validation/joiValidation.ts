@@ -1,25 +1,18 @@
 import { NextFunction,Request,Response } from 'express';
 import { bookingJoiSchema} from '../models/bookingModel';
-import logger from '../configs/logger'
-import {ValidationResult,Schema, string}from 'joi';
-// import { driverJoiSchema } from '../models/driverModel';
-// import { customerJoiSchema } from '../models/customerModel';
+import {ValidationResult,Schema}from 'joi';
+
 
 const schemas:Record<string,Schema> = {
   booking:bookingJoiSchema,
-  // driver:driverJoiSchema,
-  // user:userJoiSchema
 }
 interface validateDataInput{
   property1:string,
   property2:number
 }
 const validateData = (model:string,data:validateDataInput):ValidationResult=>{
-  const schema = schemas[model];
-    // if (!schema) {
-    //     throw new Error("Schema not found for validation..")
-    // }
-    return schema.validate(data)
+  const schema = schemas[model];  
+  return schema.validate(data)
 }
 
 export const validateRequest = (req:Request, res:Response, next:NextFunction) => { 
@@ -27,6 +20,6 @@ export const validateRequest = (req:Request, res:Response, next:NextFunction) =>
     if (error) {
     return res.status(404).json({success:false,message:"joischema validation error"+error.details[0].message})
     } 
-    next()
+    next();
 };
 

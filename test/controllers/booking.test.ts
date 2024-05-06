@@ -14,7 +14,7 @@ describe('booking',()=>{
     vehicleClass:"Bike",
     fare:140
   }
-describe('GET/POST with return success',()=>{
+describe('GET/POST with 200 Ok and return success',()=>{
       it('POST/ booking',async()=>{
           const {statusCode,body} = await supertest(app).post('/api/v1/booking/').send(booking_payload);
           createdBookingId = body.data._id;
@@ -174,17 +174,16 @@ describe('booking-with error cases',()=>{
     it('should return 500',async()=>{
       await supertest(app).get(`/api/v1/booking/list/`).
       query({id:'invalid123'})
-      expect
-      (500).toBe(500)
-    })
-    
-    it('should return 404 if no booking is found with the provided id', async () => {
-    const response = await supertest(app).get('/api/v1/bookings/list/').send({"status":"ongoing"})
-    expect(response.statusCode).toBe(404)
+      expect(500).toBe(500)
     })
 
-    it('should return 404 if no booking is found with the provided id', async () => {
-      const {statusCode} = await supertest(app).get('/api/v1/bookings/list/').send({id:'6634ab0a1a0399a6e66e0924'})
+    it('should return 404 if no booking is found with the provided id by query', async () => {
+    const {statusCode} = await supertest(app).get('/api/v1/bookings/list/').query({id:'6634ab0a1a0399a6e66e0926'})
+    expect(statusCode).toBe(404)
+    })
+
+    it('should return 404 if no booking is found with the provided id by body', async () => {
+      const {statusCode} = await supertest(app).get('/api/v1/bookings/list/').send({id:'6634ab0a1a0399a6e66e0926'})
       expect(statusCode).toBe(404)
     })
    
