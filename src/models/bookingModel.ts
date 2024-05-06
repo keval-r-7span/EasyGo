@@ -12,7 +12,7 @@ export interface Booking extends Document {
   dropoffTime:Date;
   fare: number;
   rating:number;
-  status: string;
+  status: 'pending' | 'accepted'|'ongoing'| 'completed'|'cancelled';
   comments:string;
 }
 
