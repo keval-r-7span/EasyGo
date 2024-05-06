@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DB_DATA } from '../helper/constants';
 import dotenv from 'dotenv';
-import logger from '../utils/logger';
+import logger from './logger';
 dotenv.config();
 
 const connectDB = async () => {

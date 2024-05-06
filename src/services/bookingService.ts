@@ -3,9 +3,7 @@ import BookingSchema,{Booking} from '../models/bookingModel';
 
 
 const viewBookingAll = async ()=> {
-     return await BookingSchema.find()
-    //   .populate("customer")
-    //   .populate("driver")
+  return await BookingSchema.find()
 };
 
 const viewBooking = async (id:string) => {
@@ -30,7 +28,7 @@ const deleteBooking = async (id:string)=> {
 };
 
 const getRevenue = async () => {
-    const monthlyRevenue = await BookingSchema.aggregate([
+    const result = await BookingSchema.aggregate([
       {
         $group: {
           _id: {
@@ -44,7 +42,7 @@ const getRevenue = async () => {
         $sort: { "_id.year": 1, "_id.month": 1 },
       },
     ]);
-    return monthlyRevenue;
+    return result;
 };
 
 const aggregateBookings = async () => {
