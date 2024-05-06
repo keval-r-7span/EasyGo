@@ -48,4 +48,9 @@ const AWS_S3={
   REGION:process.env.AWS_REGION || ""
 }
 
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };
+const STRIPE={
+  PUBLISH:process.env.STRIPE_API_KEY || "",
+  SECRECT:process.env.STRIPE_SECRECT|| ""
+}
+
+export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3,STRIPE };
