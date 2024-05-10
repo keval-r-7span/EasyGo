@@ -20,9 +20,17 @@ const paymentSchema = new mongoose.Schema({
     ref: "Booking",
     required: true 
 },
-  amount: { 
+  fullname:{
+  type:String,
+  required:true
+},
+  unit_amount:{ 
     type: Number,
     required: true 
+},
+ cardNumber:{
+  type:String,
+  required:true
 },
   Method: {
     type: String,

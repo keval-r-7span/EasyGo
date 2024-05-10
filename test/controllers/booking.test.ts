@@ -1,13 +1,13 @@
-import {it,describe,expect} from '@jest/globals'
+import {it,describe,expect,beforeAll,afterAll} from '@jest/globals'
 import app from '../../src/app'
 import supertest from 'supertest';
 import { setupDB } from '../../src/configs/memoryServer';
 
 
+var createdBookingId:string;
 describe('booking',()=>{
   setupDB()  
-  var createdBookingId:any;
-  var status:any
+  var status:string
   var booking_payload = {
     pickupLocation:"Panchamrut Bunglows II",
     dropoffLocation:"Sola, Ahmedabad, Gujarat 380059, India",
@@ -36,15 +36,15 @@ describe('GET/POST with 200 Ok and return success',()=>{
                   __v: 0
                 },
                 message: 'Ride booking successfully.'
-              })
-      })  
-  
+              })       
+      }) 
+
       it('should return 200',async ()=>{
             const {body,statusCode} = await supertest(app).get(`/api/v1/booking/list/`)
             expect(body.success).toBe(true)    
-            expect(statusCode).toBe(200)
+            expect(statusCode).toBe(200)        
        })
-
+  
       it('should return 200 if ID is provided by query', async () => {
             const id ={
               _id:createdBookingId
@@ -75,7 +75,7 @@ describe('GET/POST with 200 Ok and return success',()=>{
               .get(`/api/v1/booking/list/`)
               .send(statusDemo)      
             expect(statusCode).toBe(200);
-            expect(body.success).toBe(true);
+            expect(body.success).toBe(true)   
         });
 
       it('should return 200 if status is provided by query', async () => {
@@ -91,7 +91,7 @@ describe('GET/POST with 200 Ok and return success',()=>{
 })
 
 describe('DELETE /api/v1/booking/:id', () => {
-      let demoid:any;
+      let demoid:string;
       beforeAll(async () => {
         var booking_payload = {
           pickupLocation:"Panchamrut Bunglows II",
@@ -194,6 +194,15 @@ describe('booking-with error cases',()=>{
       expect(statusCode).toBe(404);
       expect(body.success).toBe(false);
       expect(body.message).toBe('Invalid Enter Status');
+    });
+
+    it('should return 404 if an No data match of status query parameter is provided in query ', async () => {
+      const { body, statusCode } = await supertest(app)
+        .get('/api/v1/booking/list/')
+        .query({ status: 'ongoing' });
+      expect(statusCode).toBe(404);
+      expect(body.success).toBe(false);
+      expect(body.message).toBe('No Booking found');
     });
  })
 
