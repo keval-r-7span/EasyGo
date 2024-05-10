@@ -1,5 +1,7 @@
 import supertest from "supertest";
 import app from '../src/app'
+import {it,describe,expect} from '@jest/globals'
+
 import { setupDB } from "../src/configs/memoryServer";
 
 describe('GET /', () => {

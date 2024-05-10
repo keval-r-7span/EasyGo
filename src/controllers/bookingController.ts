@@ -23,7 +23,7 @@ export const viewBooking = async (req:Request, res:Response)=> {
       if(response.length===0){
         return res.status(404).json({success:false,message:"No Booking found"})
       }
-      return res.status(200).json({success:true,message:response})
+      return res.status(200).json({success:true,data:response,message:'Booking found based on status'})
     }
     else{
       const response = await bookingService.viewBookingAll()
