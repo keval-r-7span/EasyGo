@@ -134,7 +134,7 @@
 //         success: true,
 //         message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
 //       });
-      
+
 //     } catch (error) {
 //       logger.error(error)
 //       return res.status(500).json({
@@ -190,11 +190,15 @@
 // export { signUp, verifyOtp, sendLoginOtp, login };
 
 
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------
 
 
-
-import { Request, Response } from 'express';
-import  {driverService}  from '../services/driverService';
+import { Request, Response } from "express";
+import { driverService } from "../services/driverService";
 
 const STATIC_PHONE_NUMBER = "9999999999";
 const STATIC_OTP = "9999";
@@ -202,22 +206,22 @@ const STATIC_OTP = "9999";
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber } = req.body;
-  if (!name || !email || !phoneNumber) {
-    return res
-      .status(404)
-      .json({ success: false, message: "Enter valid details." });
-  }
-  const userExist = await driverService.findDriver({ phoneNumber });
-  if (userExist) {
-    return res
-      .status(200)
-      .json({ success: false, message: "User Already exist." });
-  }
+    if (!name || !email || !phoneNumber) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Enter valid details." });
+    }
+    const userExist = await driverService.findDriver({ phoneNumber });
+    if (userExist) {
+      return res
+        .status(200)
+        .json({ success: false, message: "User Already exist." });
+    }
     const response = await driverService.registeruserTemp({
       name,
       email: email.toLowerCase(),
       phoneNumber,
-      role:'driver'
+      role: "driver",
     });
     if (!response) {
       return res.status(400).json({
@@ -228,14 +232,13 @@ const signUp = async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: response,
-      message: "OTP sent successfully"
-    })
-  
+      message: "OTP sent successfully",
+    });
   } catch (error) {
     return res.json({
       success: false,
-      message:"Error at signing up "+ error
-    })
+      message: "Error at signing up " + error,
+    });
   }
 };
 
@@ -284,11 +287,11 @@ const login = async (req: Request, res: Response) => {
     });
   }
   try {
-    if(phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP)
-    return res.status(200).json({
-      success: true,
-      message: "successfully logged in",
-    });
+    if (phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP)
+      return res.status(200).json({
+        success: true,
+        message: "successfully logged in",
+      });
   } catch (error) {
     return res.status(500).json({
       success: false,

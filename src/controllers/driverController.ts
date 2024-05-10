@@ -3,28 +3,27 @@ import { vehicleService } from "../services/vehicleService";
 import { Request, Response } from "express";
 import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {client} from '../configs/awsS3Client'
+import { client } from "../configs/awsS3Client";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
     const response = await driverService.viewDriver();
-    if(!response){
+    if (!response) {
       return res.status(404).json({
-        success:false,
-        message: "Unable to get list of Driver."
-      })
-    }
-    else{
-      return res.status(200).json({ 
-        success: true, 
-        data: response
+        success: false,
+        message: "Unable to get list of Driver.",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        data: response,
       });
     }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Error in GetDriver "+error,
+      message: "Error in GetDriver " + error,
     });
   }
 };
@@ -32,22 +31,21 @@ export const getDriver = async (req: Request, res: Response) => {
 export const getDriverByID = async (req: Request, res: Response) => {
   try {
     const response = await driverService.viewDriverById(req.params.id);
-    if(!response){
+    if (!response) {
       return res.status(404).json({
         success: false,
-        message: "Invalid ID"
-      })
-    }
-    else{
+        message: "Invalid ID",
+      });
+    } else {
       return res.status(200).json({
         success: true,
-        data: response
+        data: response,
       });
     }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Error in GetCustomer ID "+error,
+      message: "Error in GetCustomer ID " + error,
     });
   }
 };
@@ -62,23 +60,22 @@ export const updateVehicle = async (req: Request, res: Response) => {
       licensePlate,
       vehicleClass,
     });
-    if(!response){
+    if (!response) {
       return res.status(404).json({
         success: false,
-        message: "Invalid ID"
-      })
-    }
-    else{
+        message: "Invalid ID",
+      });
+    } else {
       return res.status(200).json({
         success: true,
         data: response,
-        message: "vehicle details updated Successfully."
+        message: "vehicle details updated Successfully.",
       });
     }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "ERROR in Update Vehicle "+error,
+      message: "ERROR in Update Vehicle " + error,
     });
   }
 };
@@ -89,15 +86,14 @@ export const updateDriver = async (req: Request, res: Response) => {
     const response = await driverService.updateDriver(req.params.id, {
       name,
       email,
-      verificationStatus
+      verificationStatus,
     });
-    if(!response){
+    if (!response) {
       return res.status(404).json({
         success: false,
-        message: "Invalid ID"
-      })
-    }
-    else{
+        message: "Invalid ID",
+      });
+    } else {
       return res.status(200).json({
         success: true,
         data: response,
@@ -107,7 +103,7 @@ export const updateDriver = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "ERROR in Update Driver "+error,
+      message: "ERROR in Update Driver " + error,
     });
   }
 };
@@ -134,10 +130,7 @@ export const deleteDriver = async (req: Request, res: Response) => {
   }
 };
 
-export const availableDrivers = async (
-  req: Request,
-  res: Response
-) => {
+export const availableDrivers = async (req: Request, res: Response) => {
   try {
     const response = await driverService.availableDrivers();
     if (!response) {
@@ -161,7 +154,8 @@ export const availableDrivers = async (
 export const imageUpload = async (req: Request, res: Response) => {
   try {
     const getPresignedUrl = async (client: S3Client) => {
-      const fileName = Date.now().toString() + (Math.random()*100000).toFixed(0);
+      const fileName =
+        Date.now().toString() + (Math.random() * 100000).toFixed(0);
       const fileUrl = `https://${AWS_S3.NAME}.s3.${AWS_S3.REGION}.amazonaws.com/${fileName}`;
       const command = new PutObjectCommand({
         Bucket: AWS_S3.NAME,
@@ -199,7 +193,8 @@ export const imageUpload = async (req: Request, res: Response) => {
 
 export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
   try {
-    const { model, year, licensePlate, vehicleClass, driverId, imageUrls } = req.body;
+    const { model, year, licensePlate, vehicleClass, driverId, imageUrls } =
+      req.body;
     // Check if the vehicle already exists
     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
     if (vehicleExist) {
@@ -224,7 +219,9 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
     // Find the driver by ID
     const driver = await driverService.findDriver({ _id: driverId });
     if (!driver) {
-      return res.status(404).json({ success: false, message: 'Driver not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: "Driver not found" });
     }
     // Add each image URL to the driver's images array
     for (const imageUrl of imageUrls) {
@@ -239,11 +236,12 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Something went wrong while adding vehicle or saving image URLs: " + error,
+      message:
+        "Something went wrong while adding vehicle or saving image URLs: " +
+        error,
     });
   }
 };
-
 
 // export const addVehicle = async (req: Request, res: Response) => {
 //   try {

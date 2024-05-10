@@ -19,7 +19,6 @@ import {
   imageUpload,
 } from "../controllers/driverController";
 
-
 router.post("/register", signUp);
 // router.post("/register", validateRequest, signUp);
 router.post("/verify-otp", verifyOtp);

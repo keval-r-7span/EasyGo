@@ -1,5 +1,5 @@
-import mongoose, { Document } from 'mongoose';
-import Joi from 'joi';
+import mongoose, { Document } from "mongoose";
+import Joi from "joi";
 
 export interface ImageObject {
   name: string;
@@ -7,11 +7,11 @@ export interface ImageObject {
 }
 export interface driver extends Document {
   name: string;
-  email: string; 
-  phoneNumber: string; 
+  email: string;
+  phoneNumber: string;
   availability: boolean;
-  role: string; 
-  token: string; 
+  role: string;
+  token: string;
   isVerified: boolean;
   images: ImageObject[];
 }
@@ -19,46 +19,46 @@ export interface driver extends Document {
 const driverSchema = new mongoose.Schema<driver>({
   name: {
     type: String,
-    required:true
+    required: true,
   },
-  email: {  
+  email: {
     type: String,
-    unique: true
+    unique: true,
   },
   phoneNumber: {
     type: String,
-    unique: true
+    unique: true,
   },
-  role:{
+  role: {
     type: String,
     enum: ["admin", "driver", "user"],
-    default: 'driver'
+    default: "driver",
   },
   availability: {
     type: Boolean,
-    default: true
+    default: true,
   },
   token: {
     type: String,
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   images: [
     {
       name: { type: String, required: true },
-      imageUrl: { type: String, required: true }
-    }
+      imageUrl: { type: String, required: true },
+    },
   ],
 });
 
-const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;
 export const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
-  role: Joi.string().default('driver'),
+  role: Joi.string().default("driver"),
 });
 
 export const updateDriverSchema = Joi.object({
@@ -66,6 +66,5 @@ export const updateDriverSchema = Joi.object({
   email: Joi.string().email(),
   role: Joi.string(),
 });
-
 
 export default mongoose.model<driver>("driver", driverSchema);

@@ -1,14 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import Joi from "joi";
 
 export interface driver {
   _id: mongoose.Schema.Types.ObjectId;
 }
 export interface vehicle {
-  model: string; 
+  model: string;
   year: number;
   licensePlate: string;
-  vehicleClass: 'Bike' | 'Rickshaw' | 'Mini' | 'Premius' | 'XL';
+  vehicleClass: "Bike" | "Rickshaw" | "Mini" | "Premius" | "XL";
   driverId: driver | string;
 }
 
@@ -54,5 +54,4 @@ export const updateVehicleSchema = Joi.object({
     .required(),
 });
 
-
-export default mongoose.model<vehicle>('Vehicle', vehicleDetails);
+export default mongoose.model<vehicle>("Vehicle", vehicleDetails);

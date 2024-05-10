@@ -1,9 +1,9 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import  driverSchema from '../models/driverModel';
-import tempAuthSchema, {tempAuth} from "../models/tempAuthModal";
+import driverSchema from "../models/driverModel";
+import tempAuthSchema, { tempAuth } from "../models/tempAuthModal";
 
 const viewDriver = async () => {
-    return await driverSchema.find()
+  return await driverSchema.find();
 };
 
 const viewDriverById = async (query: string) => {
@@ -11,38 +11,38 @@ const viewDriverById = async (query: string) => {
 };
 
 const deleteDriver = async (query: string) => {
-    return await driverSchema.findByIdAndDelete(query);
+  return await driverSchema.findByIdAndDelete(query);
 };
 
-const updateDriver = async (
-  id:string,
-  query: UpdateQuery<tempAuth>,
-) => {
-    return await driverSchema.findByIdAndUpdate(id, query, {new: true});
+const updateDriver = async (id: string, query: UpdateQuery<tempAuth>) => {
+  return await driverSchema.findByIdAndUpdate(id, query, { new: true });
 };
 
 const findDriver = async (query: RootQuerySelector<tempAuth>) => {
-    return await driverSchema.findOne(query);
+  return await driverSchema.findOne(query);
 };
 
 const registerUser = async (query: RootQuerySelector<tempAuth>) => {
-    return await driverSchema.create(query);
+  return await driverSchema.create(query);
 };
 
 const registeruserTemp = async (query: RootQuerySelector<tempAuth>) => {
-    return await tempAuthSchema.create(query);
+  return await tempAuthSchema.create(query);
 };
 
 const findPhoneNumber = async (query: RootQuerySelector<tempAuth>) => {
-    return await tempAuthSchema.findOne(query);
+  return await tempAuthSchema.findOne(query);
 };
 
 const removeTempUser = async (query: string) => {
-    return await tempAuthSchema.findByIdAndDelete(query);
+  return await tempAuthSchema.findByIdAndDelete(query);
 };
 
 const availableDrivers = async () => {
-    return await driverSchema.find({ availability:true }).select('name').select('phoneNumber')
+  return await driverSchema
+    .find({ availability: true })
+    .select("name")
+    .select("phoneNumber");
 };
 
 export const driverService = {
@@ -55,5 +55,5 @@ export const driverService = {
   registeruserTemp,
   findPhoneNumber,
   removeTempUser,
-  availableDrivers
+  availableDrivers,
 };

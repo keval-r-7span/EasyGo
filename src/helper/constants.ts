@@ -31,16 +31,6 @@ const TWILIO: TwilloConfig = {
   SERVICE_SID: process.env.TWILIO_SERVICE_SID || "",
 };
 
-const DISTANCE = {
-  DISTANCE_MATRIX: process.env.DISTANCE_MATRIX_KEY || "",
-};
-
-const MAIL = {
-  HOST: process.env.MAIL_HOST || "",
-  USER: process.env.MAIL_USER || "",
-  PASS: process.env.MAIL_PASS || "",
-};
-
 const AWS_S3={
   NAME:process.env.AWS_BUCKET_NAME || "",
   API_KEY:process.env.AWS_ACCESS_KEY_ID || "",
@@ -48,4 +38,4 @@ const AWS_S3={
   REGION:process.env.AWS_REGION || ""
 }
 
-export { PORT, JWT, DB_DATA, TWILIO, DISTANCE, MAIL,AWS_S3 };
+export { PORT, JWT, DB_DATA, TWILIO, AWS_S3 };
