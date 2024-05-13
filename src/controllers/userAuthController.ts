@@ -52,7 +52,6 @@ const signUp = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const lastDigit = phoneNumber.substring(6, 10);
   if (!phoneNumber) {
     logger.error("Invalid Phone number");
     return res.status(404).json({
@@ -65,10 +64,10 @@ const login = async (req: Request, res: Response) => {
       to: `+91${phoneNumber}`,
       channel: "sms",
     });
-    logger.info(`Otp successfully sent to xxxxxx${lastDigit}`);
+    logger.info(`Otp successfully sent to your number`);
     return res.status(200).json({
       success: true,
-      message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
+      message: `OTP successfully sent to mobile Number`,
     });
   } catch (error) {
     logger.error("Error occured while sending otp ", error);

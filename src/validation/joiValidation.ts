@@ -2,7 +2,6 @@ import { NextFunction,Request,Response } from 'express';
 import { bookingJoiSchema} from '../models/bookingModel';
 import {ValidationResult,Schema}from 'joi';
 
-
 const schemas:Record<string,Schema> = {
   booking:bookingJoiSchema,
 }
