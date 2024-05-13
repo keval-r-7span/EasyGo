@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import  {driverService}  from '../services/driverService';
+import {driverService} from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../helper/jwtToken";
@@ -189,8 +189,6 @@ const login = async (req: Request, res: Response) => {
 };
 
 export { signUp, verifyOtp, sendLoginOtp, login };
-
-
 
 // const STATIC_PHONE_NUMBER = "9999999999";
 // const STATIC_OTP = "9999";
