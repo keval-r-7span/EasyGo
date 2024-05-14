@@ -140,6 +140,7 @@ const verify = async (req: Request, res: Response) => {
 
 const requestDrive = async (req: Request, res: Response): Promise<Response> => {
   try {
+    const drivers = [];
     const userId = req.user?.id; 
     const userDetails = await customerService.findLocationByIdUser(userId);
     if (!userDetails) {
@@ -151,7 +152,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     }
     const latU = userDetails.location.coordinates[0];
     const longU = userDetails.location.coordinates[1];
-    if (!latU && !latU) {
+    if (!latU && !longU) {
       logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
       return res.status(404).json({
         isLogin: false,
@@ -174,7 +175,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       const latD = driver.location.coordinates[0];
       const longD = driver.location.coordinates[1];
       
-      if (!latD && !latD) {
+      if (!latD && !longD) {
         logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
         return res.status(404).json({
           isLogin: false,
@@ -192,7 +193,9 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
           })
         }
         const coords = location.coordinates
-        await sendRequestToDriver(driver.name, { name, coords });
+        await sendRequestToDriver(driver, { name, coords });
+        drivers.push(driver)
+
         driverFoundWithin2Km = true;
       } 
     }
