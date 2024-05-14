@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express()
-import paymentRoute from './paymentRoute'
+import customerRoute from './customerRoute'
 
-router.use('/payment',paymentRoute)
+router.use('/user',customerRoute)
 
 export default router;
