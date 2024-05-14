@@ -19,5 +19,5 @@ app.get("/",(req:Request,res:Response)=>{
 app.listen(PORT, ():void => {
   logger.info(`🚀 Server is running.. on http://localhost:${PORT}🚀..`);
   // Connect to MongoDB Atlas .
-  // connectDB()
+  connectDB()
 });
