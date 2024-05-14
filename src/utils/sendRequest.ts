@@ -1,7 +1,6 @@
-async function sendRequestToDriver(drivername: string, userLocation: object): Promise<void> {
+async function sendRequestToDriver(drivername: object, userLocation: object): Promise<{ drivername: object; userLocation: object }> {
     //logic to send request
-    console.log(drivername);
-    console.log(userLocation);
+    return {drivername, userLocation}
   }
 
   export {sendRequestToDriver}

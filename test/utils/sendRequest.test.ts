@@ -4,7 +4,7 @@ describe('sendRequestToDriver', () => {
   it('should log the driver name and user location', () => {
     const consoleSpy = jest.spyOn(console, 'log');
 
-    const driverName = 'John Doe';
+    const driverName = {"name":'John Doe'};
     const userLocation = { latitude: 52.5200, longitude: 13.4050 };
 
     sendRequestToDriver(driverName, userLocation);
