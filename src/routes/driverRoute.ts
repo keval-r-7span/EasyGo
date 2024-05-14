@@ -4,8 +4,7 @@ const router = express.Router();
 
 import {
   signUp,
-  verifyOtp,
-  sendLoginOtp,
+  verify,
   login,
 } from "../controllers/driverAuthController";
 
@@ -22,8 +21,7 @@ import {
 
 router.post("/register", signUp);
 // router.post("/register", validateRequest, signUp);
-router.post("/verify-otp", verifyOtp);
-router.post("/send-login-otp", sendLoginOtp);
+router.post("/verify", verify);
 router.post("/login", login);
 router.get("/upload", imageUpload);
 router.get("/available/list", availableDrivers);

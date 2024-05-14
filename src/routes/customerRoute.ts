@@ -16,9 +16,8 @@ import calcDistance from "../utils/distance";
 router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
-// router.post("/verify-otp", verifyOtp);
 router.get("/maps/distance", calcDistance);
-router.get("/:id?", getCustomer);
+router.get("/:id", getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
 router.delete("/:id", deleteCustomer);
 router.post("/request-drive/", verifyToken, requestDrive)
