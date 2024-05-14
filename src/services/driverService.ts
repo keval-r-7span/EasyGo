@@ -40,9 +40,7 @@ const removeTempUser = async (query: string) => {
 
 const availableDrivers = async () => {
   return await driverSchema
-    .find({ availability: true })
-    .select("name")
-    .select("phoneNumber");
+    .find({ availability: true });
 };
 
 export const driverService = {
