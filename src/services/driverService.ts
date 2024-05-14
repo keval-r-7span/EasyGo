@@ -1,27 +1,13 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import driverSchema, { driver } from "../models/driverModel";
-import tempAuthSchema, { tempAuth } from "../models/tempAuthModal";
-import { vehicleService } from "../services/vehicleService";
+import driverSchema from "../models/driverModel";
+import tempAuthSchema, { tempAuth } from "../models/tempAuthModel";
 
 const viewDriver = async () => {
   return await driverSchema.find();
 };
 
-// const viewDriverById = async (query: string) => {
-//   return await driverSchema.findById(query);
-// };
-
-const viewDriverById = async (driverId: string) => {
-  try {
-    const driverData = await driverSchema.findById(driverId);
-    if (!driverData) {
-      return null;
-    }
-    const vehiclesData = await vehicleService.findVehicle({ driverId });
-    return { driver: driverData, vehicles: vehiclesData };
-  } catch (error) {
-    throw error;
-  }
+const viewDriverById = async (query: string) => {
+  return await driverSchema.findById(query);
 };
 
 const deleteDriver = async (query: string) => {
@@ -36,11 +22,11 @@ const findDriver = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
 };
 
-const registerDriver = async (query: RootQuerySelector<tempAuth>) => {
+const registerUser = async (query: RootQuerySelector<tempAuth>) => {
   return await driverSchema.create(query);
 };
 
-const registerDriverTemp = async (query: RootQuerySelector<tempAuth>) => {
+const registeruserTemp = async (query: RootQuerySelector<tempAuth>) => {
   return await tempAuthSchema.create(query);
 };
 
@@ -48,7 +34,7 @@ const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
 };
 
-const removeTempDriver = async (query: string) => {
+const removeTempUser = async (query: string) => {
   return await tempAuthSchema.findByIdAndDelete(query);
 };
 
@@ -63,9 +49,9 @@ export const driverService = {
   deleteDriver,
   updateDriver,
   findDriver,
-  registerDriver,
-  registerDriverTemp,
+  registerUser,
+  registeruserTemp,
   findPhoneNumber,
-  removeTempDriver,
+  removeTempUser,
   availableDrivers,
 };
