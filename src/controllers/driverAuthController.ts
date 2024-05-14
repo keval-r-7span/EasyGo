@@ -190,7 +190,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location } = req.body;
+    const { name, email, phoneNumber,location} = req.body;
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
       logger.error("Existing driver");
@@ -203,8 +203,8 @@ const signUp = async (req: Request, res: Response) => {
       name,
       email: email.toLowerCase(),
       phoneNumber,
-      role: "driver",
       location,
+      role: "driver",
     });
     if (!response) {
       logger.error("Invalid driver data");
