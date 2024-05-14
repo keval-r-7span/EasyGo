@@ -9,7 +9,6 @@ import {
   login,
   verify, 
   requestDrive } from "../controllers/userAuthController";
-
 import { verifyToken } from "../middleware/authMiddleware";
 import calcDistance from "../utils/distance";
 
