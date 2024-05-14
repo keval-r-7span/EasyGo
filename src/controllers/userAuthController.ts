@@ -52,6 +52,7 @@ const signUp = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
+  const lastDigit = phoneNumber.substring(6, 10);
   if (!phoneNumber) {
     logger.error("Invalid Phone number");
     return res.status(404).json({
@@ -64,7 +65,7 @@ const login = async (req: Request, res: Response) => {
       to: `+91${phoneNumber}`,
       channel: "sms",
     });
-    logger.info(`Otp successfully sent to your number`);
+    logger.info(`Otp successfully sent to xxxxxx${lastDigit}`);
     return res.status(200).json({
       isLogin: true,
       message: `OTP successfully sent to mobile Number`,
@@ -142,7 +143,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const userId = req.user?.id; 
     const userDetails = await customerService.findLocationByIdUser(userId);
     if (!userDetails) {
-      logger.error("User object not found!");
+      logger.error("User details not found! check your token");
       return res.status(404).json({
         isLogin: false,
         message: "User location not found.",
@@ -172,7 +173,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     for (const driver of availableDrivers) {
       const latD = driver.location.coordinates[0];
       const longD = driver.location.coordinates[1];
-
+      
       if (!latD && !latD) {
         logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
         return res.status(404).json({
@@ -184,6 +185,12 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       const Radius = radiusCalc(latU, longU, latD, longD);
       if (Radius < 2) {
         const { name, location } = userDetails;
+        if(!name || !location){
+          return res.json({
+            success: false,
+            message: "Unable to fetch user details"
+          })
+        }
         const coords = location.coordinates
         await sendRequestToDriver(driver.name, { name, coords });
         driverFoundWithin2Km = true;
