@@ -35,9 +35,7 @@ const CustomerSchema = new mongoose.Schema<Customer>(
       token: {
         type: String,
       },
-      // resetPasswordExpires: {
-      //   type: Date,
-      // },
+      
       location: {
         type: { 
           type: String, 
