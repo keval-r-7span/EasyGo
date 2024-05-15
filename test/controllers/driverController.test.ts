@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import { app } from "../../src/app";
-import * as db from "../testConfigs/dbConnection";
+import * as db from "../configs/dbConnection";
 
 describe("Test request with Mongo-inMemory-Server", () => {
   beforeAll(async () => {

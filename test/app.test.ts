@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import { app } from "../src/app";
-import { setupDB } from '../test/testConfigs/dbConnection';
+import { setupDB } from './configs/dbConnection';
 
 describe('GET /', () => {
   setupDB()

@@ -32,7 +32,7 @@ describe('driverService', () => {
   it('removeTempUser should call findByIdAndDelete method of tempAuthSchema model with correct id', async () => {
     const mockFindByIdAndDelete = jest.spyOn(tempAuthSchema, 'findByIdAndDelete').mockResolvedValueOnce({});
     const id = 'yourId';
-    await driverService.removeTempUser(id);
+    await driverService.removeTempDriver(id);
     expect(mockFindByIdAndDelete).toHaveBeenCalledWith(id);
   });
     

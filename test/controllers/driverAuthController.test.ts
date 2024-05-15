@@ -1,6 +1,6 @@
 import {app} from '../../src/app'
 import request from 'supertest';
-import { setupDB } from '../testConfigs/dbConnection';
+import { setupDB } from '../configs/dbConnection';
 
 describe('Driver Registration', () => {
   setupDB()
