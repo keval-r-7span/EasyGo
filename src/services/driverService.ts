@@ -1,6 +1,5 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import driverSchema from "../models/driverModel";
-import tempAuthSchema, { tempAuth } from "../models/tempAuthModel";
+import driverSchema, {driver} from "../models/driverModel";
 
 const viewDriver = async () => {
   return await driverSchema.find();
@@ -14,28 +13,28 @@ const deleteDriver = async (query: string) => {
   return await driverSchema.findByIdAndDelete(query);
 };
 
-const updateDriver = async (id: string, query: UpdateQuery<tempAuth>) => {
+const updateDriver = async (id: string, query: UpdateQuery<driver>) => {
   return await driverSchema.findByIdAndUpdate(id, query, { new: true });
 };
 
-const findDriver = async (query: RootQuerySelector<tempAuth>) => {
+const findDriver = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
 };
 
-const registerUser = async (query: RootQuerySelector<tempAuth>) => {
+const registerUser = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.create(query);
 };
 
-const registeruserTemp = async (query: RootQuerySelector<tempAuth>) => {
-  return await tempAuthSchema.create(query);
+const registeruserTemp = async (query: RootQuerySelector<driver>) => {
+  return await driverSchema.create(query);
 };
 
-const findPhoneNumber = async (query: RootQuerySelector<tempAuth>) => {
-  return await tempAuthSchema.findOne(query);
+const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
+  return await driverSchema.findOne(query);
 };
 
 const removeTempUser = async (query: string) => {
-  return await tempAuthSchema.findByIdAndDelete(query);
+  return await driverSchema.findByIdAndDelete(query);
 };
 
 const availableDrivers = async () => {
