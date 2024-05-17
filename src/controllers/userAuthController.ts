@@ -17,7 +17,7 @@ const signUp = async (req: Request, res: Response) => {
     if (userExist) {
       logger.error("Existing User");
       return res.status(400).json({
-        success: false,
+        isLogin: false,
         message: "User Already exist.",
       });
     }
@@ -31,20 +31,20 @@ const signUp = async (req: Request, res: Response) => {
     if (!response) {
       logger.error("Invalid User data");
       return res.status(400).json({
-        success: false,
+        isLogin: false,
         message: "Invalid Data",
       });
     }
     await response?.save();
     logger.info("user Registered");
     return res.status(201).json({
-      success: true,
+      isLogin: true,
       message: "user Registered and move to home screen",
     });
   } catch (error) {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: error,
     });
   }
@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
   if (!phoneNumber) {
     logger.error("Invalid Phone number");
     return res.status(404).json({
-      success: false,
+      isLogin: false,
       message: "Enter PhoneNumber",
     });
   }
@@ -66,14 +66,14 @@ const login = async (req: Request, res: Response) => {
     });
     logger.info(`Otp successfully sent to your number`);
     return res.status(200).json({
-      success: true,
+      isLogin: true,
       message: `OTP successfully sent to mobile Number`,
     });
   } catch (error) {
     logger.error("Error occured while sending otp ", error);
     return res.status(500).json({
-      success: false,
-      message: error,
+      isLogin: false,
+      message: `Error in Login`+error,
     });
   }
 };
@@ -83,7 +83,7 @@ const verify = async (req: Request, res: Response) => {
   if (!phoneNumber || !otp) {
     logger.error("Enter valid phone number and otp");
     return res.status(404).json({
-      success: false,
+      isLogin: false,
       message: "Please Enter valid phone number and otp",
     });
   }
@@ -100,7 +100,7 @@ const verify = async (req: Request, res: Response) => {
         if (!existUser) {
           logger.error("No user found");
           return res.status(404).json({
-            success: false,
+            isLogin: false,
             data: phoneNumber,
             message: "Oops!! Sign-Up first move to signup screen",
           });
@@ -115,7 +115,7 @@ const verify = async (req: Request, res: Response) => {
             })
             .status(200)
             .json({
-              success: true,
+              isLogin: true,
               message: "User Logged in successfully",
             });
         }
@@ -123,15 +123,15 @@ const verify = async (req: Request, res: Response) => {
       default:
         logger.error("OTP enetered is invalid");
         return res.status(400).json({
-          success: false,
+          isLogin: false,
           message: "Invalid OTP. Please try again.",
         });
     }
   } catch (error) {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
-      success: false,
-      message: error,
+      isLogin: false,
+      message: 'Error in verify OTP'+ error,
     });
   }
 };
@@ -143,7 +143,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     if (!userDetails) {
       logger.error("User object not found!");
       return res.status(404).json({
-        success: false,
+        isLogin: false,
         message: "User location not found.",
       });
     }
@@ -152,7 +152,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     if (!latU && !latU) {
       logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
       return res.status(404).json({
-        success: false,
+        isLogin: false,
         message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
       });
     }
@@ -162,7 +162,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     if (!availableDrivers) {
       logger.error("NO AVAILABLE DRIVERS FOUND!");
       return res.status(404).json({
-        success: false,
+        isLogin: false,
         message: "No available drivers found.",
       });
     }
@@ -175,7 +175,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       if (!latD && !latD) {
         logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
         return res.status(404).json({
-          success: false,
+          isLogin: false,
           message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
         });
       }
@@ -191,20 +191,20 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     if (driverFoundWithin2Km) {
       logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
       return res.status(200).json({
-        success: true,
+        isLogin: true,
         message: "Requests sent to nearby drivers within 2 km radius.",
       });
     } else {
       logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
       return res.json({
-        success: false,
+        isLogin: false,
         message: "No available drivers found within 2 km radius.",
       });
     }
   } catch (error) {
     logger.error("An error occurred while processing the request. ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: "An error occurred while processing the request.",
     });
   }
@@ -225,13 +225,13 @@ export { signUp, login, verify, requestDrive };
 //   if (!name || !email || !phoneNumber || !role || !location) {
 //     return res
 //       .status(200)
-//       .json({ success: false, message: "Enter valid details." });
+//       .json({ isLogin: false, message: "Enter valid details." });
 //   }
 //   const userExist = await customerService.findCustomer({ phoneNumber });
 //   if (userExist) {
 //     return res
 //       .status(200)
-//       .json({ success: false, message: "User Already exist." });
+//       .json({ isLogin: false, message: "User Already exist." });
 //   }
 //   if (role !== "admin") {
 //     const response = await customerService.registeruserTemp({
@@ -243,19 +243,19 @@ export { signUp, login, verify, requestDrive };
 //     });
 //     if (!response) {
 //       return res.status(400).json({
-//         success: false,
+//         isLogin: false,
 //         message: "Invalid Data",
 //       });
 //     }
 //     return res.json({
-//       success: true,
+//       isLogin: true,
 //       data: response,
 //       message: "OTP sent successfully"
 //     })
 //   }
 //   } catch (error) {
 //     return res.json({
-//       success: false,
+//       isLogin: false,
 //       message:"Error at signing up "+ error
 //     })
 //   }
@@ -267,12 +267,12 @@ export { signUp, login, verify, requestDrive };
 //   if (phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP) {
 //     // Perform user registration or any other necessary actions here
 //     return res.status(200).json({
-//       success: true,
+//       isLogin: true,
 //       message: "OTP successfully verified",
 //     });
 //   } else {
 //     return res.status(400).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Invalid phone number or OTP",
 //     });
 //   }
@@ -285,12 +285,12 @@ export { signUp, login, verify, requestDrive };
 //   if (phoneNumber === STATIC_PHONE_NUMBER) {
 //     // Simulate OTP sent
 //     return res.status(200).json({
-//       success: true,
+//       isLogin: true,
 //       message: "OTP successfully sent",
 //     });
 //   } else {
 //     return res.status(400).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Invalid phone number",
 //     });
 //   }
@@ -300,19 +300,19 @@ export { signUp, login, verify, requestDrive };
 //   const { phoneNumber, otp } = req.body;
 //   if (!phoneNumber || !otp) {
 //     return res.json({
-//       success: false,
+//       isLogin: false,
 //       message: "Enter Valid details",
 //     });
 //   }
 //   try {
 //     if(phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP)
 //     return res.json({
-//       success: true,
+//       isLogin: true,
 //       message: "successfully logged in",
 //     });
 //   } catch (error) {
 //     return res.json({
-//       success: false,
+//       isLogin: false,
 //       message: error,
 //     });
 //   }

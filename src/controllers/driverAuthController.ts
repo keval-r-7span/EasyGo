@@ -173,10 +173,12 @@ export { signUp, login, verify };
 //     if (!response) {
 //       return res.status(400).json({
 //         isLogin: false,
+//         isLogin: false,
 //         message: "Invalid Data",
 //       });
 //     }
 //     return res.json({
+//       isLogin: true,
 //       isLogin: true,
 //       data: response,
 //       message: "OTP sent isLoginfully",
@@ -202,6 +204,7 @@ export { signUp, login, verify };
 //   } else {
 //     return res.status(500).json({
 //       isLogin: false,
+//       isLogin: false,
 //       message: "Invalid phone number or OTP",
 //     });
 //   }
@@ -220,6 +223,7 @@ export { signUp, login, verify };
 //   } else {
 //     return res.status(400).json({
 //       isLogin: false,
+//       isLogin: false,
 //       message: "Invalid phone number",
 //     });
 //   }
@@ -229,6 +233,7 @@ export { signUp, login, verify };
 //   const { phoneNumber, otp } = req.body;
 //   if (!phoneNumber || !otp) {
 //     return res.json({
+//       isLogin: false,
 //       isLogin: false,
 //       message: "Enter Valid details",
 //     });
@@ -241,6 +246,7 @@ export { signUp, login, verify };
 //       });
 //   } catch (error) {
 //     return res.status(500).json({
+//       isLogin: false,
 //       isLogin: false,
 //       message: error,
 //     });
