@@ -4,7 +4,7 @@ import indexRoute from './routes';
 import {PORT} from './helper/constants';
 import logger from './configs/logger';
 import cors from 'cors'
-const app = express();
+export const app = express();
 
 app.use(express.json());
 app.use(cors())

@@ -10,4 +10,4 @@ router.use('/user',customerRoute)
 router.use('/driver',driverRoute)
 router.use('/payment',paymentRoute)
 
-export default router
+export default router;

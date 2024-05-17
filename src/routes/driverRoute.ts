@@ -1,11 +1,10 @@
-
 import express from "express";
 const router = express.Router();
 
 import {
   signUp,
-  verify,
   login,
+  verify
 } from "../controllers/driverAuthController";
 
 import {
@@ -19,12 +18,12 @@ import {
   imageUpload,
 } from "../controllers/driverController";
 
+router.post("/login", login);
+router.post("/verify", verify);
 router.post("/register", signUp);
 // router.post("/register", validateRequest, signUp);
-router.post("/verify", verify);
-router.post("/login", login);
 router.get("/upload", imageUpload);
-router.get("/available/list", availableDrivers);
+router.get("/available", availableDrivers);
 router.post("/addvehicle", addVehicleAndSaveImage);
 // router.post("/addvehicle", validateAddVehicle, addVehicleAndSaveImage);
 router.put("/vehicle/:id", updateVehicle);

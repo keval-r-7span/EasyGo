@@ -1,4 +1,3 @@
-
 import { RootQuerySelector, UpdateQuery } from "mongoose";
 import vehicleDetails, { vehicle } from "../models/vehicleDetails";
 
