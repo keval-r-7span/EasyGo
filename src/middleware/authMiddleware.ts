@@ -3,10 +3,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT } from "../helper/constants";
 import logger from "../utils/logger";
 
-// interface AuthenticatedRequest extends Request {
-//   user?: JwtPayload;
-// }
-
 declare module "express" {
   interface Request {
     user?: JwtPayload; 
@@ -44,25 +40,6 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
   }
 };
 
-const isDriver = (req: Request ,res: Response,next: NextFunction) => {
-  try {
-    if (req.user?.role !== "driver") {
-      logger.warn("PROTECTED ROUTE FOR DRIVER ONLY")
-      return res.status(401).json({
-        success: false,
-        message: "Protected routes for driver only",
-      });
-    }
-    next();
-  } catch (error) {
-    logger.error("ERROR OCCURED AT ISDRIVER MIDDLEWARE",error);
-    return res.status(500).json({
-      success: false,
-      data: "Error occured at isDriver",
-    });
-  }
-};
-
 const isAdmin = (req:Request, res: Response,next: NextFunction) => {
   try {
     if (req.user?.role !== "admin") {
@@ -83,23 +60,5 @@ const isAdmin = (req:Request, res: Response,next: NextFunction) => {
   }
 };
 
-const isUser = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.user?.role !== "user") {
-      logger.warn("PROTECTED ROUTE FOR USER ONLY")
-      return res.status(401).json({
-        success: false,
-        message: "Protected routes for user only",
-      });
-    }
-    next();
-  } catch (error) {
-    logger.error("ERROR OCCURED AT ISUSER MIDDLEWARE",error);
-    return res.status(500).json({
-      success: false,
-      data: "Error occured at isUser",
-    });
-  }
-};
 
-export { verifyToken, isUser, isDriver, isAdmin };
+export { verifyToken, isAdmin };

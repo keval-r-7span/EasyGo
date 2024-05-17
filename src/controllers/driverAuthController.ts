@@ -10,11 +10,11 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //   try {
 //     const { name, email, phoneNumber } = req.body;
 //     if(!name || !email || !phoneNumber){
-//       return res.status(404).json({success:false,message:"Enter valid details."})
+//       return res.status(404).json({isLogin:false,message:"Enter valid details."})
 //     }
 //     const userExist = await driverService.findDriver({ phoneNumber });
 //     if (userExist) {
-//       return res.status(400).json({success:false,message:"driver Already exist."})
+//       return res.status(400).json({isLogin:false,message:"driver Already exist."})
 //     }
 //       const response = await driverService.registeruserTemp({
 //         name,
@@ -24,25 +24,25 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //       });
 //       if (!response) {
 //         return res.status(400).json({
-//           success: false,
+//           isLogin: false,
 //           message: "Invalid Data",
 //         });
 //       }
 //       const otpResponse = await sendOtp(phoneNumber);
-//       if (!otpResponse.success) {
+//       if (!otpResponse.isLogin) {
 //         return res.status(400).json({
-//           success: false,
+//           isLogin: false,
 //           message: "Failed OTP response"
 //         })
 //       }
 //       await response?.save();
 //       return res.status(200).json({
-//         success: true,
+//         isLogin: true,
 //         message: "OTP sent Please verify within 10 minutes",
 //       });
 //   } catch (error) {
 //     return res.status(500).json({
-//       success: false,
+//       isLogin: false,
 //       message: error,
 //     });
 //   }
@@ -57,12 +57,12 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //         channel: "sms",
 //       });
 //     return {
-//       success: true,
+//       isLogin: true,
 //       message: `OTP successfully sent to mobile Number`,
 //     };
 //   } catch (error) {
 //     return {
-//       success: false,
+//       isLogin: false,
 //       message: error,
 //     };
 //   }
@@ -72,7 +72,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //   const { phoneNumber, otp } = req.body;
 //   if (!phoneNumber && !otp) {
 //     return res.status(404).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Please Enter Phone number and otp",
 //     });
 //   }
@@ -113,13 +113,13 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 // const sendLoginOtp = async (req: Request, res: Response) => {
 //   const { phoneNumber } = req.body;
 //   if(!phoneNumber){
-//    return res.status(404).json({success:false,message:"Enter PhoneNumber"})
+//    return res.status(404).json({isLogin:false,message:"Enter PhoneNumber"})
 //   }
 
 //   const registeredUser = await driverService.findDriver({ phoneNumber });
 //   if (!registeredUser) {
 //     return res.status(404).json({
-//       success: false,
+//       isLogin: false,
 //       message: `No driver exist with such ${phoneNumber} please Sign-Up first!!`,
 //     });
 //   } else {
@@ -131,7 +131,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //           channel: "sms",
 //         });
 //       return res.status(200).json({
-//         success: true,
+//         isLogin: true,
 //         message: `OTP successfully sent to mobile Number`,
 //       });
       
@@ -149,7 +149,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 //   const { phoneNumber, otp } = req.body;
 //   if(!phoneNumber || !otp){
 //     return res.status(404).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Please Enter valid phone number and otp"
 //     })
 //   }
@@ -195,7 +195,7 @@ const signUp = async (req: Request, res: Response) => {
     if (userExist) {
       logger.error("Existing driver");
       return res.status(400).json({
-        success: false,
+        isLogin: false,
         message: "Driver Already exist.",
       });
     }
@@ -209,20 +209,20 @@ const signUp = async (req: Request, res: Response) => {
     if (!response) {
       logger.error("Invalid driver data");
       return res.status(400).json({
-        success: false,
+        isLogin: false,
         message: "Invalid Data",
       });
     }
     await response?.save();
     logger.info("driver Registered");
     return res.status(201).json({
-      success: true,
+      isLogin: true,
       message: "driver Registered and move to home screen",
     });
   } catch (error) {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: error,
     });
   }
@@ -233,7 +233,7 @@ const login = async (req: Request, res: Response) => {
   if (!phoneNumber) {
     logger.error("Invalid Phone number");
     return res.status(404).json({
-      success: false,
+      isLogin: false,
       message: "Enter PhoneNumber",
     });
   }
@@ -244,13 +244,13 @@ const login = async (req: Request, res: Response) => {
     });
     logger.info(`Otp successfully sent to your number`);
     return res.status(200).json({
-      success: true,
+      isLogin: true,
       message: `OTP successfully sent to mobile Number`,
     });
   } catch (error) {
     logger.error("Error occured while sending otp ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: error,
     });
   }
@@ -261,7 +261,7 @@ const verify = async (req: Request, res: Response) => {
   if (!phoneNumber || !otp) {
     logger.error("Enter valid phone number and otp");
     return res.status(404).json({
-      success: false,
+      isLogin: false,
       message: "Please Enter valid phone number and otp",
     });
   }
@@ -278,7 +278,7 @@ const verify = async (req: Request, res: Response) => {
         if (!existUser) {
           logger.error("No driver found");
           return res.status(404).json({
-            success: false,
+            isLogin: false,
             data: phoneNumber,
             message: "Oops!! Sign-Up first move to signup screen",
           });
@@ -293,7 +293,7 @@ const verify = async (req: Request, res: Response) => {
             })
             .status(200)
             .json({
-              success: true,
+              isLogin: true,
               token,
               message: "driver Logged in successfully",
             });
@@ -302,14 +302,14 @@ const verify = async (req: Request, res: Response) => {
       default:
         logger.error("OTP enetered is invalid");
         return res.status(400).json({
-          success: false,
+          isLogin: false,
           message: "Invalid OTP. Please try again.",
         });
     }
   } catch (error) {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: error,
     });
   }
@@ -326,13 +326,13 @@ export { signUp,verify,login };
 //   if (!name || !email || !phoneNumber) {
 //     return res
 //       .status(404)
-//       .json({ success: false, message: "Enter valid details." });
+//       .json({ isLogin: false, message: "Enter valid details." });
 //   }
 //   const userExist = await driverService.findDriver({ phoneNumber });
 //   if (userExist) {
 //     return res
 //       .status(200)
-//       .json({ success: false, message: "driver Already exist." });
+//       .json({ isLogin: false, message: "driver Already exist." });
 //   }
 //     const response = await driverService.registeruserTemp({
 //       name,
@@ -342,19 +342,19 @@ export { signUp,verify,login };
 //     });
 //     if (!response) {
 //       return res.status(400).json({
-//         success: false,
+//         isLogin: false,
 //         message: "Invalid Data",
 //       });
 //     }
 //     return res.json({
-//       success: true,
+//       isLogin: true,
 //       data: response,
 //       message: "OTP sent successfully"
 //     })
   
 //   } catch (error) {
 //     return res.json({
-//       success: false,
+//       isLogin: false,
 //       message:"Error at signing up "+ error
 //     })
 //   }
@@ -367,12 +367,12 @@ export { signUp,verify,login };
 //   if (phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP) {
 //     // Perform driver registration or any other necessary actions here
 //     return res.status(200).json({
-//       success: true,
+//       isLogin: true,
 //       message: "OTP successfully verified",
 //     });
 //   } else {
 //     return res.status(500).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Invalid phone number or OTP",
 //     });
 //   }
@@ -385,12 +385,12 @@ export { signUp,verify,login };
 //   if (phoneNumber === STATIC_PHONE_NUMBER) {
 //     // Simulate OTP sent
 //     return res.status(200).json({
-//       success: true,
+//       isLogin: true,
 //       message: "OTP successfully sent",
 //     });
 //   } else {
 //     return res.status(400).json({
-//       success: false,
+//       isLogin: false,
 //       message: "Invalid phone number",
 //     });
 //   }
@@ -400,19 +400,19 @@ export { signUp,verify,login };
 //   const { phoneNumber, otp } = req.body;
 //   if (!phoneNumber || !otp) {
 //     return res.json({
-//       success: false,
+//       isLogin: false,
 //       message: "Enter Valid details",
 //     });
 //   }
 //   try {
 //     if(phoneNumber === STATIC_PHONE_NUMBER && otp === STATIC_OTP)
 //     return res.status(200).json({
-//       success: true,
+//       isLogin: true,
 //       message: "successfully logged in",
 //     });
 //   } catch (error) {
 //     return res.status(500).json({
-//       success: false,
+//       isLogin: false,
 //       message: error,
 //     });
 //   }
