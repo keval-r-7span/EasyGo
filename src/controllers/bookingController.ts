@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {bookingService} from '../services/bookingService';
-import logger from '../configs/logger';
+import logger from '../utils/logger';
 import mongoose from 'mongoose';
 
 export const viewBooking = async (req:Request, res:Response)=> {
