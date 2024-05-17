@@ -17,7 +17,7 @@ router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
 router.get("/maps/distance", calcDistance);
-router.get("/:id?", getCustomer);
+router.get("/", getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
 router.delete("/:id", deleteCustomer);
 router.post("/request-drive/", verifyToken, requestDrive)

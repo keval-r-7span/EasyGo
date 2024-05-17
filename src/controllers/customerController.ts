@@ -3,35 +3,36 @@ import { customerService } from "../services/userService";
 import logger from "../utils/logger";
 
 const getCustomer = async (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      const response = await customerService.viewCustomer();
-      return res.status(200).json({
-        success: true,
-        data: response,
-      });
-    } else {
-      const response = await customerService.viewCustomerById(req.params.id);
-      if (!response) {
-        logger.error("Invalid ID");
-        return res.status(404).json({
-          success: false,
-          message: "Invalid ID",
-        });
-      } else {
-        return res.status(200).json({
-          success: true,
-          data: response,
-        });
-      }
+ try {
+  const { id } = req.query as { id: string }
+  if(id){
+    const response = await customerService.viewCustomerById(id);
+    if(!response){
+      return res.status(404).json({
+        success: false,
+        message: "No user found" 
+      })
     }
-  } catch (error) {
-    logger.error("Error at GetCustomer: ", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
-  }
+    return res.status(200).json({
+      success: true,
+      message: "User found",
+      data : response
+    })
+  }else {
+    const response = await customerService.viewCustomer();
+    return res.status(200).json({
+      success: true,
+      message: "List of user found",
+      data: response
+    })
+    }
+  }catch (error) {
+  logger.error("Error occured while retrieving customer ", error)
+  return res.status(500).json({
+    success: false,
+    message: "Error occured while retrieving customer"
+  })
+ }
 };
 
 const updateCustomer = async (req: Request, res: Response) => {

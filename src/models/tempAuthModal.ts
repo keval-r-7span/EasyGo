@@ -37,3 +37,4 @@ const tempAuthSchema = new mongoose.Schema<tempAuth>(
 
 export default mongoose.model<tempAuth>("tempAuth", tempAuthSchema);
 
+
