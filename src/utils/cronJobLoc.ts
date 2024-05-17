@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import cron from 'node-cron';
 import { customerService } from '../services/userService';
+import cron from 'node-cron'
 import logger from "./logger";
 
 const initScheduleJobs = async () => {
   const scheduledJobFunction = cron.schedule('*/10 * * * * *', () => {
-    // console.log('running a task every 10 seconds');
   });
   scheduledJobFunction.start();
 }
