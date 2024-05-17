@@ -1,5 +1,5 @@
 import stripe from "../configs/stripe";
-import logger from '../configs/logger';
+import logger from '../utils/logger';
 import { Response,Request } from "express";
 
 export const payment_checkout = async(req:Request,res:Response)=>{

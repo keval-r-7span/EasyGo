@@ -1,5 +1,5 @@
-import { Request, Response, response } from 'express';
-import  {driverService}  from '../services/driverService';
+import { Request, Response } from 'express';
+import {driverService} from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../helper/jwtToken";
@@ -34,15 +34,15 @@ const signUp = async (req: Request, res: Response) => {
     await response?.save();
     logger.info("Driver Registered");
     return res.status(201).json({
-      isLogin: true,
-      message: "Driver Registered and move to home screen",
+      isLogin: true,  
       driverId: response._id,
+      message: "Driver Registered and move to home screen",
     });
   } catch (error) {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
       isLogin: false,
-      message: error,
+      message: `Error in SignUp`+error,
     });
   }
 };
@@ -130,7 +130,7 @@ const verify = async (req: Request, res: Response) => {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
       isLogin: false,
-      message: error,
+      message: `Error in verify OTP`+error,
     });
   }
 };

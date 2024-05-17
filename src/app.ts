@@ -2,7 +2,7 @@ import express,{Request,Response} from 'express';
 import connectDB from './configs/dbConnection';
 import indexRoute from './routes';
 import {PORT} from './helper/constants';
-import logger from './configs/logger';
+import logger from './utils/logger';
 import cors from 'cors'
 export const app = express();
 
