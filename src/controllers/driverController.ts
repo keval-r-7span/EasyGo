@@ -5,6 +5,7 @@ import { AWS_S3 } from "../helper/constants";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { client } from "../configs/awsS3Client";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import logger from "../utils/logger";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -21,6 +22,7 @@ export const getDriver = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    logger.error("Error in GetDriver."+error)
     return res.status(500).json({
       success: false,
       message: "Error in GetDriver " + error,
@@ -43,6 +45,7 @@ export const getDriverByID = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    logger.error("Error in GetDriverByID."+ error)
     return res.status(500).json({
       success: false,
       message: "Error in GetCustomer ID " + error,
@@ -73,6 +76,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    logger.error("Error in UpdateVehicle."+error)
     return res.status(500).json({
       success: false,
       message: "ERROR in Update Vehicle " + error,
@@ -101,6 +105,7 @@ export const updateDriver = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
+    logger.error("Error in UpdateDriver." + error)
     return res.status(500).json({
       success: false,
       message: "ERROR in Update Driver " + error,
@@ -123,6 +128,7 @@ export const deleteDriver = async (req: Request, res: Response) => {
       message: "Driver deleted Successfully",
     });
   } catch (error) {
+    logger.error("Error in DeleteDriver."+ error)
     return res.status(500).json({
       success: false,
       message: error,
@@ -144,6 +150,7 @@ export const availableDrivers = async (req: Request, res: Response) => {
       message: "all available driver",
     });
   } catch (error) {
+    logger.error("Error in availableDriver."+ error)
     return res.status(500).json({
       success: false,
       message: error,
@@ -185,6 +192,7 @@ export const imageUpload = async (req: Request, res: Response) => {
       message: "preSignedUrl Generated...",
     });
   } catch (error) {
+    logger.error("Error in imageUpload."+error)
     return res
       .status(500)
       .json({ success: false, message: "preSigned URL failed:" + error });
@@ -234,6 +242,7 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
       message: "Vehicle added successfully, and image URLs saved",
     });
   } catch (error) {
+    logger.error("Error in addImage in DB."+error)
     return res.status(500).json({
       success: false,
       message:
