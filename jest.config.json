@@ -2,7 +2,7 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "testMatch": [
-    "**/test/**/*.ts?(x)",
+    "**/__tests__/**/*.ts?(x)",
     "**/?(*.)+(spec|test).ts?(x)"
   ],
   "moduleFileExtensions": [

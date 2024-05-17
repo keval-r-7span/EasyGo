@@ -9,14 +9,13 @@ import {
   login,
   verify, 
   requestDrive } from "../controllers/userAuthController";
-// import validateRequest from "../validation/userValidation";
+
 import { verifyToken } from "../middleware/authMiddleware";
 import calcDistance from "../utils/distance";
 
 router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
-// router.post("/verify-otp", verifyOtp);
 router.get("/maps/distance", calcDistance);
 router.get("/:id?", getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
