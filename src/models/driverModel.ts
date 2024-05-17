@@ -10,7 +10,7 @@ export interface driver extends Document {
   name: string;
   email: string;
   phoneNumber: string;
-  availability: boolean;
+  available: boolean;
   role: string;
   token: string;
   isVerified: boolean;
@@ -18,8 +18,20 @@ export interface driver extends Document {
   location: {
     type: string; 
     coordinates: [number, number];
-  };
+   }
 }
+
+const locationSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+}, { _id: false });
 
 const driverSchema = new mongoose.Schema<driver>({
   name: {
@@ -39,7 +51,7 @@ const driverSchema = new mongoose.Schema<driver>({
     enum: ["admin", "driver", "user"],
     default: "driver",
   },
-  availability: {
+  available: {
     type: Boolean,
     default: true,
   },
@@ -50,15 +62,9 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: false,
   },
-  location: {
-    type: { 
-      type: String, 
-      default: "Point"
-    },
-    coordinates: {
-      type: [Number],
-      required: false,
-    }
+  location:{
+    type:locationSchema,
+    required:true
   },
   images: [
     {
@@ -73,6 +79,7 @@ export const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
+  location:Joi.object(),
   role: Joi.string().default("driver"),
 });
 
