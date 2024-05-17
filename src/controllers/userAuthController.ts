@@ -116,6 +116,7 @@ const verify = async (req: Request, res: Response) => {
             .status(200)
             .json({
               isLogin: true,
+              token,
               message: "User Logged in successfully",
             });
         }
