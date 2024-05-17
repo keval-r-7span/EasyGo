@@ -18,7 +18,7 @@ export interface driver extends Document {
   location: {
     type: string; 
     coordinates: [number, number];
-};
+  };
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -50,21 +50,22 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: false,
   },
+  location: {
+    type: { 
+      type: String, 
+      default: "Point"
+    },
+    coordinates: {
+      type: [Number],
+      required: false,
+    }
+  },
   images: [
     {
       name: { type: String, required: true },
       imageUrl: { type: String, required: true },
     },
   ],
-  location: {
-    type: { 
-      type: String, 
-      default: "Point" }, 
-    coordinates: {
-      type: [Number],
-      index: "2dsphere"
-    }, //long, lat
-},
 });
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;
@@ -80,5 +81,7 @@ export const updateDriverSchema = Joi.object({
   email: Joi.string().email(),
   role: Joi.string(),
 });
+
+driverSchema.index({ location: "2dsphere" });
 
 export default mongoose.model<driver>("driver", driverSchema);
