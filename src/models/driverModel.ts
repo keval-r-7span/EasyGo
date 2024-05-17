@@ -14,6 +14,10 @@ export interface driver extends Document {
   token: string;
   isVerified: boolean;
   images: ImageObject[];
+  location: {
+    type: string; 
+    coordinates: [number, number];
+  };
 }
 
 const driverSchema = new mongoose.Schema<driver>({
@@ -45,6 +49,16 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: false,
   },
+  location: {
+    type: { 
+      type: String, 
+      default: "Point"
+    },
+    coordinates: {
+      type: [Number],
+      required: false,
+    }
+  },
   images: [
     {
       name: { type: String, required: true },
@@ -66,5 +80,7 @@ export const updateDriverSchema = Joi.object({
   email: Joi.string().email(),
   role: Joi.string(),
 });
+
+driverSchema.index({ location: "2dsphere" });
 
 export default mongoose.model<driver>("driver", driverSchema);

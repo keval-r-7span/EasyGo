@@ -21,3 +21,5 @@ app.listen(PORT, ():void => {
   // Connect to MongoDB Atlas .
   connectDB()
 });
+
+export default app
