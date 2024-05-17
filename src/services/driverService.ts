@@ -1,5 +1,5 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import driverSchema from "../models/driverModel";
+import driverSchema, { driver } from "../models/driverModel";
 import tempAuthSchema, { tempAuth } from "../models/tempAuthModal";
 import { vehicleService } from "../services/vehicleService";
 
