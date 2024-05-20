@@ -1,13 +1,16 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
 import driverSchema from "../models/driverModel";
 import tempAuthSchema, { tempAuth } from "../models/tempAuthModel";
+import { vehicleService } from "../services/vehicleService";
 
 const viewDriver = async () => {
   return await driverSchema.find();
 };
 
-const viewDriverById = async (query: string) => {
-  return await driverSchema.findById(query);
+const viewDriverById = async (driverId: string) => {
+    const driverData = await driverSchema.findById(driverId);
+    const vehiclesData = await vehicleService.findVehicle({ driverId });
+    return { driver: driverData, vehicles: vehiclesData };
 };
 
 const deleteDriver = async (query: string) => {
@@ -22,11 +25,11 @@ const findDriver = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
 };
 
-const registerUser = async (query: RootQuerySelector<tempAuth>) => {
+const registerDriver = async (query: RootQuerySelector<tempAuth>) => {
   return await driverSchema.create(query);
 };
 
-const registeruserTemp = async (query: RootQuerySelector<tempAuth>) => {
+const registerDriverTemp = async (query: RootQuerySelector<tempAuth>) => {
   return await tempAuthSchema.create(query);
 };
 
@@ -34,24 +37,25 @@ const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
 };
 
-const removeTempUser = async (query: string) => {
+const removeTempDriver = async (query: string) => {
   return await tempAuthSchema.findByIdAndDelete(query);
 };
 
 const availableDrivers = async () => {
   return await driverSchema
-    .find({ availability: true });
+    .find({ availability: true })
+    .select("name")
+    .select("phoneNumber");
 };
-
 export const driverService = {
   viewDriver,
   viewDriverById,
   deleteDriver,
   updateDriver,
   findDriver,
-  registerUser,
-  registeruserTemp,
+  registerDriver,
+  registerDriverTemp,
   findPhoneNumber,
-  removeTempUser,
+  removeTempDriver,
   availableDrivers,
 };
