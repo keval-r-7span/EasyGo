@@ -7,21 +7,10 @@ const viewDriver = async () => {
   return await driverSchema.find();
 };
 
-// const viewDriverById = async (query: string) => {
-//   return await driverSchema.findById(query);
-// };
-
 const viewDriverById = async (driverId: string) => {
-  try {
     const driverData = await driverSchema.findById(driverId);
-    if (!driverData) {
-      return null;
-    }
     const vehiclesData = await vehicleService.findVehicle({ driverId });
     return { driver: driverData, vehicles: vehiclesData };
-  } catch (error) {
-    throw error;
-  }
 };
 
 const deleteDriver = async (query: string) => {
@@ -59,6 +48,19 @@ const availableDrivers = async () => {
     .select("phoneNumber");
 };
 
+const updateRandomDigit = async (id: string) => {
+  const digit = Math.floor(1000 + Math.random() * 9000);
+  const updatedDriver = await driverSchema.findByIdAndUpdate(
+    id,
+    { digit },
+    { new: true }
+  );
+  if (!updatedDriver) {
+    throw new Error('Driver not found');
+  }
+  return updatedDriver;
+};
+
 export const driverService = {
   viewDriver,
   viewDriverById,
@@ -70,4 +72,5 @@ export const driverService = {
   findPhoneNumber,
   removeTempDriver,
   availableDrivers,
+  updateRandomDigit,  
 };
