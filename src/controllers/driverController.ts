@@ -86,11 +86,11 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
 export const updateDriver = async (req: Request, res: Response) => {
   try {
-    const { name, email, verificationStatus } = req.body;
+    const { name, email, isVerified } = req.body;
     const response = await driverService.updateDriver(req.params.id, {
       name,
       email,
-      verificationStatus,
+      isVerified,
     });
     if (!response) {
       return res.status(404).json({
@@ -203,10 +203,9 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
   try {
     const { model, year, licensePlate, vehicleClass, driverId, imageUrls } =
       req.body;
-    // Check if the vehicle already exists
     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
     if (vehicleExist) {
-      return res.status(500).json({
+      return res.status(409).json({
         success: false,
         message: "Already Registered Vehicle",
       });
@@ -218,13 +217,9 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
       licensePlate,
       vehicleClass,
       driverId,
-      fare: 0,
-      save: function (): unknown {
-        throw new Error("Function not implemented.");
-      },
+      fare: 0
     });
     await response.save();
-    // Find the driver by ID
     const driver = await driverService.findDriver({ _id: driverId });
     if (!driver) {
       return res
