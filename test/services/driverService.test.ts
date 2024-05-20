@@ -1,6 +1,7 @@
+import {it,describe,expect,afterEach} from '@jest/globals'
 import { driverService } from '../../src/services/driverService';
 import driverSchema from '../../src/models/driverModel';
-import tempAuthSchema from '../../src/models/tempAuthModal';
+import tempAuthSchema from '../../src/models/tempAuthModel';
 
 describe('driverService', () => {
   afterEach(() => {
