@@ -86,11 +86,11 @@ export const updateVehicle = async (req: Request, res: Response) => {
 
 export const updateDriver = async (req: Request, res: Response) => {
   try {
-    const { name, email, verificationStatus } = req.body;
+    const { name, email, isVerified } = req.body;
     const response = await driverService.updateDriver(req.params.id, {
       name,
       email,
-      verificationStatus,
+      isVerified,
     });
     if (!response) {
       return res.status(404).json({
@@ -206,7 +206,7 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
     // Check if the vehicle already exists
     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
     if (vehicleExist) {
-      return res.status(500).json({
+      return res.status(409).json({
         success: false,
         message: "Already Registered Vehicle",
       });
@@ -252,65 +252,25 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
   }
 };
 
-// export const addVehicle = async (req: Request, res: Response) => {
-//   try {
-//     const { model, year, licensePlate, vehicleClass, driverId } = req.body;
-//     const vehicleExist = await vehicleService.findVehicle({ licensePlate });
-//     if (vehicleExist) {
-//       return res.status(500).json({
-//         success: false,
-//         message: "Already Register Vehicle ",
-//       });
-//     }
-//     const response = await vehicleService.addVehicle({
-//       model,
-//       year,
-//       licensePlate,
-//       vehicleClass,
-//       driverId,
-//       fare: 0,
-//       save: function (): unknown {
-//         throw new Error("Function not implemented.");
-//       },
-//     });
-//     await response.save();
-//     return res.status(201).json({
-//       success: true,
-//       data: response,
-//       message: "vehicle added successfully",
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Something went wrong while addind vehicle " + error,
-//     });
-//   }
-// };
-
-// export const saveImageUrl = async (req: Request, res: Response) => {
-//   try {
-//     const { driverId, imageUrls } = req.body; // Assuming you pass driverId and imageUrls in the request body
-
-//     // Find the driver by ID
-//     const driver = await driverService.findDriver({ _id: driverId }); // Pass an object with the _id field
-
-//     if (!driver) {
-//       return res.status(404).json({ success: false, message: 'Driver not found' });
-//     }
-
-//     // Add each image URL to the driver's images array
-//     for (const imageUrl of imageUrls) {
-//       driver.images.push(imageUrl);
-//     }
-
-//     // Save the updated driver document
-//     await driver.save();
-
-//     return res.status(200).json({
-//       success: true,
-//       message: 'Image URLs saved successfully',
-//     });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, message: 'Error saving image URLs: ' + error });
-//   }
-// };
+export const randomDigit = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "Driver ID is required",
+    });
+  }
+  try {
+    const updatedDigit = await driverService.updateRandomDigit(id);
+    return res.status(200).json({
+      success: true,
+      randomDigit: updatedDigit.digit,
+    });
+  } catch (error) {
+    logger.error("Error in save randomDigit in DB."+error)
+    return res.status(500).json({
+      success: false,
+      message: "Error in generating and saving random digit: " + error,
+    });
+  }
+};

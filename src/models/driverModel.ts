@@ -18,20 +18,9 @@ export interface driver extends Document {
   location: {
     type: string; 
     coordinates: [number, number];
-   }
+  };
+  digit: number;
 }
-
-const locationSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['Point'],
-    required: true
-  },
-  coordinates: {
-    type: [Number],
-    required: true
-  }
-}, { _id: false });
 
 const driverSchema = new mongoose.Schema<driver>({
   name: {
@@ -62,9 +51,15 @@ const driverSchema = new mongoose.Schema<driver>({
     type: Boolean,
     default: false,
   },
-  location:{
-    type:locationSchema,
-    required:true
+  location: {
+    type: { 
+      type: String, 
+      default: "Point"
+    },
+    coordinates: {
+      type: [Number],
+      required: false,
+    }
   },
   images: [
     {
@@ -72,6 +67,9 @@ const driverSchema = new mongoose.Schema<driver>({
       imageUrl: { type: String, required: true },
     },
   ],
+  digit: {
+    type: Number
+  }
 });
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;

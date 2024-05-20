@@ -1,6 +1,6 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
 import driverSchema from "../models/driverModel";
-import tempAuthSchema, { tempAuth } from "../models/tempAuthModel";
+import tempAuthSchema, { tempAuth } from "../models/tempAuthModal";
 import { vehicleService } from "../services/vehicleService";
 
 const viewDriver = async () => {
@@ -17,11 +17,11 @@ const deleteDriver = async (query: string) => {
   return await driverSchema.findByIdAndDelete(query);
 };
 
-const updateDriver = async (id: string, query: UpdateQuery<driver>) => {
+const updateDriver = async (id: string, query: UpdateQuery<tempAuth>) => {
   return await driverSchema.findByIdAndUpdate(id, query, { new: true });
 };
 
-const findDriver = async (query: RootQuerySelector<driver>) => {
+const findDriver = async (query: RootQuerySelector<tempAuth>) => {
   return await driverSchema.findOne(query);
 };
 
@@ -33,8 +33,8 @@ const registerDriverTemp = async (query: RootQuerySelector<tempAuth>) => {
   return await tempAuthSchema.create(query);
 };
 
-const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
-  return await driverSchema.findOne(query);
+const findPhoneNumber = async (query: RootQuerySelector<tempAuth>) => {
+  return await tempAuthSchema.findOne(query);
 };
 
 const removeTempDriver = async (query: string) => {
@@ -47,6 +47,20 @@ const availableDrivers = async () => {
     .select("name")
     .select("phoneNumber");
 };
+
+const updateRandomDigit = async (id: string) => {
+  const digit = Math.floor(1000 + Math.random() * 9000);
+  const updatedDriver = await driverSchema.findByIdAndUpdate(
+    id,
+    { digit },
+    { new: true }
+  );
+  if (!updatedDriver) {
+    throw new Error('Driver not found');
+  }
+  return updatedDriver;
+};
+
 export const driverService = {
   viewDriver,
   viewDriverById,
@@ -58,4 +72,5 @@ export const driverService = {
   findPhoneNumber,
   removeTempDriver,
   availableDrivers,
+  updateRandomDigit,  
 };

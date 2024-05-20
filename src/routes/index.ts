@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express()
+import customerRoute from './customerRoute'
 import paymentRoute from './paymentRoute'
 import driverRoute from './driverRoute';
 import booking from './bookingRoute'
