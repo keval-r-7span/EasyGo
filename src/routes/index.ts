@@ -4,6 +4,8 @@ import paymentRoute from './paymentRoute'
 import driverRoute from './driverRoute';
 import booking from './bookingRoute'
 
+router.use('/user',customerRoute)
+router.use('/driver',driverRoute)
 router.use('/payment',paymentRoute)
 router.use('/booking',booking)
 
