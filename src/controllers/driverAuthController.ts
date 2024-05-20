@@ -8,7 +8,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location } = req.body;
+    const { name, email, phoneNumber, location=null } = req.body;
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
       logger.error("Existing driver");
