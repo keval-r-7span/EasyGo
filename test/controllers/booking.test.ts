@@ -3,7 +3,6 @@ import app from '../../src/app'
 import supertest from 'supertest';
 import { setupDB } from '../configs/dbConnection';
 
-
 var createdBookingId:string;
 describe('booking',()=>{
   setupDB()  

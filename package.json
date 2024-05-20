@@ -15,7 +15,8 @@
         "build": "rimraf dist && npx tsc",
         "prod": "tsc && node --es-module-specifier-resolution=node dist/app.js",
         "lint": "eslint src/**/*.ts --fix",
-        "test": "jest"
+        "test": "jest",
+        "coverage":"jest --coverage"
     },
     "author": "7Span Interns",
     "license": "ISC",
