@@ -1,4 +1,4 @@
-import {it,describe,expect,beforeAll,afterAll} from '@jest/globals'
+import {it,describe,expect,beforeAll,afterEach,afterAll} from '@jest/globals'
 import supertest from "supertest";
 import app from "../../src/app";
 import * as db from "../configs/dbConnection";
