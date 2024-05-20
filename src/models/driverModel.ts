@@ -18,7 +18,8 @@ export interface driver extends Document {
   location: {
     type: string; 
     coordinates: [number, number];
-   }
+  };
+  digit: number;
 }
 
 const locationSchema = new mongoose.Schema({
@@ -72,6 +73,9 @@ const driverSchema = new mongoose.Schema<driver>({
       imageUrl: { type: String, required: true },
     },
   ],
+  digit: {
+    type: Number
+  }
 });
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;

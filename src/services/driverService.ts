@@ -47,6 +47,20 @@ const availableDrivers = async () => {
     .select("name")
     .select("phoneNumber");
 };
+
+const updateRandomDigit = async (id: string) => {
+  const digit = Math.floor(1000 + Math.random() * 9000);
+  const updatedDriver = await driverSchema.findByIdAndUpdate(
+    id,
+    { digit },
+    { new: true }
+  );
+  if (!updatedDriver) {
+    throw new Error('Driver not found');
+  }
+  return updatedDriver;
+};
+
 export const driverService = {
   viewDriver,
   viewDriverById,
@@ -58,4 +72,5 @@ export const driverService = {
   findPhoneNumber,
   removeTempDriver,
   availableDrivers,
+  updateRandomDigit,  
 };
