@@ -35,6 +35,32 @@ const getCustomer = async (req: Request, res: Response) => {
  }
 };
 
+const getDetails = async (req: Request, res: Response) => {
+  try {
+   const userId = req.user?.id;
+   if(userId){
+     const response = await customerService.viewCustomerById(userId);
+     if(!response){
+       return res.status(404).json({
+         success: false,
+         message: "No user found" 
+       })
+     }
+     return res.status(200).json({
+       success: true,
+       message: "User found",
+       data : response
+     })
+   }
+   }catch (error) {
+   logger.error("Error occured while retrieving customer ", error)
+   return res.status(500).json({
+     success: false,
+     message: "Error occured while retrieving customer"
+   })
+  }
+ };
+
 const updateCustomer = async (req: Request, res: Response) => {
   try {
     const { name, email, role } = req.body;
@@ -88,4 +114,4 @@ const deleteCustomer = async (req: Request, res: Response) => {
   }
 };
 
-export { getCustomer, updateCustomer, deleteCustomer };
+export { getCustomer, getDetails, updateCustomer, deleteCustomer };

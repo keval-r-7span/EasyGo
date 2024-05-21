@@ -3,7 +3,10 @@ const router = Router();
 import {
   getCustomer,
   updateCustomer,
-  deleteCustomer } from "../controllers/customerController";
+  deleteCustomer,
+  getDetails
+ } from "../controllers/customerController";
+
 import { 
   signUp, 
   login,
@@ -20,5 +23,6 @@ router.get("/", getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
 router.delete("/:id", deleteCustomer);
 router.post("/request-drive/", verifyToken, requestDrive)
+router.post('/getDetails', verifyToken, getDetails)
 
 export default router;
