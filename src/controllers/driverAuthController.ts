@@ -34,7 +34,8 @@ const signUp = async (req: Request, res: Response) => {
     await response?.save();
     logger.info("Driver Registered");
     return res.status(201).json({
-      isLogin: true,  
+      isLogin: true,
+      isReg: true,
       driverId: response._id,
       message: "Driver Registered and move to home screen",
     });
@@ -62,10 +63,10 @@ const login = async (req: Request, res: Response) => {
       to: `+91${phoneNumber}`,
       channel: "sms",
     });
-    logger.info(`Otp isLoginfully sent to xxxxxx${lastDigit}`);
+    logger.info(`Otp successfully sent to xxxxxx${lastDigit}`);
     return res.status(200).json({
       isLogin: true,
-      message: `OTP isLoginfully sent to mobile Number ending with ${lastDigit}`,
+      message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
     });
   } catch (error) {
     logger.error("Error occured while sending otp ", error);
@@ -99,13 +100,14 @@ const verify = async (req: Request, res: Response) => {
           logger.error("No Driver found");
           return res.status(404).json({
             isLogin: false,
+            isReg: false,
             data: phoneNumber,
             message: "Oops!! Sign-Up first move to signup screen",
           });
         } else {
           const token = jwtToken(existUser);
           existUser.token = token;
-          logger.info(`DriverID: ${existUser.id} logged in isLoginfully`)
+          logger.info(`DriverID: ${existUser.id} logged in successfully`)
           return res
             .cookie("token", token, {
               maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -114,8 +116,9 @@ const verify = async (req: Request, res: Response) => {
             .status(200)
             .json({
               isLogin: true,
+              isReg: true,
               token,
-              message: "Driver Logged in isLoginfully",
+              message: "Driver Logged in successfully",
             });
         }
       }
