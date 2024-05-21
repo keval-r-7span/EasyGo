@@ -28,7 +28,7 @@ const vehicleDetails = new mongoose.Schema<vehicle>({
   },
   vehicleClass: {
     type: String,
-    enum: ["Bike", "Rickshaw", "mini", "premium", "xl"],
+    enum: ["Bike", "Rickshaw", "Mini", "Premium", "XL"],
   },
 });
 
@@ -38,7 +38,7 @@ export const addVehicleSchema = Joi.object({
   licensePlate: Joi.string().required(),
   color: Joi.string(),
   vehicleClass: Joi.string()
-    .valid("Bike", "Rickshaw", "mini", "premium", "xl")
+    .valid("Bike", "Rickshaw", "Mini", "Premium", "XL")
     .required(),
   driverId: Joi.string().required(),
 });
