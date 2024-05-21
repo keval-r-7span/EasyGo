@@ -3,16 +3,21 @@ import { customerService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
-import radiusCalc from "../utils/radiusCalc";
-import { driverService } from "../services/driverService";
+// import radiusCalc from "../utils/radiusCalc";
+// import { driverService } from "../services/driverService";
 import logger from "../utils/logger";
-import { sendRequestToDriver } from "../utils/sendRequest";
+// import { sendRequestToDriver } from "../utils/sendRequest";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location } = req.body;
+    const { 
+      name, 
+      email, 
+      phoneNumber, 
+      // location 
+    } = req.body;
     const userExist = await customerService.findCustomer({ phoneNumber });
     if (userExist) {
       logger.error("Existing User");
@@ -26,7 +31,7 @@ const signUp = async (req: Request, res: Response) => {
       email: email.toLowerCase(),
       phoneNumber,
       role: "user",
-      location,
+      // location,
     });
     if (!response) {
       logger.error("Invalid User data");
@@ -38,6 +43,7 @@ const signUp = async (req: Request, res: Response) => {
     await response?.save();
     logger.info("user Registered");
     return res.status(201).json({
+      isReg: true,
       isLogin: true,
       message: "user Registered and move to home screen",
     });
@@ -102,6 +108,7 @@ const verify = async (req: Request, res: Response) => {
           logger.error("No user found");
           return res.status(404).json({
             isLogin: false,
+            isReg: false,
             data: phoneNumber,
             message: "Oops!! Sign-Up first move to signup screen",
           });
@@ -117,6 +124,7 @@ const verify = async (req: Request, res: Response) => {
             .status(200)
             .json({
               isLogin: true,
+              isReg: true,
               token,
               message: "User Logged in successfully",
             });
@@ -138,93 +146,98 @@ const verify = async (req: Request, res: Response) => {
   }
 };
 
-const requestDrive = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const drivers = [];
-    const userId = req.user?.id; 
-    const userDetails = await customerService.findLocationByIdUser(userId);
-    if (!userDetails) {
-      logger.error("User details not found! check your token");
-      return res.status(404).json({
-        isLogin: false,
-        message: "User location not found.",
-      });
-    }
-    const latU = userDetails.location.coordinates[0];
-    const longU = userDetails.location.coordinates[1];
-    if (!latU && !longU) {
-      logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
-      return res.status(404).json({
-        isLogin: false,
-        message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
-      });
-    }
+// const requestDrive = async (req: Request, res: Response): Promise<Response> => {
+//   try {
+//     const drivers = [];
+//     const userId = req.user?.id; 
+//     const userDetails = await customerService.findLocationByIdUser(userId);
+//     if (!userDetails) {
+//       logger.error("User details not found! check your token");
+//       return res.status(404).json({
+//         isLogin: false,
+//         message: "User location not found.",
+//       });
+//     }
+//     const latU = userDetails.location.coordinates[0];
+//     const longU = userDetails.location.coordinates[1];
+//     if (!latU && !longU) {
+//       logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
+//       return res.status(404).json({
+//         isLogin: false,
+//         message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
+//       });
+//     }
 
-    const availableDrivers = await driverService.availableDrivers();
+//     const availableDrivers = await driverService.availableDrivers();
 
-    if (!availableDrivers) {
-      logger.error("NO AVAILABLE DRIVERS FOUND!");
-      return res.status(404).json({
-        isLogin: false,
-        message: "No available drivers found.",
-      });
-    }
-    let driverFoundWithin2Km = false;
+//     if (!availableDrivers) {
+//       logger.error("NO AVAILABLE DRIVERS FOUND!");
+//       return res.status(404).json({
+//         isLogin: false,
+//         message: "No available drivers found.",
+//       });
+//     }
+//     let driverFoundWithin2Km = false;
 
-    for (const driver of availableDrivers) {
-      const latD = driver.location.coordinates[0];
-      const longD = driver.location.coordinates[1];
+//     for (const driver of availableDrivers) {
+//       const latD = driver.location.coordinates[0];
+//       const longD = driver.location.coordinates[1];
       
-      if (!latD && !longD) {
-        logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
-        return res.status(404).json({
-          isLogin: false,
-          message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
-        });
-      }
+//       if (!latD && !longD) {
+//         logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
+//         return res.status(404).json({
+//           isLogin: false,
+//           message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
+//         });
+//       }
 
-      const Radius = radiusCalc(latU, longU, latD, longD);
-      if (Radius < 2) {
-        const { name, location } = userDetails;
-        if(!name || !location){
-          return res.json({
-            success: false,
-            message: "Unable to fetch user details"
-          })
-        }
-        const coords = location.coordinates
-        await sendRequestToDriver(driver, { name, coords });
-        drivers.push(driver)
+//       const Radius = radiusCalc(latU, longU, latD, longD);
+//       if (Radius < 2) {
+//         const { name, location } = userDetails;
+//         if(!name || !location){
+//           return res.json({
+//             success: false,
+//             message: "Unable to fetch user details"
+//           })
+//         }
+//         const coords = location.coordinates
+//         await sendRequestToDriver(driver, { name, coords });
+//         drivers.push(driver)
 
-        driverFoundWithin2Km = true;
-      } 
-    }
-    if (driverFoundWithin2Km) {
-      logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
-      return res.status(200).json({
-        isLogin: true,
-        userLocation: userDetails.location,
-        driverDetails: drivers,
-        message: "Requests sent to nearby drivers within 2 km radius."
+//         driverFoundWithin2Km = true;
+//       } 
+//     }
+//     if (driverFoundWithin2Km) {
+//       logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
+//       return res.status(200).json({
+//         isLogin: true,
+//         userLocation: userDetails.location,
+//         driverDetails: drivers,
+//         message: "Requests sent to nearby drivers within 2 km radius."
         
-      });
-    } else {
-      logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
-      return res.json({
-        isLogin: false,
-        message: "No available drivers found within 2 km radius.",
-      });
-    }
-  } catch (error) {
-    logger.error("An error occurred while processing the request. ", error);
-    return res.status(500).json({
-      isLogin: false,
-      message: "An error occurred while processing the request.",
-    });
-  }
-};
+//       });
+//     } else {
+//       logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
+//       return res.json({
+//         isLogin: false,
+//         message: "No available drivers found within 2 km radius.",
+//       });
+//     }
+//   } catch (error) {
+//     logger.error("An error occurred while processing the request. ", error);
+//     return res.status(500).json({
+//       isLogin: false,
+//       message: "An error occurred while processing the request.",
+//     });
+//   }
+// };
 
-export { signUp, login, verify, requestDrive };
+export { 
+  signUp, 
+  login, 
+  verify, 
+  // requestDrive 
+};
 
 // import { Request, Response } from "express";
 // import { customerService } from "../services/userService";

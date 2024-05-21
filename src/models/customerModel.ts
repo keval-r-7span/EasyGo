@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 export interface Customer{
@@ -9,10 +8,10 @@ export interface Customer{
     role: string;
     token: string;
     resetPasswordExpires: Date;
-    location: {
-      type: string; 
-      coordinates: [number, number];
-  };
+  //   location: {
+  //     type: string; 
+  //     coordinates: [number, number];
+  // };
 }
 
 const CustomerSchema = new mongoose.Schema<Customer>(
@@ -39,15 +38,15 @@ const CustomerSchema = new mongoose.Schema<Customer>(
       // resetPasswordExpires: {
       //   type: Date,
       // },
-      location: {
-        type: { 
-          type: String, 
-          default: "Point" }, 
-        coordinates: {
-          type: [Number],
-          index: "2dsphere"
-        },
-    },
+    //   location: {
+    //     type: { 
+    //       type: String, 
+    //       default: "Point" }, 
+    //     coordinates: {
+    //       type: [Number],
+    //       index: "2dsphere"
+    //     },
+    // },
     },
     { timestamps: true }
   );
