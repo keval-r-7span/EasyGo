@@ -14,6 +14,18 @@ export interface Customer{
   };
 }
 
+const locationSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+}, { _id: false });
+
 const CustomerSchema = new mongoose.Schema<Customer>(
     {
       name: {
@@ -39,13 +51,8 @@ const CustomerSchema = new mongoose.Schema<Customer>(
       //   type: Date,
       // },
       location: {
-        type: { 
-          type: String, 
-          default: "Point" }, 
-        coordinates: {
-          type: [Number],
-          index: "2dsphere"
-        },
+        type: locationSchema,
+        required: false
     },
     },
     { timestamps: true }
