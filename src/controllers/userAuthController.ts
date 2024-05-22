@@ -42,9 +42,12 @@ const signUp = async (req: Request, res: Response) => {
     }
     await response?.save();
     logger.info("user Registered");
+    const token = jwtToken(response);
+    response.token = token;
     return res.status(201).json({
       isReg: true,
       isLogin: true,
+      token,
       message: "user Registered and move to home screen",
     });
   } catch (error) {
@@ -126,6 +129,7 @@ const verify = async (req: Request, res: Response) => {
               isLogin: true,
               isReg: true,
               token,
+              data: existUser.id,
               message: "User Logged in successfully",
             });
         }
