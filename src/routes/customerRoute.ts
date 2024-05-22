@@ -4,7 +4,7 @@ import {
   getCustomer,
   updateCustomer,
   deleteCustomer,
-  getDetails
+  // getDetails
  } from "../controllers/customerController";
 
 import { 
@@ -19,10 +19,10 @@ router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
 router.get("/maps/distance", calcDistance);
-router.get("/", getCustomer);
+router.get("/",getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
 router.delete("/:id", deleteCustomer);
 router.post("/request-drive/", verifyToken, requestDrive)
-router.post('/getDetails', verifyToken, getDetails)
+// router.post('/getDetails',  verifyToken ,getDetails)
 
 export default router;

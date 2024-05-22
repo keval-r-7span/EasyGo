@@ -110,14 +110,12 @@ const verify = async (req: Request, res: Response) => {
           existUser.token = token;
           logger.info(`UserID: ${existUser.id} logged in successfully`)
           return res
-            .cookie("token", token, {
-              maxAge: 3 * 24 * 60 * 60 * 1000,
-              httpOnly: true,
-            })
             .status(200)
             .json({
               success: true,
-              message: "User Logged in successfully",
+              token,
+              data: existUser.id,
+              message: "User Logged in successfully"
             });
         }
       }

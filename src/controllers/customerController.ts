@@ -3,63 +3,80 @@ import { customerService } from "../services/userService";
 import logger from "../utils/logger";
 
 const getCustomer = async (req: Request, res: Response) => {
- try {
+  try {
   const { id } = req.query as { id: string }
   if(id){
     const response = await customerService.viewCustomerById(id);
     if(!response){
-      return res.status(404).json({
-        success: false,
-        message: "No user found" 
+        return res.status(404).json({
+          success: false,
+          message: "No user found"
       })
-    }
-    return res.status(200).json({
-      success: true,
-      message: "User found",
+      }
+      return res.status(200).json({
+        success: true,
+        message: "User found",
       data : response
     })
   }else {
-    const response = await customerService.viewCustomer();
-    return res.status(200).json({
-      success: true,
-      message: "List of user found",
-      data: response
+      const response = await customerService.viewCustomer();
+      return res.status(200).json({
+        success: true,
+        message: "List of user found",
+        data: response
     })
     }
   }catch (error) {
   logger.error("Error occured while retrieving customer ", error)
-  return res.status(500).json({
-    success: false,
-    message: "Error occured while retrieving customer"
+    return res.status(500).json({
+      success: false,
+      message: "Error occured while retrieving customer"
   })
- }
+  }
 };
 
-const getDetails = async (req: Request, res: Response) => {
-  try {
-   const userId = req.user?.id;
-   if(userId){
-     const response = await customerService.viewCustomerById(userId);
-     if(!response){
-       return res.status(404).json({
-         success: false,
-         message: "No user found" 
-       })
-     }
-     return res.status(200).json({
-       success: true,
-       message: "User found",
-       data : response
-     })
-   }
-   }catch (error) {
-   logger.error("Error occured while retrieving customer ", error)
-   return res.status(500).json({
-     success: false,
-     message: "Error occured while retrieving customer"
-   })
-  }
- };
+// const getDetails = async (req: Request, res: Response) => {
+//   try {
+//     const { token } = req.body;
+//     if (!token) {
+//       logger.info("NO TOKEN FOUND");
+//       return res.status(404).json({
+//         success: false,
+//         messaage: "No Token Found"
+//       });
+//     }
+//     const decode = jwt.verify(token, JWT.SECRET) as JwtPayload;
+//     if (!decode.role) {
+//       logger.info("UNABLE TO DECODE TOKEN");
+//       return res.status(404).json({
+//         success: false,
+//         message: "Unable to Decode Token"
+//       });
+//     }
+//     // req.user = decode?.id;
+
+//     const userID  = decode?.id;
+//     const response = await customerService.viewCustomerById(userID);
+//     if (!response) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No user found"
+//       });
+//     }
+//     const { _id, name, email } = response
+//     return res.status(200).json({
+//            success: true,
+//            message: "User found",
+//            data : {_id, name, email}
+//          })
+//   } catch (error) {
+//     logger.error("Error occured while retrieving customer ", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error occured while retrieving customer"
+//     });
+//   }
+// };
 
 const updateCustomer = async (req: Request, res: Response) => {
   try {
@@ -114,4 +131,4 @@ const deleteCustomer = async (req: Request, res: Response) => {
   }
 };
 
-export { getCustomer, getDetails, updateCustomer, deleteCustomer };
+export { getCustomer, updateCustomer, deleteCustomer };
