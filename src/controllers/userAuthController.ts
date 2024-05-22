@@ -109,13 +109,7 @@ const verify = async (req: Request, res: Response) => {
           const token = jwtToken(existUser);
           existUser.token = token;
           logger.info(`UserID: ${existUser.id} logged in successfully`)
-          return res
-            .cookie("token", token, {
-              maxAge: 3 * 24 * 60 * 60 * 1000,
-              httpOnly: true,
-            })
-            .status(200)
-            .json({
+          return res.status(200).json({
               isLogin: true,
               token,
               message: "User Logged in successfully",
