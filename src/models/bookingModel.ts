@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import mongoose, { Document } from 'mongoose';
 
-
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
@@ -14,7 +13,27 @@ export interface Booking extends Document {
   rating:number;
   status: 'pending' | 'accepted'|'ongoing'| 'completed'|'cancelled';
   comments:string;
+  origin: {
+    type: string; 
+    coordinates: [number, number];
+   };
+   destination:{
+    type: string; 
+    coordinates: [number, number];
+   }
 }
+
+const locationSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+}, { _id: false });
 
 const bookingSchema = new mongoose.Schema<Booking>(
   {
@@ -36,6 +55,14 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     dropoffLocation: {
       type: String,
+    },
+    origin: {
+      type: locationSchema,
+      required: true
+    },
+    destination: {
+      type: locationSchema,
+      required: true
     },
     pickupTime: {
       type: Date,
@@ -59,7 +86,7 @@ const bookingSchema = new mongoose.Schema<Booking>(
       type: String,
       default:"Good Experience"
     },
-  },
+ },
   { timestamps: true }
 );
 
@@ -75,6 +102,8 @@ export const bookingJoiSchema= Joi.object({
   rating: Joi.number(),
   payment_status: Joi.string().lowercase(),
   comments: Joi.string(),
+  origin:Joi.object(),
+  destination:Joi.object()
 });
 
 export const updateJoiSchema = Joi.object({
@@ -83,4 +112,5 @@ export const updateJoiSchema = Joi.object({
   vehicleClass:Joi.string(),
 })
 
+bookingSchema.index({location: "2dsphere"})
 export default mongoose.model<Booking>("Booking", bookingSchema);

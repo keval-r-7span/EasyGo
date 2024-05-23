@@ -7,6 +7,7 @@ import radiusCalc from "../utils/radiusCalc";
 import { driverService } from "../services/driverService";
 import logger from "../utils/logger";
 import { sendRequestToDriver } from "../utils/sendRequest";
+import { bookingService } from "../services/bookingService";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 
@@ -139,20 +140,21 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
   try {
     const drivers = [];
     const userId = req.user?.id; 
-    const userDetails = await customerService.findLocationByIdUser(userId);
-    if (!userDetails) {
-      logger.error("User details not found! check your token");
+    const bookingDetails = await bookingService.findUserIDBooking({customer:userId});
+    const userDetails = await customerService.viewCustomerById(userId);
+    if (!bookingDetails) {
+      logger.error("booking details not found! check your token");
       return res.status(404).json({
-        success: false,
-        message: "User Deatails not found. check token",
+        isLogin: false,
+        message: "booking location not found.",
       });
     }
-    const latU = userDetails.location.coordinates[0];
-    const longU = userDetails.location.coordinates[1];
+    const latU = bookingDetails.origin.coordinates[0];
+    const longU = bookingDetails.origin.coordinates[1];
     if (!latU && !longU) {
       logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
       return res.status(404).json({
-        success: false,
+        isLogin: false,
         message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
       });
     }
@@ -162,7 +164,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     if (!availableDrivers) {
       logger.error("NO AVAILABLE DRIVERS FOUND!");
       return res.status(404).json({
-        success: false,
+        isLogin: false,
         message: "No available drivers found.",
       });
     }
@@ -175,14 +177,15 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       if (!latD && !longD) {
         logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
         return res.status(404).json({
-          success: false,
+          isLogin: false,
           message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
         });
       }
 
       const Radius = radiusCalc(latU, longU, latD, longD);
       if (Radius < 2) {
-        const { name, location } = userDetails;
+        const name = userDetails?.name;
+        const location = bookingDetails?.origin
         if(!name || !location){
           return res.json({
             success: false,
@@ -190,17 +193,24 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
           })
         }
         const coords = location.coordinates
+        const payload = {
+          name,
+          coords,
+          pickupLocation: bookingDetails.pickupLocation,
+          dropoffLocation: bookingDetails.dropoffLocation,
+          pickupTime: bookingDetails.pickupTime,
+          fare: bookingDetails.fare,
+        };
         await sendRequestToDriver(driver, { name, coords });
         drivers.push(driver)
-
         driverFoundWithin2Km = true;
       } 
     }
     if (driverFoundWithin2Km) {
       logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
       return res.status(200).json({
-        success: true,
-        userLocation: userDetails,
+        isLogin: true,
+        userDetail: bookingDetails.origin,
         driverDetails: drivers,
         message: "Requests sent to nearby drivers within 2 km radius."
         
@@ -208,19 +218,18 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     } else {
       logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
       return res.json({
-        success: false,
+        isLogin: false,
         message: "No available drivers found within 2 km radius.",
       });
     }
   } catch (error) {
     logger.error("An error occurred while processing the request. ", error);
     return res.status(500).json({
-      success: false,
+      isLogin: false,
       message: "An error occurred while processing the request.",
     });
   }
 };
-
 export { signUp, login, verify, requestDrive };
 
 // import { Request, Response } from "express";

@@ -62,4 +62,8 @@ const aggregateBookings = async () => {
     return result;
 };
 
-export const bookingService = {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,getRevenue,aggregateBookings}
+const findUserIDBooking = async(query: {customer: string}) => {
+  return await BookingSchema.findOne(query)
+}
+
+export const bookingService = {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,getRevenue,aggregateBookings, findUserIDBooking}
