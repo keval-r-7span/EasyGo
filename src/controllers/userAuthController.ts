@@ -7,6 +7,7 @@ import radiusCalc from "../utils/radiusCalc";
 import { driverService } from "../services/driverService";
 import logger from "../utils/logger";
 import { sendRequestToDriver } from "../utils/sendRequest";
+import { bookingService } from "../services/bookingService";
 const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 
@@ -136,16 +137,17 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
   try {
     const drivers = [];
     const userId = req.user?.id; 
-    const userDetails = await customerService.findLocationByIdUser(userId);
-    if (!userDetails) {
-      logger.error("User details not found! check your token");
+    const bookingDetails = await bookingService.findUserIDBooking({customer:userId});
+    const userDetails = await customerService.viewCustomerById(userId);
+    if (!bookingDetails) {
+      logger.error("booking details not found! check your token");
       return res.status(404).json({
         isLogin: false,
-        message: "User location not found.",
+        message: "booking location not found.",
       });
     }
-    const latU = userDetails.location.coordinates[0];
-    const longU = userDetails.location.coordinates[1];
+    const latU = bookingDetails.origin.coordinates[0];
+    const longU = bookingDetails.origin.coordinates[1];
     if (!latU && !longU) {
       logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
       return res.status(404).json({
@@ -179,7 +181,8 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
 
       const Radius = radiusCalc(latU, longU, latD, longD);
       if (Radius < 2) {
-        const { name, location } = userDetails;
+        const name = userDetails?.name;
+        const location = bookingDetails?.origin
         if(!name || !location){
           return res.json({
             success: false,
@@ -189,7 +192,6 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
         const coords = location.coordinates
         await sendRequestToDriver(driver, { name, coords });
         drivers.push(driver)
-
         driverFoundWithin2Km = true;
       } 
     }
@@ -197,7 +199,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
       return res.status(200).json({
         isLogin: true,
-        userLocation: userDetails.location,
+        userDetail: bookingDetails.origin,
         driverDetails: drivers,
         message: "Requests sent to nearby drivers within 2 km radius."
         
