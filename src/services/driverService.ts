@@ -43,9 +43,10 @@ const removeTempDriver = async (query: string) => {
 
 const availableDrivers = async () => {
   return await driverSchema
-    .find({ availability: true })
+    .find({ available: true })
     .select("name")
-    .select("phoneNumber");
+    .select("phoneNumber")
+    .select("location");
 };
 
 const updateRandomDigit = async (id: string) => {
