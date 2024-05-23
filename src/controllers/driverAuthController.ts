@@ -36,14 +36,14 @@ const signUp = async (req: Request, res: Response) => {
     return res.status(201).json({
       isLogin: true,
       isReg: true,
-      driverId: response._id,
       message: "Driver Registered and move to home screen",
+      driverId: response._id,
     });
   } catch (error) {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
       isLogin: false,
-      message: `Error in SignUp`+error,
+      message: error,
     });
   }
 };
@@ -133,7 +133,7 @@ const verify = async (req: Request, res: Response) => {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
       isLogin: false,
-      message: `Error in verify OTP`+error,
+      message: error,
     });
   }
 };
