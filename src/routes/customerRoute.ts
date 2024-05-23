@@ -8,7 +8,7 @@ import {
   signUp, 
   login,
   verify, 
-  // requestDrive
+  requestDrive
  } from "../controllers/userAuthController";
 import { verifyToken } from "../middleware/authMiddleware";
 import calcDistance from "../utils/distance";
@@ -20,6 +20,6 @@ router.get("/maps/distance", calcDistance);
 router.get("/", getCustomer);
 router.put("/:id", verifyToken,updateCustomer);
 router.delete("/:id", deleteCustomer);
-// router.post("/request-drive/", verifyToken, requestDrive)
+router.post("/request-drive/", verifyToken, requestDrive)
 
 export default router;
