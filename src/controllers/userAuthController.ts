@@ -196,7 +196,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
       return res.status(200).json({
         isLogin: true,
-        userDetail: bookingDetails.origin,
+        userDetail: bookingDetails,
         driverDetails: drivers,
         message: "Requests sent to nearby drivers within 2 km radius."
         
