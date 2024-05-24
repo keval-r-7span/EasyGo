@@ -20,7 +20,7 @@ const paymentSchema = new mongoose.Schema({
     ref: "Booking",
     required: true 
 },
-  amount: { 
+  fare: { 
     type: Number,
     required: true 
 },
