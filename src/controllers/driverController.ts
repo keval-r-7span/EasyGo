@@ -235,6 +235,7 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
     await driver.save();
     return res.status(201).json({
       success: true,
+      isReg: true,
       message: "Vehicle added successfully, and image URLs saved",
     });
   } catch (error) {
@@ -248,7 +249,7 @@ export const addVehicleAndSaveImage = async (req: Request, res: Response) => {
   }
 };
 
-export const randomDigit = async (req: Request, res: Response) => {
+export const bookingOTP = async (req: Request, res: Response) => {
   const { id } = req.params;
   if (!id) {
     return res.status(400).json({
@@ -257,7 +258,7 @@ export const randomDigit = async (req: Request, res: Response) => {
     });
   }
   try {
-    const updatedDigit = await driverService.updateRandomDigit(id);
+    const updatedDigit = await driverService.updateBookingOTP(id);
     return res.status(200).json({
       success: true,
       randomDigit: updatedDigit.digit,
@@ -267,6 +268,36 @@ export const randomDigit = async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Error in generating and saving random digit: " + error,
+    });
+  }
+};
+
+export const verifyBookingOTP = async (req: Request, res: Response) => {
+  const { id, otp } = req.body;
+  if (!id || !otp) {
+    return res.status(400).json({
+      success: false,
+      message: "Driver ID and OTP are required",
+    });
+  }
+  try {
+    const isValid = await driverService.verifyBookingOTP(id, otp);
+    if (isValid) {
+      return res.status(200).json({
+        success: true,
+        message: "OTP verified successfully",
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+  } catch (error) {
+    logger.error("Error in verifying OTP: " + error);
+    return res.status(500).json({
+      success: false,
+      message: "Error in verifying OTP: " + error,
     });
   }
 };

@@ -16,7 +16,8 @@ import {
   deleteDriver,
   availableDrivers,
   imageUpload,
-  randomDigit,
+  bookingOTP,
+  verifyBookingOTP
 } from "../controllers/driverController";
 
 router.post("/login", login);
@@ -34,6 +35,7 @@ router.get("/:id", getDriverByID);
 router.put("/:id", updateDriver);
 // router.put("/:id", validateUpdateRequest, updateDriver);
 router.delete("/:id", deleteDriver);
-router.put('/randomdigit/:id', randomDigit);
+router.put('/bookingotp/:id', bookingOTP);
+router.post('/verifybookingotp', verifyBookingOTP);
 
 export default router;

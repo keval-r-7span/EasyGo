@@ -72,6 +72,7 @@ const driverSchema = new mongoose.Schema<driver>({
 });
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;
+
 export const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
