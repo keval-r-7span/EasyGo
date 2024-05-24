@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import {driverService} from '../services/driverService';
+import { Request, Response, response } from 'express';
+import  {driverService}  from '../services/driverService';
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
@@ -33,17 +33,20 @@ const signUp = async (req: Request, res: Response) => {
     }
     await response?.save();
     logger.info("Driver Registered");
+    const token = jwtToken(response);
+    response.token = token;
     return res.status(201).json({
       isLogin: true,
       isReg: true,
-      driverId: response._id,
       message: "Driver Registered and move to home screen",
+      driverId: response._id,
+      token
     });
   } catch (error) {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
       isLogin: false,
-      message: `Error in SignUp`+error,
+      message: error,
     });
   }
 };
@@ -109,15 +112,12 @@ const verify = async (req: Request, res: Response) => {
           existUser.token = token;
           logger.info(`DriverID: ${existUser.id} logged in successfully`)
           return res
-            .cookie("token", token, {
-              maxAge: 3 * 24 * 60 * 60 * 1000,
-              httpOnly: true,
-            })
             .status(200)
             .json({
               isLogin: true,
               isReg: true,
               token,
+              driverId: existUser.id,
               message: "Driver Logged in successfully",
             });
         }
@@ -133,7 +133,7 @@ const verify = async (req: Request, res: Response) => {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
       isLogin: false,
-      message: `Error in verify OTP`+error,
+      message: error,
     });
   }
 };
