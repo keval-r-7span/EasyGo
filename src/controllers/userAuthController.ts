@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { customerService } from "../services/userService";
+import { userService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
@@ -13,8 +13,8 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location } = req.body;
-    const userExist = await customerService.findCustomer({ phoneNumber });
+    const { name, email, phoneNumber } = req.body;
+    const userExist = await userService.findUser({ phoneNumber });
     if (userExist) {
       logger.error("Existing User");
       return res.status(400).json({
@@ -22,12 +22,11 @@ const signUp = async (req: Request, res: Response) => {
         message: "User Already exist.",
       });
     }
-    const response = await customerService.registerUser({
+    const response = await userService.registerUser({
       name,
       email: email.toLowerCase(),
       phoneNumber,
       role: "user",
-      location,
     });
     if (!response) {
       logger.error("Invalid User data");
@@ -38,8 +37,11 @@ const signUp = async (req: Request, res: Response) => {
     }
     await response?.save();
     logger.info("user Registered");
+    const token = jwtToken(response);
+    response.token = token;
     return res.status(201).json({
       isLogin: true,
+      token,
       message: "user Registered and move to home screen",
     });
   } catch (error) {
@@ -98,7 +100,7 @@ const verify = async (req: Request, res: Response) => {
       });
     switch (response.status) {
       case "approved": {
-        const existUser = await customerService.findCustomer({ phoneNumber });
+        const existUser = await userService.findUser({ phoneNumber });
         if (!existUser) {
           logger.error("No user found");
           return res.status(404).json({
@@ -113,6 +115,7 @@ const verify = async (req: Request, res: Response) => {
           return res.status(200).json({
               isLogin: true,
               token,
+              userId: existUser.id,
               message: "User Logged in successfully",
             });
         }
@@ -138,7 +141,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const drivers = [];
     const userId = req.user?.id; 
     const bookingDetails = await bookingService.findUserIDBooking({customer:userId});
-    const userDetails = await customerService.viewCustomerById(userId);
+    const userDetails = await userService.viewUserByID(userId);
     if (!bookingDetails) {
       logger.error("booking details not found! check your token");
       return res.status(404).json({
@@ -223,7 +226,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
 export { signUp, login, verify, requestDrive };
 
 // import { Request, Response } from "express";
-// import { customerService } from "../services/userService";
+// import { userService } from "../services/userService";
 
 // // Static phone number and OTP
 // const STATIC_PHONE_NUMBER = "9999999999";
@@ -237,14 +240,14 @@ export { signUp, login, verify, requestDrive };
 //       .status(200)
 //       .json({ isLogin: false, message: "Enter valid details." });
 //   }
-//   const userExist = await customerService.findCustomer({ phoneNumber });
+//   const userExist = await userService.findCustomer({ phoneNumber });
 //   if (userExist) {
 //     return res
 //       .status(200)
 //       .json({ isLogin: false, message: "User Already exist." });
 //   }
 //   if (role !== "admin") {
-//     const response = await customerService.registeruserTemp({
+//     const response = await userService.registeruserTemp({
 //       name,
 //       email: email.toLowerCase(),
 //       phoneNumber,

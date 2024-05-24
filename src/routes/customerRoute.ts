@@ -1,14 +1,14 @@
 import { Router } from "express";
 const router = Router();
 import {
-  getCustomer,
-  updateCustomer,
-  deleteCustomer } from "../controllers/customerController";
+  viewUser,
+  updateUser,
+  deleteUser} from "../controllers/userController";
 import { 
   signUp, 
   login,
   verify, 
-  // requestDrive
+  requestDrive
  } from "../controllers/userAuthController";
 import { verifyToken } from "../middleware/authMiddleware";
 import calcDistance from "../utils/distance";
@@ -17,9 +17,9 @@ router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
 router.get("/maps/distance", calcDistance);
-router.get("/", getCustomer);
-router.put("/:id", verifyToken,updateCustomer);
-router.delete("/:id", deleteCustomer);
-// router.post("/request-drive/", verifyToken, requestDrive)
+router.get("/", viewUser);
+router.put("/", verifyToken,updateUser);
+router.delete("/:id", deleteUser);
+router.post("/request-drive/", verifyToken, requestDrive)
 
 export default router;
