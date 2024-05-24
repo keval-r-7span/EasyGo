@@ -171,17 +171,11 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     let driverFoundWithin2Km = false;
 
     for (const driver of availableDrivers) {
-      const latD = driver.location.coordinates[0];
-      const longD = driver.location.coordinates[1];
-      
-      if (!latD && !longD) {
-        logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
-        return res.status(404).json({
-          isLogin: false,
-          message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
-        });
+      const driverCoordinates = driver.location?.coordinates;
+      if (!driverCoordinates || driverCoordinates.length < 2) {
+        continue;
       }
-
+      const [latD, longD] = driverCoordinates;
       const Radius = radiusCalc(latU, longU, latD, longD);
       if (Radius < 2) {
         const name = userDetails?.name;
@@ -193,14 +187,6 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
           })
         }
         const coords = location.coordinates
-        const payload = {
-          name,
-          coords,
-          pickupLocation: bookingDetails.pickupLocation,
-          dropoffLocation: bookingDetails.dropoffLocation,
-          pickupTime: bookingDetails.pickupTime,
-          fare: bookingDetails.fare,
-        };
         await sendRequestToDriver(driver, { name, coords });
         drivers.push(driver)
         driverFoundWithin2Km = true;
