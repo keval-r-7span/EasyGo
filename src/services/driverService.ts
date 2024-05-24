@@ -48,7 +48,7 @@ const availableDrivers = async () => {
     .select("phoneNumber");
 };
 
-const updateRandomDigit = async (id: string) => {
+const updateBookingOTP = async (id: string) => {
   const digit = Math.floor(1000 + Math.random() * 9000);
   const updatedDriver = await driverSchema.findByIdAndUpdate(
     id,
@@ -59,6 +59,14 @@ const updateRandomDigit = async (id: string) => {
     throw new Error('Driver not found');
   }
   return updatedDriver;
+};
+
+const verifyBookingOTP = async (id: string, otp: string) => {
+  const driver = await driverSchema.findById(id);
+  if (!driver) {
+    throw new Error('Driver not found');
+  }
+  return driver.digit === parseInt(otp, 10);
 };
 
 export const driverService = {
@@ -72,5 +80,6 @@ export const driverService = {
   findPhoneNumber,
   removeTempDriver,
   availableDrivers,
-  updateRandomDigit,  
+  updateBookingOTP,  
+  verifyBookingOTP
 };
