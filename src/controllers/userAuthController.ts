@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { customerService } from "../services/userService";
+import { userService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
@@ -14,7 +14,7 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 const signUp = async (req: Request, res: Response) => {
   try {
     const { name, email, phoneNumber, location } = req.body;
-    const userExist = await customerService.findCustomer({ phoneNumber });
+    const userExist = await userService.findUser({ phoneNumber });
     if (userExist) {
       logger.error("Existing User");
       return res.status(400).json({
@@ -22,7 +22,7 @@ const signUp = async (req: Request, res: Response) => {
         message: "User Already exist.",
       });
     }
-    const response = await customerService.registerUser({
+    const response = await userService.registerUser({
       name,
       email: email.toLowerCase(),
       phoneNumber,
@@ -38,6 +38,8 @@ const signUp = async (req: Request, res: Response) => {
     }
     await response?.save();
     logger.info("user Registered");
+    const token = jwtToken(response);
+    response.token = token;
     return res.status(201).json({
       success: true,
       message: "user Registered and move to home screen",
@@ -98,7 +100,7 @@ const verify = async (req: Request, res: Response) => {
       });
     switch (response.status) {
       case "approved": {
-        const existUser = await customerService.findCustomer({ phoneNumber });
+        const existUser = await userService.findUser({ phoneNumber });
         if (!existUser) {
           logger.error("No user found");
           return res.status(404).json({
@@ -121,7 +123,7 @@ const verify = async (req: Request, res: Response) => {
         }
       }
       default:
-        logger.error("OTP enetered is invalid");
+        logger.error("OTP entered is invalid");
         return res.status(400).json({
           success: false,
           message: "Invalid OTP. Please try again.",
@@ -141,7 +143,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const drivers = [];
     const userId = req.user?.id; 
     const bookingDetails = await bookingService.findUserIDBooking({customer:userId});
-    const userDetails = await customerService.viewCustomerById(userId);
+    const userDetails = await userService.viewUserById(userId);
     if (!bookingDetails) {
       logger.error("booking details not found! check your token");
       return res.status(404).json({
@@ -152,17 +154,17 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const latU = bookingDetails.origin.coordinates[0];
     const longU = bookingDetails.origin.coordinates[1];
     if (!latU && !longU) {
-      logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
+      logger.error("Lat & Long undefined");
       return res.status(404).json({
         isLogin: false,
-        message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
+        message: "Lat & Long undefined",
       });
     }
 
     const availableDrivers = await driverService.availableDrivers();
 
     if (!availableDrivers) {
-      logger.error("NO AVAILABLE DRIVERS FOUND!");
+      logger.error("No available drivers found!");
       return res.status(404).json({
         isLogin: false,
         message: "No available drivers found.",
@@ -193,16 +195,16 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       } 
     }
     if (driverFoundWithin2Km) {
-      logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
+      logger.info("Request sent to drivers within 2 K.M.");
       return res.status(200).json({
         isLogin: true,
-        userDetail: bookingDetails.origin,
+        userDetail: bookingDetails,
         driverDetails: drivers,
         message: "Requests sent to nearby drivers within 2 km radius."
         
       });
     } else {
-      logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
+      logger.info("No driver found within 2km Radius");
       return res.json({
         isLogin: false,
         message: "No available drivers found within 2 km radius.",
@@ -219,7 +221,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
 export { signUp, login, verify, requestDrive };
 
 // import { Request, Response } from "express";
-// import { customerService } from "../services/userService";
+// import { userService } from "../services/userService";
 
 // // Static phone number and OTP
 // const STATIC_PHONE_NUMBER = "9999999999";
@@ -233,14 +235,14 @@ export { signUp, login, verify, requestDrive };
 //       .status(200)
 //       .json({ success: false, message: "Enter valid details." });
 //   }
-//   const userExist = await customerService.findCustomer({ phoneNumber });
+//   const userExist = await userService.findCustomer({ phoneNumber });
 //   if (userExist) {
 //     return res
 //       .status(200)
 //       .json({ success: false, message: "User Already exist." });
 //   }
 //   if (role !== "admin") {
-//     const response = await customerService.registeruserTemp({
+//     const response = await userService.registeruserTemp({
 //       name,
 //       email: email.toLowerCase(),
 //       phoneNumber,

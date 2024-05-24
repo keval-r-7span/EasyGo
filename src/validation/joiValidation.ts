@@ -1,9 +1,11 @@
 import { NextFunction,Request,Response } from 'express';
 import { bookingJoiSchema} from '../models/bookingModel';
+import { userJoiSchema } from '../models/userModel';
 import {ValidationResult,Schema}from 'joi';
 
 const schemas:Record<string,Schema> = {
   booking:bookingJoiSchema,
+  user: userJoiSchema,
 }
 interface validateDataInput{
   property1:string,
@@ -21,4 +23,3 @@ export const validateRequest = (req:Request, res:Response, next:NextFunction) =>
     } 
     next();
 };
-

@@ -19,7 +19,7 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
       req.headers["authorization"] || req.headers["Authorization"];
     const token = (authHeader as string)?.split(" ")[1];
     if (!token) {
-      logger.info("NO TOKEN FOUND")
+      logger.info("No token found")
       return res.status(404).json({
         success: false,
         messaage: "No Token Found",
@@ -27,7 +27,7 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
     }
     const decode = jwt.verify(token, JWT.SECRET) as JwtPayload;
       if (!decode.role) {
-        logger.info("UNABLE TO DECODE TOKEN")
+        logger.info("Unable to decode token")
         return res.status(404).json({
           success: false,
           message: "Unable to Decode Token",
@@ -36,7 +36,7 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
       req.user = decode;
       next();
   } catch (error) {
-    logger.error("AN ERROR OCCURED WHILE VERIFYING TOKEN!! ",error)
+    logger.error("An error occured while verifying token! ",error)
     return res.status(500).json({
       success: false,
       message: "Error occured at verifying Token",
@@ -44,29 +44,10 @@ const verifyToken = (req: Request, res: Response,next: NextFunction) => {
   }
 };
 
-const isDriver = (req: Request ,res: Response,next: NextFunction) => {
-  try {
-    if (req.user?.role !== "driver") {
-      logger.warn("PROTECTED ROUTE FOR DRIVER ONLY")
-      return res.status(401).json({
-        success: false,
-        message: "Protected routes for driver only",
-      });
-    }
-    next();
-  } catch (error) {
-    logger.error("ERROR OCCURED AT ISDRIVER MIDDLEWARE",error);
-    return res.status(500).json({
-      success: false,
-      data: "Error occured at isDriver",
-    });
-  }
-};
-
 const isAdmin = (req:Request, res: Response,next: NextFunction) => {
   try {
     if (req.user?.role !== "admin") {
-      logger.warn("PROTECTED ROUTE FOR ADMIN ONLY")
+      logger.warn("Protected route for admin only")
       return res.status(401).json({
         success: false,
         message: "Protected routes for admin only",
@@ -74,7 +55,7 @@ const isAdmin = (req:Request, res: Response,next: NextFunction) => {
     }
     next();
   } catch (error) {
-    logger.error("ERROR OCCURED AT ISADMIN MIDDLEWARE",error);
+    logger.error("Error occured at isAdmin middleware",error);
     logger.error(error);
     return res.status(500).json({
       success: false,
@@ -83,23 +64,4 @@ const isAdmin = (req:Request, res: Response,next: NextFunction) => {
   }
 };
 
-const isUser = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.user?.role !== "user") {
-      logger.warn("PROTECTED ROUTE FOR USER ONLY")
-      return res.status(401).json({
-        success: false,
-        message: "Protected routes for user only",
-      });
-    }
-    next();
-  } catch (error) {
-    logger.error("ERROR OCCURED AT ISUSER MIDDLEWARE",error);
-    return res.status(500).json({
-      success: false,
-      data: "Error occured at isUser",
-    });
-  }
-};
-
-export { verifyToken, isUser, isDriver, isAdmin };
+export { verifyToken, isAdmin };
