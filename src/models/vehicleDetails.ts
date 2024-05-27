@@ -15,21 +15,21 @@ export interface vehicle {
 const vehicleDetails = new mongoose.Schema<vehicle>({
   driverId: {
     type: mongoose.Types.ObjectId,
-    ref: "Driver",
+    ref: "Driver"
   },
   model: {
-    type: String,
+    type: String
   },
   year: {
-    type: Number,
+    type: Number
   },
   licensePlate: {
-    type: String,
+    type: String
   },
   vehicleClass: {
     type: String,
-    enum: ["Bike", "Rickshaw", "Mini", "Premium", "XL"],
-  },
+    enum: ["Bike", "Rickshaw", "Mini", "Premium", "XL"]
+  }
 });
 
 export const addVehicleSchema = Joi.object({
@@ -40,7 +40,7 @@ export const addVehicleSchema = Joi.object({
   vehicleClass: Joi.string()
     .valid("Bike", "Rickshaw", "Mini", "Premium", "XL")
     .required(),
-  driverId: Joi.string().required(),
+  driverId: Joi.string().required()
 });
 
 export const updateVehicleSchema = Joi.object({
@@ -51,7 +51,7 @@ export const updateVehicleSchema = Joi.object({
   color: Joi.string(),
   vehicleClass: Joi.string()
     .valid("Bike", "Rickshaw", "Mini", "Premium", "XL")
-    .required(),
+    .required()
 });
 
 export default mongoose.model<vehicle>("Vehicle", vehicleDetails);

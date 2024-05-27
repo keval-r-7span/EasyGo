@@ -1,60 +1,63 @@
-import Joi from 'joi';
-import mongoose, { Document } from 'mongoose';
+import Joi from "joi";
+import mongoose, { Document } from "mongoose";
 
 export interface Booking extends Document {
   customer: mongoose.Schema.Types.ObjectId;
   driver: mongoose.Schema.Types.ObjectId;
-  vehicleClass: 'Bike' | 'Auto' | 'Mini' | 'Premium' | 'XL';
+  vehicleClass: "Bike" | "Auto" | "Mini" | "Premium" | "XL";
   pickupLocation: string;
-  dropoffLocation:string;
-  pickupTime:Date;
-  dropoffTime:Date;
+  dropoffLocation: string;
+  pickupTime: Date;
+  dropoffTime: Date;
   fare: number;
-  rating:number;
-  status: 'pending' | 'accepted'|'ongoing'| 'completed'|'cancelled';
-  comments:string;
+  rating: number;
+  status: "pending" | "accepted" | "ongoing" | "completed" | "cancelled";
+  comments: string;
   origin: {
-    type: string; 
+    type: string;
     coordinates: [number, number];
-   };
-   destination:{
-    type: string; 
+  };
+  destination: {
+    type: string;
     coordinates: [number, number];
-   }
+  };
 }
 
-const locationSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ['Point'],
-    required: true
+const locationSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
   },
-  coordinates: {
-    type: [Number],
-    required: true
-  }
-}, { _id: false });
+  { _id: false }
+);
 
 const bookingSchema = new mongoose.Schema<Booking>(
   {
     customer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Customer",
+      ref: "Customer"
     },
     driver: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Driver",
+      ref: "Driver"
     },
     vehicleClass: {
       type: String,
       enum: ["Bike", "Auto", "Mini", "Premium", "XL"],
-      default:'Auto'
+      default: "Auto"
     },
     pickupLocation: {
-      type: String,
+      type: String
     },
     dropoffLocation: {
-      type: String,
+      type: String
     },
     origin: {
       type: locationSchema,
@@ -66,34 +69,34 @@ const bookingSchema = new mongoose.Schema<Booking>(
     },
     pickupTime: {
       type: Date,
-      default:Date.now()
+      default: Date.now()
     },
     dropoffTime: {
-      type: Date,
+      type: Date
     },
     status: {
       type: String,
       enum: ["pending", "accepted", "ongoing", "completed", "cancelled"],
-      default:"pending"
+      default: "pending"
     },
     fare: {
-      type:Number,
+      type: Number
     },
     rating: {
-      type: Number,
+      type: Number
     },
     comments: {
       type: String,
-      default:"Good Experience"
-    },
- },
+      default: "Good Experience"
+    }
+  },
   { timestamps: true }
 );
 
-export const bookingJoiSchema= Joi.object({
-  customer:Joi.string(),
-  driver:Joi.string(),
-  vehicleClass:Joi.string(),
+export const bookingJoiSchema = Joi.object({
+  customer: Joi.string(),
+  driver: Joi.string(),
+  vehicleClass: Joi.string(),
   pickupLocation: Joi.string().min(4).max(150).required(),
   dropoffLocation: Joi.string().min(4).max(150).required(),
   pickupTime: Joi.string().default(Date.now()),
@@ -102,15 +105,15 @@ export const bookingJoiSchema= Joi.object({
   rating: Joi.number(),
   payment_status: Joi.string().lowercase(),
   comments: Joi.string(),
-  origin:Joi.object(),
-  destination:Joi.object()
+  origin: Joi.object(),
+  destination: Joi.object()
 });
 
 export const updateJoiSchema = Joi.object({
   pickupLocation: Joi.string().min(3).max(100).required(),
   dropoffLocation: Joi.string().min(3).max(100).required(),
-  vehicleClass:Joi.string(),
-})
+  vehicleClass: Joi.string()
+});
 
-bookingSchema.index({location: "2dsphere"})
+bookingSchema.index({ location: "2dsphere" });
 export default mongoose.model<Booking>("Booking", bookingSchema);

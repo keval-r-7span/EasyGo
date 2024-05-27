@@ -51,9 +51,6 @@ const CustomerSchema = new mongoose.Schema<Customer>(
     token: {
       type: String
     },
-    // resetPasswordExpires: {
-    //   type: Date,
-    // },
     location: {
       type: locationSchema,
       required: false
@@ -62,9 +59,9 @@ const CustomerSchema = new mongoose.Schema<Customer>(
   { timestamps: true }
 );
 
-const phonePattern = /^(0|91)?[6-9][0-9]{9}$/
+const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;
 
-export const userJoiSchema= Joi.object({
+export const userJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),

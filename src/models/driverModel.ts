@@ -15,7 +15,7 @@ export interface driver extends Document {
   isVerified: boolean;
   images: ImageObject[];
   location: {
-    type: string; 
+    type: string;
     coordinates: [number, number];
   };
   digit: number;
@@ -24,47 +24,47 @@ export interface driver extends Document {
 const driverSchema = new mongoose.Schema<driver>({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    unique: true,
+    unique: true
   },
   phoneNumber: {
     type: String,
-    unique: true,
+    unique: true
   },
   role: {
     type: String,
     enum: ["admin", "driver", "user"],
-    default: "driver",
+    default: "driver"
   },
   available: {
     type: Boolean,
-    default: true,
+    default: true
   },
   token: {
-    type: String,
+    type: String
   },
   isVerified: {
     type: Boolean,
-    default: false,
+    default: false
   },
   location: {
-    type: { 
-      type: String, 
+    type: {
+      type: String,
       default: "Point"
     },
     coordinates: {
       type: [Number],
-      required: false,
+      required: false
     }
   },
   images: [
     {
       name: { type: String, required: true },
-      imageUrl: { type: String, required: true },
-    },
+      imageUrl: { type: String, required: true }
+    }
   ],
   digit: {
     type: Number
@@ -77,13 +77,13 @@ export const driverJoiSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   phoneNumber: Joi.string().min(10).max(10).regex(phonePattern).required(),
-  role: Joi.string().default("driver"),
+  role: Joi.string().default("driver")
 });
 
 export const updateDriverSchema = Joi.object({
   name: Joi.string().min(3).max(30),
   email: Joi.string().email(),
-  role: Joi.string(),
+  role: Joi.string()
 });
 
 driverSchema.index({ location: "2dsphere" });

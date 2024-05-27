@@ -1,13 +1,15 @@
-import { vehicleService } from '../../src/services/vehicleService';
-import vehicleDetails from '../../src/models/vehicleDetails';
+import { vehicleService } from "../../src/services/vehicleService";
+import vehicleDetails from "../../src/models/vehicleDetails";
 
-describe('vehicleService', () => {
+describe("vehicleService", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  it('findVehicle should give data of all vehicles', async () => {
-    const mockFindOne = jest.spyOn(vehicleDetails, 'findOne').mockResolvedValueOnce({});
+  it("findVehicle should give data of all vehicles", async () => {
+    const mockFindOne = jest
+      .spyOn(vehicleDetails, "findOne")
+      .mockResolvedValueOnce({});
     await vehicleService.findVehicle({});
     expect(mockFindOne).toHaveBeenCalledWith({});
   });
@@ -18,9 +20,11 @@ describe('vehicleService', () => {
   //   // expect(mockCreate).toHaveBeenCalledWith({});
   // });
 
-  it('updateVehicleDetails should change the vehicle data', async () => {
-    const mockFindByIdAndUpdate = jest.spyOn(vehicleDetails, 'findByIdAndUpdate').mockResolvedValueOnce({});
-    const id = 'yourId';
+  it("updateVehicleDetails should change the vehicle data", async () => {
+    const mockFindByIdAndUpdate = jest
+      .spyOn(vehicleDetails, "findByIdAndUpdate")
+      .mockResolvedValueOnce({});
+    const id = "yourId";
     const updateQuery = {};
     await vehicleService.updateVehicleDetails(id, updateQuery);
     expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(id, updateQuery);

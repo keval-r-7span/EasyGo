@@ -1,5 +1,5 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import driverSchema , {driver} from "../models/driverModel";
+import driverSchema, { driver } from "../models/driverModel";
 import { vehicleService } from "../services/vehicleService";
 
 const viewDriver = async () => {
@@ -7,9 +7,9 @@ const viewDriver = async () => {
 };
 
 const viewDriverById = async (driverId: string) => {
-    const driverData = await driverSchema.findById(driverId);
-    const vehiclesData = await vehicleService.findVehicle({ driverId });
-    return { driver: driverData, vehicles: vehiclesData };
+  const driverData = await driverSchema.findById(driverId);
+  const vehiclesData = await vehicleService.findVehicle({ driverId });
+  return { driver: driverData, vehicles: vehiclesData };
 };
 
 const deleteDriver = async (query: string) => {
@@ -56,7 +56,7 @@ const updateBookingOTP = async (id: string) => {
     { new: true }
   );
   if (!updatedDriver) {
-    throw new Error('Driver not found');
+    throw new Error("Driver not found");
   }
   return updatedDriver;
 };
@@ -64,7 +64,7 @@ const updateBookingOTP = async (id: string) => {
 const verifyBookingOTP = async (id: string, otp: string) => {
   const driver = await driverSchema.findById(id);
   if (!driver) {
-    throw new Error('Driver not found');
+    throw new Error("Driver not found");
   }
   return driver.digit === parseInt(otp, 10);
 };
@@ -80,6 +80,6 @@ export const driverService = {
   findPhoneNumber,
   removeTempDriver,
   availableDrivers,
-  updateBookingOTP,  
+  updateBookingOTP,
   verifyBookingOTP
 };

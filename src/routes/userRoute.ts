@@ -3,14 +3,15 @@ const router = Router();
 import {
   viewUser,
   updateUser,
-  deleteUser,
- } from "../controllers/userController";
+  deleteUser
+} from "../controllers/userController";
 
-import { 
-  signUp, 
+import {
+  signUp,
   login,
-  verify, 
-  requestDrive } from "../controllers/userAuthController";
+  verify,
+  requestDrive
+} from "../controllers/userAuthController";
 import { verifyToken } from "../middleware/authMiddleware";
 import calcDistance from "../utils/distance";
 
@@ -18,10 +19,9 @@ router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", signUp);
 router.get("/maps/distance", calcDistance);
-router.get("/",viewUser);
-router.put("/:id", verifyToken,updateUser);
-router.delete("/:id", deleteUser);
-router.post("/request-drive/", verifyToken, requestDrive)
-// router.post('/getDetails',  verifyToken ,getDetails)
+router.get("/", viewUser);
+router.put("/", verifyToken, updateUser);
+router.delete("/", deleteUser);
+router.post("/request-drive/", verifyToken, requestDrive);
 
 export default router;

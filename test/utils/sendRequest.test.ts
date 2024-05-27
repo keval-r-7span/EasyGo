@@ -1,11 +1,11 @@
-import { sendRequestToDriver } from '../../src/utils/sendRequest';
+import { sendRequestToDriver } from "../../src/utils/sendRequest";
 
-describe('sendRequestToDriver', () => {
-  it('should log the driver name and user location', () => {
-    const consoleSpy = jest.spyOn(console, 'log');
+describe("sendRequestToDriver", () => {
+  it("should log the driver name and user location", () => {
+    const consoleSpy = jest.spyOn(console, "log");
 
-    const driverName = {"name":'John Doe'};
-    const userLocation = { latitude: 52.5200, longitude: 13.4050 };
+    const driverName = { name: "John Doe" };
+    const userLocation = { latitude: 52.52, longitude: 13.405 };
 
     sendRequestToDriver(driverName, userLocation);
 

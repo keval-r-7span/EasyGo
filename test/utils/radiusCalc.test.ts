@@ -1,11 +1,11 @@
 // Import the function to be tested
-import radiusCalc from '../../src/utils/radiusCalc';
+import radiusCalc from "../../src/utils/radiusCalc";
 
-describe('radiusCalc', () => {
-  it('should calculate the distance between two points correctly', () => {
+describe("radiusCalc", () => {
+  it("should calculate the distance between two points correctly", () => {
     // Define input values for latitude and longitude of two points
-    const lat1 = 52.5200; // Latitude of first point
-    const long1 = 13.4050; // Longitude of first point
+    const lat1 = 52.52; // Latitude of first point
+    const long1 = 13.405; // Longitude of first point
     const lat2 = 51.5074; // Latitude of second point
     const long2 = -0.1278; // Longitude of second point
 

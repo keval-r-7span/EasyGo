@@ -1,10 +1,13 @@
-import {it,describe,expect,beforeAll,afterEach,afterAll} from '@jest/globals'
+import {
+  it,
+  describe,
+  expect,
+} from "@jest/globals";
 import supertest from "supertest";
-import app  from "../../src/app";
-import {setupDB} from "../../src/configs/memoryServer";
+import app from "../../src/app";
+import { setupDB } from "../../src/configs/memoryServer";
 
 describe("Test request with Mongo-inMemory-Server", () => {
-  
   //usercontroller test
   describe("CustomerController ", () => {
     describe("Get list of Customer", () => {
@@ -48,7 +51,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       describe("Delete customer by their id", () => {
         it("Should check return 404 id doesn't exist", async () => {
           const payload = {
-            id: "6634750d0cbb8b710ad5d8ef",
+            id: "6634750d0cbb8b710ad5d8ef"
           };
           const response = await supertest(app)
             .delete(`/api/v1/user/${payload.id}`)
@@ -64,7 +67,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
         // })
         it("Should check return 404 id doesn't exist", async () => {
           const payload = {
-            id: "6634750d0cbb8b710ad5d8a",
+            id: "6634750d0cbb8b710ad5d8a"
           };
           const response = await supertest(app)
             .delete(`/api/v1/user/${payload.id}`)
@@ -85,8 +88,8 @@ describe("Test request with Mongo-inMemory-Server", () => {
           phoneNumber: "8141467418",
           location: {
             type: "Point",
-            coordinates: [23.070786151574477, 72.51760853268873],
-          },
+            coordinates: [23.070786151574477, 72.51760853268873]
+          }
         };
         const response = await supertest(app)
           .post("/api/v1/user/register")
@@ -96,7 +99,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("Should Return 404 if Invalid/empty details", async () => {
         const payload = {
           name: "",
-          phone: "",
+          phone: ""
         };
         const response = await supertest(app)
           .post("/api/v1/user/register")
@@ -131,7 +134,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("Should return 404 error for invalid/empty phoneNumber", async () => {
         const payload = {
           phoneNumber: "",
-          lastDigit: "7418",
+          lastDigit: "7418"
         };
         const response = await supertest(app)
           .post(`/api/v1/user/login`)
@@ -150,7 +153,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("Should return 500 internal server error", async () => {
         const payload = {
           phoneNumber: "9857832165",
-          lastDigit: "7418",
+          lastDigit: "7418"
         };
         const response = await supertest(app)
           .post(`/api/v1/user/login`)
@@ -162,7 +165,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("should return 404 error for invalid/empty phoneNumber or otp", async () => {
         const payload = {
           phoneNumber: "",
-          otp: "",
+          otp: ""
         };
         const response = await supertest(app)
           .post(`/api/v1/user/verify`)
@@ -172,7 +175,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
 
       it("should return 404 error if no user found with provided phoneNumber", async () => {
         const payload = {
-          phoneNumber: "987654123",
+          phoneNumber: "987654123"
         };
         const response = await supertest(app)
           .post(`/api/v1/user/verify`)
@@ -193,7 +196,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("should return 400 error for invalid OTP", async () => {
         const payload = {
           phoneNumber: "8141467418",
-          otp: "8797",
+          otp: "8797"
         };
         const response = await supertest(app)
           .post(`/api/v1/user/verify`)
@@ -204,7 +207,7 @@ describe("Test request with Mongo-inMemory-Server", () => {
       it("should return 500 error if an internal server error occurs", async () => {
         const payload = {
           phoneNumber: "1234567890",
-          otp: "123456",
+          otp: "123456"
         };
         const response = await supertest(app)
           .post(`/api/v1/user/verify`)

@@ -1,5 +1,5 @@
-import { Request, Response, response } from 'express';
-import  {driverService}  from '../services/driverService';
+import { Request, Response, response } from "express";
+import { driverService } from "../services/driverService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
@@ -8,13 +8,13 @@ const client = twilio(TWILIO.ACCOUNT_SID, TWILIO.AUTH_TOKEN);
 
 const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, phoneNumber, location=null } = req.body;
+    const { name, email, phoneNumber, location = null } = req.body;
     const userExist = await driverService.findDriver({ phoneNumber });
     if (userExist) {
       logger.error("Existing driver");
       return res.status(400).json({
         isLogin: false,
-        message: "Driver Already exist.",
+        message: "Driver Already exist."
       });
     }
     const response = await driverService.registerDriver({
@@ -28,7 +28,7 @@ const signUp = async (req: Request, res: Response) => {
       logger.error("Invalid Driver data");
       return res.status(400).json({
         isLogin: false,
-        message: "Invalid Data",
+        message: "Invalid Data"
       });
     }
     await response?.save();
@@ -46,7 +46,7 @@ const signUp = async (req: Request, res: Response) => {
     logger.error("Error occured at signing up! ", error);
     return res.status(500).json({
       isLogin: false,
-      message: error,
+      message: error
     });
   }
 };
@@ -58,24 +58,24 @@ const login = async (req: Request, res: Response) => {
     logger.error("Invalid Phone number");
     return res.status(404).json({
       isLogin: false,
-      message: "Enter PhoneNumber",
+      message: "Enter PhoneNumber"
     });
   }
   try {
     await client.verify.v2.services(TWILIO.SERVICE_SID).verifications.create({
       to: `+91${phoneNumber}`,
-      channel: "sms",
+      channel: "sms"
     });
     logger.info(`Otp successfully sent to xxxxxx${lastDigit}`);
     return res.status(200).json({
       isLogin: true,
-      message: `OTP successfully sent to mobile Number ending with ${lastDigit}`,
+      message: `OTP successfully sent to mobile Number ending with ${lastDigit}`
     });
   } catch (error) {
     logger.error("Error occured while sending otp ", error);
     return res.status(500).json({
       isLogin: false,
-      message: error,
+      message: error
     });
   }
 };
@@ -86,7 +86,7 @@ const verify = async (req: Request, res: Response) => {
     logger.error("Enter valid phone number and otp");
     return res.status(404).json({
       isLogin: false,
-      message: "Please Enter valid phone number and otp",
+      message: "Please Enter valid phone number and otp"
     });
   }
   try {
@@ -94,7 +94,7 @@ const verify = async (req: Request, res: Response) => {
       .services(TWILIO.SERVICE_SID)
       .verificationChecks.create({
         to: `+91${phoneNumber}`,
-        code: otp,
+        code: otp
       });
     switch (response.status) {
       case "approved": {
@@ -105,35 +105,33 @@ const verify = async (req: Request, res: Response) => {
             isLogin: false,
             isReg: false,
             data: phoneNumber,
-            message: "Oops!! Sign-Up first move to signup screen",
+            message: "Oops!! Sign-Up first move to signup screen"
           });
         } else {
           const token = jwtToken(existUser);
           existUser.token = token;
-          logger.info(`DriverID: ${existUser.id} logged in successfully`)
-          return res
-            .status(200)
-            .json({
-              isLogin: true,
-              isReg: true,
-              token,
-              driverId: existUser.id,
-              message: "Driver Logged in successfully",
-            });
+          logger.info(`DriverID: ${existUser.id} logged in successfully`);
+          return res.status(200).json({
+            isLogin: true,
+            isReg: true,
+            token,
+            driverId: existUser.id,
+            message: "Driver Logged in successfully"
+          });
         }
       }
       default:
         logger.error("OTP enetered is invalid");
         return res.status(400).json({
           isLogin: false,
-          message: "Invalid OTP. Please try again.",
+          message: "Invalid OTP. Please try again."
         });
     }
   } catch (error) {
     logger.error("Error occured at Login ", error);
     return res.status(500).json({
       isLogin: false,
-      message: error,
+      message: error
     });
   }
 };
@@ -145,7 +143,6 @@ export { signUp, login, verify };
 // -----------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------
-
 
 // import { Request, Response } from "express";
 // import { driverService } from "../services/driverService";

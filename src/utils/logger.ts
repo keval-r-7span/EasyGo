@@ -11,7 +11,7 @@ const logLevels = {
   warn: 2,
   info: 3,
   debug: 4,
-  trace: 5,
+  trace: 5
 };
 
 const logger: Logger = createLogger({
@@ -21,7 +21,7 @@ const logger: Logger = createLogger({
     timestamp({ format: "HH:mm:ss" }),
     myFormat
   ),
-  transports: [new transports.Console()],
+  transports: [new transports.Console()]
 });
 
 export default logger;
