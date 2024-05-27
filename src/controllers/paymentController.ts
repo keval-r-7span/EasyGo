@@ -11,7 +11,7 @@ export const payment_checkout = async(req:Request,res:Response)=>{
           product_data: {
               name: bookingItem.fullName,
           },
-          unit_amount: bookingItem.fare * 100,
+          unit_amount: +(bookingItem.fare * 100)
         },
         quantity: 1,
       }));    
