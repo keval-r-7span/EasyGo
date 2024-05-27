@@ -34,7 +34,7 @@ const paymentSchema = new mongoose.Schema({
     enum: ["pending", "completed", "failed"],
     default: "pending",
   },
-  transactionId: { type: String, unique: true },
+  // transactionId: { type: String, unique: true },
 },{timestamps:true});
 
 export default mongoose.model<Payment>("Payment", paymentSchema);
