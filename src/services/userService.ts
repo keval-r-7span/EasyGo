@@ -1,18 +1,21 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import CustomerSchema, { Customer } from "../models/customerModel";
+import CustomerSchema, { Customer } from "../models/userModel";
 
+const viewUser = async () => {
 const viewUser = async () => {
   return await CustomerSchema.find();
 };
 
-const viewUserByID = async (query: string) => {
+const viewUserById = async (query: string) => {
   return await CustomerSchema.findById(query);
 };
 
 const deleteUser = async (query: string) => {
+const deleteUser = async (query: string) => {
   return await CustomerSchema.findByIdAndDelete(query);
 };
 
+const updateUser = async (
 const updateUser = async (
   id:string,
   query: UpdateQuery<Customer>,
@@ -20,6 +23,7 @@ const updateUser = async (
   return await CustomerSchema.findByIdAndUpdate(id, query, {new: true});
 };
 
+const findUser = async (query: RootQuerySelector<Customer>) => {
 const findUser = async (query: RootQuerySelector<Customer>) => {
   return await CustomerSchema.findOne(query);
 };
@@ -38,7 +42,7 @@ const updateLoc = async (id: string, update: UpdateQuery<Customer>): Promise<Cus
 
 export const userService = {
   viewUser,
-  viewUserByID,
+  viewUserById,
   deleteUser,
   updateUser,
   findUser,

@@ -1,5 +1,6 @@
 import { NextFunction,Request,Response } from 'express';
 import { bookingJoiSchema} from '../models/bookingModel';
+import { userJoiSchema } from '../models/userModel';
 import {ValidationResult,Schema}from 'joi';
 import { driverJoiSchema } from '../models/driverModel';
 import { userJoiSchema } from '../models/customerModel';
@@ -15,6 +16,7 @@ interface validateDataInput{
 }
 const validateData = (model:string,data:validateDataInput):ValidationResult=>{
   return schemas[model].validate(data)
+  return schemas[model].validate(data)
 }
 
 export const validateRequest = (req:Request, res:Response, next:NextFunction) => { 
@@ -24,4 +26,3 @@ export const validateRequest = (req:Request, res:Response, next:NextFunction) =>
     } 
     next();
 };
-

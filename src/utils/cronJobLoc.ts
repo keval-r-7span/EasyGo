@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
+import cron from 'node-cron';
 import { userService } from '../services/userService';
-import cron from 'node-cron'
 import logger from "./logger";
 
 const initScheduleJobs = async () => {
@@ -18,6 +18,7 @@ async function locUpdater(req: Request, res: Response) {
     },
   };
   try {
+    const updatedCustomer = await userService.updateLoc(req.params.id, update);
     const updatedCustomer = await userService.updateLoc(req.params.id, update);
     logger.info("UPDATING LOCATION WAS SUCCESS")
     res.status(200).json({

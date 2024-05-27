@@ -1,18 +1,10 @@
 import {it,describe,expect,beforeAll,afterEach,afterAll} from '@jest/globals'
 import supertest from "supertest";
-import app from "../../src/app";
-import * as db from "../configs/dbConnection";
+import app  from "../../src/app";
+import {setupDB} from "../../src/configs/memoryServer";
 
 describe("Test request with Mongo-inMemory-Server", () => {
-  beforeAll(async () => {
-    await db.connect();
-  });
-  afterEach(async () => {
-    await db.clearDatabase();
-  });
-  afterAll(async () => {
-    await db.closeDatabase();
-  });
+  
   //usercontroller test
   describe("CustomerController ", () => {
     describe("Get list of Customer", () => {

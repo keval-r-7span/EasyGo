@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userService } from "../services/userService";
+import { userService } from "../services/userService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
 import jwtToken from "../validation/jwtToken";
@@ -42,6 +43,7 @@ const signUp = async (req: Request, res: Response) => {
     return res.status(201).json({
       isLogin: true,
       token,
+      userId: response.id,
       message: "user Registered and move to home screen",
     });
   } catch (error) {
@@ -101,6 +103,7 @@ const verify = async (req: Request, res: Response) => {
     switch (response.status) {
       case "approved": {
         const existUser = await userService.findUser({ phoneNumber });
+        const existUser = await userService.findUser({ phoneNumber });
         if (!existUser) {
           logger.error("No user found");
           return res.status(404).json({
@@ -112,8 +115,10 @@ const verify = async (req: Request, res: Response) => {
           const token = jwtToken(existUser);
           existUser.token = token;
           logger.info(`UserID: ${existUser.id} logged in successfully`)
-          return res.status(200).json({
-              isLogin: true,
+          return res
+            .status(200)
+            .json({
+              success: true,
               token,
               userId: existUser.id,
               message: "User Logged in successfully",
@@ -121,7 +126,7 @@ const verify = async (req: Request, res: Response) => {
         }
       }
       default:
-        logger.error("OTP enetered is invalid");
+        logger.error("OTP entered is invalid");
         return res.status(400).json({
           isLogin: false,
           message: "Invalid OTP. Please try again.",
@@ -141,7 +146,7 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const drivers = [];
     const userId = req.user?.id; 
     const bookingDetails = await bookingService.findUserIDBooking({customer:userId});
-    const userDetails = await userService.viewUserByID(userId);
+    const userDetails = await userService.viewUserById(userId);
     if (!bookingDetails) {
       logger.error("booking details not found! check your token");
       return res.status(404).json({
@@ -152,17 +157,17 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     const latU = bookingDetails.origin.coordinates[0];
     const longU = bookingDetails.origin.coordinates[1];
     if (!latU && !longU) {
-      logger.error("LAT AND LONG UNDEFINED OR NOT FOUND!");
+      logger.error("Lat & Long undefined");
       return res.status(404).json({
         isLogin: false,
-        message: "LAT AND LONG UNDEFINED OR NOT FOUND!",
+        message: "Lat & Long undefined",
       });
     }
 
     const availableDrivers = await driverService.availableDrivers();
 
     if (!availableDrivers) {
-      logger.error("NO AVAILABLE DRIVERS FOUND!");
+      logger.error("No available drivers found!");
       return res.status(404).json({
         isLogin: false,
         message: "No available drivers found.",
@@ -171,6 +176,11 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     let driverFoundWithin2Km = false;
 
     for (const driver of availableDrivers) {
+      const driverCoordinates = driver.location?.coordinates;
+      if (!driverCoordinates || driverCoordinates.length < 2) {
+        continue;
+      }
+      const [latD, longD] = driverCoordinates;
       const driverCoordinates = driver.location?.coordinates;
       if (!driverCoordinates || driverCoordinates.length < 2) {
         continue;
@@ -193,16 +203,17 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       } 
     }
     if (driverFoundWithin2Km) {
-      logger.info("REQUEST SENT TO DRIVERS WITHIN 2 KM RADIUS");
+      logger.info("Request sent to drivers within 2 K.M.");
       return res.status(200).json({
         isLogin: true,
+        userDetail: bookingDetails,
         userDetail: bookingDetails,
         driverDetails: drivers,
         message: "Requests sent to nearby drivers within 2 km radius."
         
       });
     } else {
-      logger.info("NO DRIVERS FOUND WITHIN 2 KM RADIUS");
+      logger.info("No driver found within 2km Radius");
       return res.json({
         isLogin: false,
         message: "No available drivers found within 2 km radius.",
@@ -216,7 +227,6 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     });
   }
 };
-
 export { signUp, login, verify, requestDrive };
 
 // import { Request, Response } from "express";

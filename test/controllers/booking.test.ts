@@ -1,7 +1,7 @@
 import {it,describe,expect,beforeAll,afterAll} from '@jest/globals'
 import app from '../../src/app'
 import supertest from 'supertest';
-import { setupDB } from '../configs/dbConnection';
+import { setupDB } from '../../src/configs/memoryServer';
 
 var createdBookingId:string;
 describe('booking',()=>{
