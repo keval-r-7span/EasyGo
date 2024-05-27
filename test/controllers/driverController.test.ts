@@ -1,17 +1,9 @@
 import supertest from "supertest";
 import  app  from "../../src/app";
-import * as db from "../configs/dbConnection";
+import {setupDB} from "../../src/configs/memoryServer";
 
 describe("Test request with Mongo-inMemory-Server", () => {
-  beforeAll(async () => {
-    await db.connect();
-  });
-  afterEach(async () => {
-    await db.clearDatabase();
-  });
-  afterAll(async () => {
-    await db.closeDatabase();
-  });
+  setupDB()
 
     describe("Get list of driver", () => {
 

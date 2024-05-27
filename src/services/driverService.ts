@@ -1,5 +1,5 @@
 import { RootQuerySelector, UpdateQuery } from "mongoose";
-import driverSchema ,{driver} from "../models/driverModel";
+import driverSchema , {driver} from "../models/driverModel";
 import { vehicleService } from "../services/vehicleService";
 
 const viewDriver = async () => {
@@ -34,6 +34,10 @@ const registerDriverTemp = async (query: RootQuerySelector<driver>) => {
 
 const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
+};
+
+const removeTempDriver = async (query: string) => {
+  return await driverSchema.findByIdAndDelete(query);
 };
 
 const availableDrivers = async () => {
@@ -74,6 +78,7 @@ export const driverService = {
   registerDriver,
   registerDriverTemp,
   findPhoneNumber,
+  removeTempDriver,
   availableDrivers,
   updateBookingOTP,  
   verifyBookingOTP
