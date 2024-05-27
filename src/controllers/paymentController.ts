@@ -1,6 +1,7 @@
 import stripe from "../configs/stripe";
 import logger from '../utils/logger';
 import { Response,Request } from "express";
+import { createPayment, allPayment } from '../services/paymentService';
 
 export const payment_checkout = async(req:Request,res:Response)=>{
     try {
@@ -25,27 +26,36 @@ export const payment_checkout = async(req:Request,res:Response)=>{
       email: "admin@easygo.com",
       address: {
         line1: "7Span",
-        line2: "Sola",
-        postal_code: "145235",
         city: "Ahmedabad",
-        state: "Gujarat",
-        country: "India",
+        country: "US",
       },
     });
+    (await createPayment(booking[0])).save() //add db
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [lineItems],
       mode: 'payment',
       success_url: 'https://example.com/success',
       cancel_url: 'https://example.com/cancel',
-      shipping_address_collection: {
-        allowed_countries: ['IN'],
-      },
       customer: stripeCustomer.id,
     });
-    return res.status(303).json({ success: true, data: session });
+    return res.status(303).json({ success: true, url:session.url});
     } catch (err) {
       logger.error("error in stripe"+ err)
       return res.status(500).json({ error: "An error occurred during checkout."+ err });
     }
 }
+
+
+export const getallPayment = async (req:Request, res:Response)=> {
+  try {
+       const response = await allPayment();  
+       if(!response){
+          return res.status(404).json({ success: false, message: "No Payment Record Found"});
+       }
+       return res.status(200).json({success: true,data:response, message: "all payment record here."});
+     }catch(err){
+      return res.status(500).json({success: false,message: `error in get all payment`+err});
+     }
+    }
