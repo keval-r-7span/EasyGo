@@ -37,11 +37,11 @@ const viewUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const { name, email, role } = req.body;
-    const response = await userService.updateUser(req.params.id, {
+    const { id } = req.query as { id: string }
+    const { name, email } = req.body;
+    const response = await userService.updateUser(id, {
       name,
       email,
-      role,
     });
     if (!response) {
       logger.error("Invalid ID while updating Customer");
