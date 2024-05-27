@@ -10,8 +10,7 @@ interface validateDataInput{
   property2:number
 }
 const validateData = (model:string,data:validateDataInput):ValidationResult=>{
-  const schema = schemas[model];  
-  return schema.validate(data)
+  return schemas[model].validate(data)
 }
 
 export const validateRequest = (req:Request, res:Response, next:NextFunction) => { 

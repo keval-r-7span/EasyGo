@@ -9,7 +9,7 @@ export interface driver extends Document {
   name: string;
   email: string;
   phoneNumber: string;
-  availability: boolean;
+  available: boolean;
   role: string;
   token: string;
   isVerified: boolean;
@@ -39,7 +39,7 @@ const driverSchema = new mongoose.Schema<driver>({
     enum: ["admin", "driver", "user"],
     default: "driver",
   },
-  availability: {
+  available: {
     type: Boolean,
     default: true,
   },

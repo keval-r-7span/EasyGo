@@ -1,6 +1,5 @@
 import { driverService } from '../../src/services/driverService';
 import driverSchema from '../../src/models/driverModel';
-import tempAuthSchema from '../../src/models/tempAuthModal';
 
 describe('driverService', () => {
   afterEach(() => {
@@ -23,14 +22,14 @@ describe('driverService', () => {
   // });
 
   it('findPhoneNumber should call findOne method of tempAuthSchema model with correct query', async () => {
-    const mockFindOne = jest.spyOn(tempAuthSchema, 'findOne').mockResolvedValueOnce({});
+    const mockFindOne = jest.spyOn(driverSchema, 'findOne').mockResolvedValueOnce({});
     const query = {};
     await driverService.findPhoneNumber(query);
     expect(mockFindOne).toHaveBeenCalledWith(query);
   });
 
   it('removeTempUser should call findByIdAndDelete method of tempAuthSchema model with correct id', async () => {
-    const mockFindByIdAndDelete = jest.spyOn(tempAuthSchema, 'findByIdAndDelete').mockResolvedValueOnce({});
+    const mockFindByIdAndDelete = jest.spyOn(driverSchema, 'findByIdAndDelete').mockResolvedValueOnce({});
     const id = 'yourId';
     await driverService.removeTempDriver(id);
     expect(mockFindByIdAndDelete).toHaveBeenCalledWith(id);

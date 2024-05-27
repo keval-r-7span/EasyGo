@@ -6,7 +6,7 @@ import {
   login,
   verify
 } from "../controllers/driverAuthController";
-
+import { validateRequest } from "../validation/joiValidation";
 import {
   getDriver,
   getDriverByID,
@@ -22,7 +22,7 @@ import {
 
 router.post("/login", login);
 router.post("/verify", verify);
-router.post("/register", signUp);
+router.post("/register", validateRequest,signUp);
 // router.post("/register", validateRequest, signUp);
 router.get("/upload", imageUpload);
 router.get("/available", availableDrivers);
