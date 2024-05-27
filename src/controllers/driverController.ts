@@ -17,7 +17,7 @@ export const getDriver = async (req: Request, res: Response) => {
         message: "Unable to get list of Driver.",
       });
     } else {
-      logger.error("Get the list of Driver successfully.")
+      logger.info("Get the list of Driver successfully.")
       return res.status(200).json({
         success: true,
         data: response,
@@ -42,7 +42,7 @@ export const getDriverByID = async (req: Request, res: Response) => {
         message: "Invalid ID",
       });
     } else {
-      logger.error("Get Driver by id is successfully.")
+      logger.info("Get Driver by id is successfully.")
       return res.status(200).json({
         success: true,
         data: response,
@@ -74,7 +74,7 @@ export const updateVehicle = async (req: Request, res: Response) => {
         message: "Invalid ID",
       });
     } else {
-      logger.error("Updating Vehicle was success.");
+      logger.info("Updating Vehicle was success.");
       return res.status(200).json({
         success: true,
         data: response,
@@ -158,7 +158,7 @@ export const availableDrivers = async (req: Request, res: Response) => {
         message: "Not Available Any Driver"
       });
     } else {
-      logger.error("Available driver is found.");
+      logger.info("Available driver is found.");
       return res.status(200).json({
         success: true,
         data: response,
@@ -278,7 +278,7 @@ export const bookingOTP = async (req: Request, res: Response) => {
   }
   try {
     const updatedDigit = await driverService.updateBookingOTP(id);
-    logger.error("Booking otp is generated.");
+    logger.info("Booking otp is generated.");
     return res.status(200).json({
       success: true,
       randomDigit: updatedDigit.digit,
@@ -304,7 +304,7 @@ export const verifyBookingOTP = async (req: Request, res: Response) => {
   try {
     const isValid = await driverService.verifyBookingOTP(id, otp);
     if (isValid) {
-      logger.error("OTP verification is a success.");
+      logger.info("OTP verification is a success.");
       return res.status(200).json({
         success: true,
         message: "OTP verified successfully",
