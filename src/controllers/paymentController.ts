@@ -42,7 +42,7 @@ export const payment_checkout = async (req: Request, res: Response) => {
       cancel_url: "https://example.com/cancel",
       customer: stripeCustomer.id
     });
-    return res.status(303).json({ success: true, url: session.url });
+    return res.status(200).json({ success: true, url: session.url });
   } catch (err) {
     logger.error("error in stripe" + err);
     return res
