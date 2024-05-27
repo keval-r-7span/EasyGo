@@ -42,6 +42,8 @@ const signUp = async (req: Request, res: Response) => {
     response.token = token;
     return res.status(201).json({
       isLogin: true,
+      token,
+      userId: response.id,
       message: "user Registered and move to home screen",
     });
   } catch (error) {
