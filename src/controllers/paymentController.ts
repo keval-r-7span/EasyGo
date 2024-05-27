@@ -15,11 +15,11 @@ export const payment_checkout = async(req:Request,res:Response)=>{
         product_data: {
           name: bookingItem.fullName,
         },
-        unit_amount: +(bookingItem.fare * 100)
+        unit_amount: parseInt(bookingItem.fare)*100
       },
       quantity: 1,
     };
-      
+    
     const stripeCustomer = await stripe.customers.create({
       name: bookingItem.fullName,
       email: "admin@easygo.com",
