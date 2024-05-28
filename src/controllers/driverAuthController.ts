@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response} from "express";
 import { driverService } from "../services/driverService";
 import { TWILIO } from "../helper/constants";
 import twilio from "twilio";
@@ -53,7 +53,7 @@ const signUp = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { phoneNumber } = req.body;
-  const lastDigit = phoneNumber.substring(6, 10);
+  const lastDigit = phoneNumber?.substring(6, 10);
   if (!phoneNumber) {
     logger.error("Invalid Phone number");
     return res.status(404).json({

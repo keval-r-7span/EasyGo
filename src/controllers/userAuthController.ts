@@ -105,7 +105,6 @@ const verify = async (req: Request, res: Response) => {
           logger.error("No user found");
           return res.status(404).json({
             isLogin: false,
-            data: phoneNumber,
             message: "Oops!! Sign-Up first move to signup screen"
           });
         } else {
@@ -113,7 +112,7 @@ const verify = async (req: Request, res: Response) => {
           existUser.token = token;
           logger.info(`UserID: ${existUser.id} logged in successfully`);
           return res.status(200).json({
-            success: true,
+            isLogin: true,
             token,
             userId: existUser.id,
             message: "User Logged in successfully"
@@ -162,7 +161,6 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
     }
 
     const availableDrivers = await driverService.availableDrivers();
-
     if (!availableDrivers) {
       logger.error("No available drivers found!");
       return res.status(404).json({
@@ -171,7 +169,6 @@ const requestDrive = async (req: Request, res: Response): Promise<Response> => {
       });
     }
     let driverFoundWithin2Km = false;
-
     for (const driver of availableDrivers) {
       const driverCoordinates = driver.location?.coordinates;
       if (!driverCoordinates || driverCoordinates.length < 2) {
