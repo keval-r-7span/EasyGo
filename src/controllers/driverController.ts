@@ -9,50 +9,44 @@ import logger from "../utils/logger";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
-    const response = await driverService.viewDriver();
-    if (!response) {
-      logger.error("Unable to Get the Driver.")
-      return res.status(404).json({
-        success: false,
-        message: "Unable to get list of Driver.",
-      });
+    if (req.params.id) {
+      // If id is present in params, fetch driver by ID
+      const response = await driverService.viewDriverById(req.params.id);
+      if (!response) {
+        logger.error("Invalid ID while get driver.");
+        return res.status(404).json({
+          success: false,
+          message: "Invalid ID",
+        });
+      } else {
+        logger.info("Get Driver by id is successful.");
+        return res.status(200).json({
+          success: true,
+          data: response,
+        });
+      }
     } else {
-      logger.info("Get the list of Driver successfully.")
-      return res.status(200).json({
-        success: true,
-        data: response,
-      });
+      // If no id is present, fetch all drivers
+      const response = await driverService.viewDriver();
+      if (!response) {
+        logger.error("Unable to Get the Driver.");
+        return res.status(404).json({
+          success: false,
+          message: "Unable to get list of Drivers.",
+        });
+      } else {
+        logger.info("Get the list of Drivers successfully.");
+        return res.status(200).json({
+          success: true,
+          data: response,
+        });
+      }
     }
   } catch (error) {
-    logger.error("Error in GetDriver."+error)
+    logger.error("Error in getDriver." + error);
     return res.status(500).json({
       success: false,
-      message: "Error in GetDriver " + error,
-    });
-  }
-};
-
-export const getDriverByID = async (req: Request, res: Response) => {
-  try {
-    const response = await driverService.viewDriverById(req.params.id);
-    if (!response) {
-      logger.error("Invalid ID while get driver.")
-      return res.status(404).json({
-        success: false,
-        message: "Invalid ID",
-      });
-    } else {
-      logger.info("Get Driver by id is successfully.")
-      return res.status(200).json({
-        success: true,
-        data: response,
-      });
-    }
-  } catch (error) {
-    logger.error("Error in GetDriverByID."+ error)
-    return res.status(500).json({
-      success: false,
-      message: "Error in GetCustomer ID " + error,
+      message: "Error in getDriver " + error,
     });
   }
 };
