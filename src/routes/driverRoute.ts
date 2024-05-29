@@ -22,8 +22,10 @@ import {
 router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", validateRequest, signUp);
-router.post("/addvehicle", validateRequest, addVehicleAndSaveImage);
+router.post("/addvehicle", addVehicleAndSaveImage);
+// router.post("/addvehicle", validateRequest, addVehicleAndSaveImage);
 
+// 
 router.get("/available", availableDrivers);
 router.get("/upload", imageUpload);
 router.get("/:id?", getDriver);
