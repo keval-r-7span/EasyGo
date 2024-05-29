@@ -1,11 +1,14 @@
 import express from "express";
 const router = express.Router();
 
-import { signUp, login, verify } from "../controllers/driverAuthController";
-import { validateRequest } from "../validation/joiValidation";
+import {
+  signUp,
+  login,
+  verify
+} from "../controllers/driverAuthController";
+import { validateRequest, updateValidateRequest } from "../validation/joiValidation";
 import {
   getDriver,
-  getDriverByID,
   addVehicleAndSaveImage,
   updateVehicle,
   updateDriver,
@@ -19,19 +22,18 @@ import {
 router.post("/login", login);
 router.post("/verify", verify);
 router.post("/register", validateRequest, signUp);
-// router.post("/register", validateRequest, signUp);
-router.get("/upload", imageUpload);
+router.post("/addvehicle", validateRequest, addVehicleAndSaveImage);
+
 router.get("/available", availableDrivers);
-router.post("/addvehicle", addVehicleAndSaveImage);
-// router.post("/addvehicle", validateAddVehicle, addVehicleAndSaveImage);
+router.get("/upload", imageUpload);
+router.get("/:id?", getDriver);
+
+router.put("/:id", updateValidateRequest, updateDriver);
 router.put("/vehicle/:id", updateVehicle);
-// router.put("/vehicle/:id", validateUpdateVehicle, updateVehicle);
-router.get("/", getDriver);
-router.get("/:id", getDriverByID);
-router.put("/:id", updateDriver);
-// router.put("/:id", validateUpdateRequest, updateDriver);
+// router.put("/vehicle/:id", updateValidateRequest, updateVehicle);
+
+router.put('/bookingotp/:id', bookingOTP);
+router.post('/verifybookingotp', verifyBookingOTP);
 router.delete("/:id", deleteDriver);
-router.put("/bookingotp/:id", bookingOTP);
-router.post("/verifybookingotp", verifyBookingOTP);
 
 export default router;

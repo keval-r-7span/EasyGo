@@ -9,50 +9,35 @@ import logger from "../utils/logger";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
-    const response = await driverService.viewDriver();
-    if (!response) {
-      logger.error("Unable to Get the Driver.");
-      return res.status(404).json({
-        success: false,
-        message: "Unable to get list of Driver."
-      });
-    } else {
-      logger.info("Get the list of Driver successfully.");
+    const { id } = req.query as { id: string };
+    if (id) {
+      const response = await driverService.viewDriverById(id);
+      if (!response) {
+        logger.error("Invalid ID while get driver.");
+        return res.status(404).json({
+          success: false,
+          message: "Invalid ID",
+        });
+      }
+      logger.info("Get Driver by id is successful.");
       return res.status(200).json({
         success: true,
-        data: response
+        message: "Driver found",
+        data: response,
+      });
+    } else {
+      const response = await driverService.viewDriver();
+      return res.status(200).json({
+        success: true,
+        message: "List of drivers found",
+        data: response,
       });
     }
   } catch (error) {
-    logger.error("Error in GetDriver." + error);
+    logger.error("Error in getDriver.", error);
     return res.status(500).json({
       success: false,
-      message: "Error in GetDriver " + error
-    });
-  }
-};
-
-export const getDriverByID = async (req: Request, res: Response) => {
-  try {
-    const response = await driverService.viewDriverById(req.params.id);
-    if (!response) {
-      logger.error("Invalid ID while get driver.");
-      return res.status(404).json({
-        success: false,
-        message: "Invalid ID"
-      });
-    } else {
-      logger.info("Get Driver by id is successfully.");
-      return res.status(200).json({
-        success: true,
-        data: response
-      });
-    }
-  } catch (error) {
-    logger.error("Error in GetDriverByID." + error);
-    return res.status(500).json({
-      success: false,
-      message: "Error in GetCustomer ID " + error
+      message: "Error in getDriver",
     });
   }
 };

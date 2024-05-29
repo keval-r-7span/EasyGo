@@ -24,7 +24,6 @@ export interface driver extends Document {
 const driverSchema = new mongoose.Schema<driver>({
   name: {
     type: String,
-    required: true
   },
   email: {
     type: String,
@@ -83,7 +82,10 @@ export const driverJoiSchema = Joi.object({
 export const updateDriverSchema = Joi.object({
   name: Joi.string().min(3).max(30),
   email: Joi.string().email(),
-  role: Joi.string()
+  role: Joi.string(),
+  available: Joi.string(),
+  isVerified: Joi.string(),
+  location: Joi.object(),
 });
 
 driverSchema.index({ location: "2dsphere" });
