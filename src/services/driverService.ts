@@ -28,16 +28,8 @@ const registerDriver = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.create(query);
 };
 
-const registerDriverTemp = async (query: RootQuerySelector<driver>) => {
-  return await driverSchema.create(query);
-};
-
 const findPhoneNumber = async (query: RootQuerySelector<driver>) => {
   return await driverSchema.findOne(query);
-};
-
-const removeTempDriver = async (query: string) => {
-  return await driverSchema.findByIdAndDelete(query);
 };
 
 const availableDrivers = async () => {
@@ -76,9 +68,7 @@ export const driverService = {
   updateDriver,
   findDriver,
   registerDriver,
-  registerDriverTemp,
   findPhoneNumber,
-  removeTempDriver,
   availableDrivers,
   updateBookingOTP,  
   verifyBookingOTP
