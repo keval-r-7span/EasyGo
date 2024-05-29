@@ -90,11 +90,19 @@ export const updateBooking = async (req: Request, res: Response) => {
       },
       { new: true }
     );
+    if(!response){
+      return res
+      .status(404)
+      .json({
+        success: false,
+        message: "Invalid Enter Id"
+      })
+    }
     return res
       .status(200)
       .json({
         success: true,
-        data: response,
+        data:response,
         message: "Booking updated successfully.."
       });
   } catch (error) {

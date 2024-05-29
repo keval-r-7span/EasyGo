@@ -1,7 +1,7 @@
 import stripe from "../configs/stripe";
 import logger from "../utils/logger";
 import { Response, Request } from "express";
-import { createPayment, allPayment } from "../services/paymentService";
+import {paymentService} from "../services/paymentService";
 
 export const payment_checkout = async (req: Request, res: Response) => {
   try {
@@ -32,7 +32,7 @@ export const payment_checkout = async (req: Request, res: Response) => {
         country: "US"
       }
     });
-    (await createPayment(booking[0])).save(); //add db
+    (await paymentService.createPayment(booking[0])).save(); //add db
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -53,7 +53,7 @@ export const payment_checkout = async (req: Request, res: Response) => {
 
 export const getallPayment = async (req: Request, res: Response) => {
   try {
-    const response = await allPayment();
+    const response = await paymentService.allPayment();
     if (!response) {
       return res
         .status(404)
@@ -70,5 +70,37 @@ export const getallPayment = async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ success: false, message: `error in get all payment` + err });
+  }
+};
+
+export const updatePayment = async (req: Request, res: Response) => {
+  try {
+    const { status } = req.body;
+    if (!status) {
+      return res.status(400).json({ success: false, message: "Status is required" });
+    }
+    const response = await paymentService.updateStatus(
+      req.params.id,
+      {
+        $set:{status}
+      },
+      { new: true }
+    );  
+    if(!response){
+      return res
+      .status(404)
+      .json({
+        success: false,
+        message: "Invalid Enter Id"
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      data: response,
+      message: "Payment status updated successfully."
+    });
+  } catch (error) {
+    logger.error("Error in updatePayment controller: " + error);
+    return res.status(500).json({ success: false, message: `Error in updatePayment: ${error}` });
   }
 };
