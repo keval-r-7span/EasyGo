@@ -33,13 +33,12 @@ export const payment_checkout = async (req: Request, res: Response) => {
       }
     });
     (await paymentService.createPayment(booking[0])).save(); //add db
-
-    const session = await stripe.checkout.sessions.create({
+      const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [lineItems],
       mode: "payment",
-      success_url: "https://example.com/success",
-      cancel_url: "https://example.com/cancel",
+      success_url: "https://www.easy-go.tech/successpayment",
+      cancel_url: "https://www.easy-go.tech/cancelpayment",
       customer: stripeCustomer.id
     });
     return res.status(200).json({ success: true, url: session.url });
