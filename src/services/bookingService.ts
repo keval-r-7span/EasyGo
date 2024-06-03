@@ -2,32 +2,32 @@ import { QueryOptions, RootQuerySelector, UpdateQuery}from 'mongoose';
 import BookingSchema,{Booking} from '../models/bookingModel';
 
 
-const viewBookingAll = async ()=> {
+export const viewBookingAll = async ()=> {
   return await BookingSchema.find()
 };
 
-const viewBooking = async (id:string) => {
+export const viewBooking = async (id:string) => {
     return await BookingSchema.findById(id)
 };
 
-const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
+export const viewBookingFilter = async (query:RootQuerySelector<Booking>) => {
   return await BookingSchema.find(query)
   .sort({ createdAt: -1 })
 };
 
-const createBooking = async (id:string) => {
+export const createBooking = async (id:string) => {
   return await BookingSchema.create(id);
 };
 
-const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:QueryOptions<Booking>) => {
+export const updateBooking = async (id:string, query:UpdateQuery<Booking>, option:QueryOptions<Booking>) => {
   return await BookingSchema.findByIdAndUpdate(id, query, option);
 };
 
-const deleteBooking = async (id:string)=> {
+export const deleteBooking = async (id:string)=> {
   return await BookingSchema.findByIdAndDelete(id);
 };
 
-const getRevenue = async () => {
+export const getRevenue = async () => {
     const result = await BookingSchema.aggregate([
       {
         $group: {
@@ -45,7 +45,7 @@ const getRevenue = async () => {
     return result;
 };
 
-const aggregateBookings = async () => {
+export const aggregateBookings = async () => {
     const result = await BookingSchema.aggregate([
       {
         $group: {
@@ -62,8 +62,8 @@ const aggregateBookings = async () => {
     return result;
 };
 
-const findUserIDBooking = async(query: {customer: string}) => {
+export const findUserIDBooking = async(query: {customer: string}) => {
   return await BookingSchema.findOne(query)
 }
 
-export const bookingService = {createBooking,viewBookingAll,viewBookingFilter,viewBooking,updateBooking,deleteBooking,getRevenue,aggregateBookings, findUserIDBooking}
+
