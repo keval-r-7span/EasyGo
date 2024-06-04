@@ -37,8 +37,8 @@ export const payment_checkout = async (req: Request, res: Response) => {
       payment_method_types: ["card"],
       line_items: [lineItems],
       mode: "payment",
-      success_url: "https://www.easy-go.tech/successpayment",
-      cancel_url: "https://www.easy-go.tech/cancelpayment",
+      success_url: "https://main.d2snpgn7du78xj.amplifyapp.com/successpayment",
+      cancel_url: "https://main.d2snpgn7du78xj.amplifyapp.com/cancelpayment",
       customer: stripeCustomer.id
     });
     return res.status(200).json({ success: true, url: session.url });
