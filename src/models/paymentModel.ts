@@ -10,12 +10,12 @@ export interface Payment extends Document {
 
 const paymentSchema = new mongoose.Schema(
   {
-    userId: {
+    customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
       required: true
     },
-    bookingId: {
+    booking: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
       required: true
@@ -34,7 +34,6 @@ const paymentSchema = new mongoose.Schema(
       enum: ["pending", "completed", "failed"],
       default: "pending"
     }
-    // transactionId: { type: String, unique: true },
   },
   { timestamps: true }
 );

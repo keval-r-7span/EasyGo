@@ -56,7 +56,7 @@ const CustomerSchema = new mongoose.Schema<Customer>(
       required: false
     }
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const phonePattern = /^(0|91)?[6-9][0-9]{9}$/;
@@ -70,5 +70,4 @@ export const userJoiSchema = Joi.object({
 });
 
 CustomerSchema.index({ location: "2dsphere" });
-
 export default mongoose.model<Customer>("Customer", CustomerSchema);

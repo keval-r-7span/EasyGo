@@ -6,7 +6,7 @@ const createPayment = async (id: string) => {
 };
 
 const allPayment = async () => {
-  return await paymentSchema.find();
+  return await paymentSchema.find().populate('customer')
 };
 
 const updateStatus = async (

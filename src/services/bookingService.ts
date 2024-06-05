@@ -2,7 +2,7 @@ import { QueryOptions, RootQuerySelector, UpdateQuery } from "mongoose";
 import BookingSchema, { Booking } from "../models/bookingModel";
 
 const viewBookingAll = async () => {
-  return await BookingSchema.find();
+  return await BookingSchema.find().populate('customer');
 };
 
 const viewBooking = async (id: string) => {
