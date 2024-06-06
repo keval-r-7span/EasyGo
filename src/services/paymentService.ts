@@ -1,14 +1,22 @@
-import {UpdateQuery,QueryOptions}from 'mongoose';
-import paymentSchema,{Payment} from '../models/paymentModel'
+import { UpdateQuery, QueryOptions } from "mongoose";
+import paymentSchema, { Payment } from "../models/paymentModel";
 
-export const createPayment = async (id:string) => {
-    return await paymentSchema.create(id);
+const createPayment = async (id: string) => {
+  return await paymentSchema.create(id);
 };
 
-export const allPayment = async()=>{
-    return await paymentSchema.find()
+const allPayment = async () => {
+  return await paymentSchema.find().populate('customer').populate('booking')
+};
+
+const updateStatus = async (
+  id: string,
+  query: UpdateQuery<Payment>,
+  option: QueryOptions<Payment>
+) => {
+  return await paymentSchema.findByIdAndUpdate(id, query, option);
+};
+
+export const paymentService ={
+  createPayment,allPayment,updateStatus
 }
-
-export const updateStatus = async (id:string, query:UpdateQuery<Payment>, option:QueryOptions<Payment>) => {
-    return await paymentSchema.findByIdAndUpdate(id, query, option);
-};
