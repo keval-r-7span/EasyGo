@@ -32,7 +32,8 @@ export const payment_checkout = async (req: Request, res: Response) => {
         country: "US"
       }
     });
-    (await paymentService.createPayment(booking[0])).save(); //add db
+      const response = await paymentService.createPayment(booking[0]); //add db
+      await response.save();
       const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [lineItems],
@@ -41,7 +42,7 @@ export const payment_checkout = async (req: Request, res: Response) => {
       cancel_url: "https://main.d2snpgn7du78xj.amplifyapp.com/cancelpayment",
       customer: stripeCustomer.id
     });
-    return res.status(200).json({ success: true, url: session.url });
+    return res.status(200).json({ success: true, url: session.url,payment_id:response._id});
   } catch (err) {
     logger.error("error in stripe" + err);
     return res
