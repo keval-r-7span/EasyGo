@@ -16,6 +16,7 @@ import {
   availableDrivers,
   imageUpload,
   bookingOTP,
+  // watermark,
   verifyBookingOTP
 } from "../controllers/driverController";
 
@@ -25,7 +26,7 @@ router.post("/register", validateRequest, signUp);
 router.post("/addvehicle", addVehicleAndSaveImage);
 // router.post("/addvehicle", validateRequest, addVehicleAndSaveImage);
 
-// 
+// router.get('/watermark', watermark);
 router.get("/available", availableDrivers);
 router.get("/upload", imageUpload);
 router.get("/:id?", getDriver);

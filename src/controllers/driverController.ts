@@ -6,6 +6,8 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { client } from "../configs/awsS3Client";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import logger from "../utils/logger";
+// import router from "../routes";
+// import Jimp from "jimp";
 
 export const getDriver = async (req: Request, res: Response) => {
   try {
@@ -158,6 +160,29 @@ export const availableDrivers = async (req: Request, res: Response) => {
     });
   }
 };
+
+// export const watermark = async (req:Request, res:Response) => {
+//     // const { key } = req.query; 
+//     try {
+//         // const imageBuffer = '';
+//           logger.info("image proccesing")
+//         // Add watermark
+//         const watermarkedBuffer = await addWatermark('https://fotofizz-directus.preview.im/assets/eec653ac-8e03-4190-9bf9-9fdf2b1eff26', 'Bhagysesh radia');
+//         // Serve the watermarked image
+//         res.writeHead(200, { 'Content-Type': 'image/png' });
+//         res.end(watermarkedBuffer, 'binary');
+//     } catch (error) {
+//         console.error('Error in downloadWithWatermark:', error);
+//         res.status(500).json({ success: false, message: `Error downloading image with watermark: ${error}` });
+//     }
+// };
+
+// async function addWatermark(imageBuffer:any, watermarkText:any) {
+//     const image = await Jimp.read(imageBuffer);
+//     const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+//     image.print(font, 10, 10, watermarkText);
+//     return image.getBufferAsync(Jimp.MIME_PNG);
+// }
 
 export const imageUpload = async (req: Request, res: Response) => {
   try {
