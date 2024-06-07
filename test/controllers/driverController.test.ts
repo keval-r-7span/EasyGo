@@ -1,10 +1,10 @@
 import supertest from "supertest";
+import { it, describe, expect } from "@jest/globals";
 import app from "../../src/app";
 import { setupDB } from "../../src/configs/memoryServer";
 
 describe("Test request with Mongo-inMemory-Server", () => {
   setupDB();
-
   describe("Get list of driver", () => {
     it("Should retrieve list of driver", async () => {
       const res = await supertest(app).get(`/api/v1/driver/`);
@@ -17,14 +17,6 @@ describe("Test request with Mongo-inMemory-Server", () => {
       const response = await supertest(app).get(`/api/v1/driver/${id}`);
       expect(response.status).toBe(404);
     });
-
-    // it("Should get driver with id", async () => {
-    //   const payload = {
-    //     id: "663dae4dadbf9e3d34b43d05"
-    //   }
-    //   const response = await supertest(app).get(`/api/v1/driver/${payload.id}`)
-    //   expect(response.status).toBe(200);
-    // });
 
     it("Should give 500 internal server error", async () => {
       const id = "663386553a51e2bc35eb300";

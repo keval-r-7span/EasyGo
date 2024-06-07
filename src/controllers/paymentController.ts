@@ -3,7 +3,7 @@ import logger from "../utils/logger";
 import { Response, Request } from "express";
 import {paymentService} from "../services/paymentService";
 
-export const payment_checkout = async (req: Request, res: Response) => {
+export const paymentCheckout = async (req: Request, res: Response) => {
   try {
     const { booking } = req.body;
     if (!booking || !Array.isArray(booking) || booking.length === 0) {

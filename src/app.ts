@@ -4,7 +4,6 @@ import indexRoute from "./routes";
 import { PORT } from "./helper/constants";
 import logger from "./utils/logger";
 import cors from "cors";
-import { initScheduleJobs } from "./utils/cronJobLoc";
 const app = express();
 
 app.use(express.json());
@@ -20,7 +19,5 @@ app.listen(PORT, (): void => {
   logger.info(`🚀 Server is running.. on http://localhost:${PORT}🚀..`);
   connectDB();
 });
-
-initScheduleJobs();
 
 export default app;

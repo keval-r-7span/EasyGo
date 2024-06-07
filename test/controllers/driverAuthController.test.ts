@@ -1,10 +1,10 @@
 import app from "../../src/app";
+import { it, describe, expect } from "@jest/globals";
 import request from "supertest";
 import { setupDB } from "../../src/configs/memoryServer";
 
 describe("Driver Registration", () => {
   setupDB();
-
   it("should register a new driver with valid data", async () => {
     const response = await request(app).post("/api/v1/driver/register").send({
       name: "John Doe",

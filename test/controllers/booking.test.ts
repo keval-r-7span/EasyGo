@@ -7,7 +7,7 @@ var createdBookingId: string;
 describe("booking", () => {
   setupDB();
   var status: string;
-  var booking_payload = {
+  const booking_payload = {
     pickupLocation: "Panchamrut Bunglows II",
     dropoffLocation: "Sola, Ahmedabad, Gujarat 380059, India",
     vehicleClass: "Bike",

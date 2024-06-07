@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import { it, describe, expect,beforeEach } from "@jest/globals";
 import jwt from "jsonwebtoken";
-import { verifyToken, isAdmin } from "../../src/middleware/authMiddleware";
-// import logger from "../utils/logger";
+import { verifyToken } from "../../src/middleware/authMiddleware";
 
 jest.mock("jsonwebtoken");
-
 describe("Middleware Tests", () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
