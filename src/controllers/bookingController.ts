@@ -17,11 +17,6 @@ export const viewBooking = async (req: Request, res: Response) => {
     if (id || status) {
       if (id) {
         const response = await bookingService.viewBooking(id);
-        if (!response) {
-          return res
-            .status(404)
-            .json({ success: false, message: "No Booking Found" });
-        }
         return res
           .status(200)
           .json({
@@ -90,14 +85,6 @@ export const updateBooking = async (req: Request, res: Response) => {
       },
       { new: true }
     );
-    if(!response){
-      return res
-      .status(404)
-      .json({
-        success: false,
-        message: "Invalid Enter Id"
-      })
-    }
     return res
       .status(200)
       .json({

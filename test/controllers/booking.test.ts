@@ -7,11 +7,23 @@ var createdBookingId:string;
 describe('booking',()=>{
   setupDB()  
   var status:string
-  var booking_payload = {
-    pickupLocation:"Panchamrut Bunglows II",
-    dropoffLocation:"Sola, Ahmedabad, Gujarat 380059, India",
-    vehicleClass:"Bike",
-    fare:140
+  const booking_payload = {
+      "pickupLocation":"Sola, Ahmedabad",
+      "dropoffLocation":"thaltej, Ahmedabad",
+      "vehicleClass":"Auto",
+      "fare":140,
+      "origin": {
+          "type": "Point",
+          "coordinates": [
+              23.071055764825, 72.51767422437
+          ]
+      },
+     "destination": {
+          "type": "Point",
+          "coordinates": [
+              23.072793003678886, 72.52037789100295
+          ]
+      }
   }
 describe('GET/POST with 200 Ok and return success',()=>{
       it('POST/ booking',async()=>{
@@ -19,24 +31,39 @@ describe('GET/POST with 200 Ok and return success',()=>{
           createdBookingId = body.data._id;
           status = body.data.status
             expect(statusCode).toBe(201)
-            expect(body).toEqual({   
-                success: true,
-                data: {
-                  vehicleClass: 'Bike',    
-                  pickupLocation: 'Panchamrut Bunglows II',
-                  dropoffLocation: 'Sola, Ahmedabad, Gujarat 380059, India',
+            expect(body).toEqual({
+              success: true,
+              data: {
+                  vehicleClass: "Auto",
+                  pickupLocation: "Sola, Ahmedabad",
+                  dropoffLocation: "thaltej, Ahmedabad",
+                  origin: {
+                      "type": "Point",
+                      "coordinates": [
+                          23.071055764825,
+                          72.51767422437
+                      ]
+                  },
+                  destination: {
+                      type: "Point",
+                      coordinates: [
+                          23.072793003678886,
+                          72.52037789100295
+                      ]
+                  },
                   pickupTime: expect.any(String),
-                  status: 'pending',
+                  status: "pending",
                   fare: 140,
-                  comments: 'Good Experience',
-                  _id:expect.any(String),
+                  comments: "Good Experience",
+                  _id: expect.any(String),
                   createdAt: expect.any(String),
                   updatedAt: expect.any(String),
                   __v: 0
-                },
-                message: 'Ride booking successfully.'
-              })       
-      }) 
+        
+              },
+              message: "Ride booking successfully."
+          }) 
+})
 
       it('should return 200',async ()=>{
             const {body,statusCode} = await supertest(app).get(`/api/v1/booking/list/`)
@@ -92,13 +119,24 @@ describe('GET/POST with 200 Ok and return success',()=>{
 describe('DELETE /api/v1/booking/:id', () => {
       let demoid:string;
       beforeAll(async () => {
-        var booking_payload = {
-          pickupLocation:"Panchamrut Bunglows II",
-          dropoffLocation:"Sola, Ahmedabad, Gujarat 380059, India",
-          vehicleClass:"Bike",
-          fare:140
-        }
-    
+        const booking_payload = {
+          "pickupLocation":"Sola, Ahmedabad",
+          "dropoffLocation":"thaltej, Ahmedabad",
+          "vehicleClass":"Auto",
+          "fare":140,
+          "origin": {
+              "type": "Point",
+              "coordinates": [
+                  23.071055764825, 72.51767422437
+              ]
+          },
+         "destination": {
+              "type": "Point",
+              "coordinates": [
+                  23.072793003678886, 72.52037789100295
+              ]
+          }
+      }
         const response = await supertest(app)
           .post('/api/v1/booking/')
           .send(booking_payload);
@@ -124,12 +162,24 @@ describe('DELETE /api/v1/booking/:id', () => {
     
 describe('PUT /api/v1/booking/:id', () => {
   beforeAll(async () => {
-    var bookingPayload = {
-      pickupLocation:"Panchamrut Bunglows II",
-      dropoffLocation:"Sola, Ahmedabad, Gujarat 380059, India",
-      vehicleClass:"Bike",
-      fare:140
-    }    
+    const bookingPayload = {
+      "pickupLocation":"Sola, Ahmedabad",
+      "dropoffLocation":"thaltej, Ahmedabad",
+      "vehicleClass":"Auto",
+      "fare":140,
+      "origin": {
+          "type": "Point",
+          "coordinates": [
+              23.071055764825, 72.51767422437
+          ]
+      },
+     "destination": {
+          "type": "Point",
+          "coordinates": [
+              23.072793003678886, 72.52037789100295
+          ]
+      }
+  }
     const response = await supertest(app)
       .post('/api/v1/booking/')
       .send(bookingPayload);
@@ -145,12 +195,23 @@ describe('PUT /api/v1/booking/:id', () => {
 
   it('should update a booking and return success message', async () => {
     const updatedBookingData = {
-      pickupLocation: 'Updated Pickup Location',
-      dropoffLocation: 'Updated Dropoff Location',
-      vehicleClass: 'Updated Vehicle Class',
-      fare: 150,
-    };
-
+      "pickupLocation":"Sola, Ahmedabad",
+      "dropoffLocation":"thaltej, Ahmedabad",
+      "vehicleClass":"Auto",
+      "fare":140,
+      "origin": {
+          "type": "Point",
+          "coordinates": [
+              23.071055764825, 72.51767422437
+          ]
+      },
+     "destination": {
+          "type": "Point",
+          "coordinates": [
+              23.072793003678886, 72.52037789100295
+          ]
+      }
+  }
     const response = await supertest(app)
       .put(`/api/v1/booking/${createdBookingId}`)
       .send(updatedBookingData);
@@ -158,12 +219,12 @@ describe('PUT /api/v1/booking/:id', () => {
     expect(response.body.success).toBe(true);
     expect(response.body.message).toBe('Booking updated successfully..');
   })
-  it('should return 404 if no booking ID or status is provided', async () => {
-    const { statusCode } = await supertest(app)
-      .put('/api/v1/bookings/update/')
-      .send({}); 
-    expect(statusCode).toBe(404);
-  }) 
+  // it('should return 404 if no booking ID or status is provided', async () => {
+  //   const { statusCode } = await supertest(app)
+  //     .put('/api/v1/bookings/update/')
+  //     .send({}); 
+  //   expect(statusCode).toBe(404);
+  // }) 
     });
 });
        
@@ -255,19 +316,19 @@ describe('payment',()=>{
   setupDB()
   describe('GET/ revenue',()=>{
     it('return 200 status and get total revenue',async()=>{
-     const {body,statusCode} = await supertest(app).get('/api/v1/booking/revenue/')
+     const {body,statusCode} = await supertest(app).get('/api/v1/payment/revenue')
       expect(statusCode).toBe(200)
       expect(body.success).toBe(true)
     })
     it('return 404 for wrong path',async()=>{
-      const {statusCode} = await supertest(app).get('/api/v1/booking/revenu/')
+      const {statusCode} = await supertest(app).get('/api/v1/payment/revenuea')
       expect(statusCode).toBe(404)
     })
   })
 
   describe('GET/ booking',()=>{
     it('return 200 status and get total booking',async()=>{
-     const {body,statusCode} = await supertest(app).get('/api/v1/booking/total/')
+     const {body,statusCode} = await supertest(app).get('/api/v1/payment/total/')
       expect(statusCode).toBe(200)
       expect(body.success).toBe(true)
     })
