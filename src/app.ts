@@ -4,10 +4,13 @@ import indexRoute from "./routes";
 import { PORT } from "./helper/constants";
 import logger from "./utils/logger";
 import cors from "cors";
+import limiter from "./utils/rateLimit";
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+//rate-limit
+app.use(limiter)
 // Define routes
 app.use("/api/v1", indexRoute);
 
